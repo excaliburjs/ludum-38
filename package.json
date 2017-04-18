@@ -1,0 +1,11 @@
+{
+    "name": "mygame",
+    "private": true,
+    "version": "0.0.0",
+    "scripts": {
+        "start": "./node_modules/.bin/tsc -p game/tsconfig.json"
+    },
+    "devDependencies": {
+        "typescript": "latest"
+    }
+}
