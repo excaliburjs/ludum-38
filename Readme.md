@@ -1,6 +1,6 @@
-# My Excalibur.js Game
+# ludum-38
 
-This is a basic Excalibur.js game.
+Ludum Dare 38 Game Jam (April 21-24) http://excaliburjs.com/ludum-38
 
 ## Compiling the game
 

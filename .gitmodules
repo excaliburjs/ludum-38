@@ -1,0 +1,4 @@
+[submodule "lib/excalibur"]
+	path = lib/excalibur
+	url = git@github.com:excaliburjs/Excalibur.git
+	branch = ludum-dare-38
