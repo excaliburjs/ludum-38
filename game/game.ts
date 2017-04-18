@@ -1,4 +1,4 @@
-/// <reference path="../bower_components/excalibur/dist/excalibur.d.ts" />
+/// <reference path="../lib/excalibur/build/dist/excalibur.d.ts" />
 
 var game = new ex.Engine({
     width: 800,

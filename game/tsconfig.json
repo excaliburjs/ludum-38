@@ -2,6 +2,12 @@
     "compileOnSave": true,
     "compilerOptions": {
         "target": "es5",
-        "outFile": "game.js"
-    }
+        "outFile": "game.js",
+        "watch": true
+    },
+
+    "files": [
+      "game.ts",
+      "../lib/excalibur/build/dist/excalibur.d.ts"
+   ]
 }
