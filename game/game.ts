@@ -1,27 +1,45 @@
 /// <reference path="../lib/excalibur/build/dist/excalibur.d.ts" />
+/// <reference path="Resources.ts" />
+/// <reference path="Config.ts" />
+/// <reference path="Stats.ts" />
+/// <reference path="ScnMain.ts" />
 
 var game = new ex.Engine({
-    width: 800,
-    height: 600
+    width: Config.gameWidth,
+    height: Config.gameHeight,
+    canvasElementId: "game",
 });
 
 // create an asset loader
 var loader = new ex.Loader();
-var resources = {
-
-    /* include resources here */
-    //txPlayer: new ex.Texture("assets/tex/player.png")
-
-};
-
-// queue resources for loading
-for (var r in resources) {
-    loader.addResource(resources[r]);
+for (var r in Resources) {
+    loader.addResource(Resources[r]);
 }
 
-// uncomment loader after adding resources
-game.start(/* loader */).then(() => {
+var scnMain = new ScnMain(game);
+game.addScene('main', scnMain);
 
-    // start your game!
+//TODO Remove debug mode
+var gamePaused = false;
+game.input.keyboard.on('down', (keyDown?: ex.Input.KeyEvent) => {
+    switch(keyDown.key) {
+        case ex.Input.Keys.P : 
+            if (gamePaused) {
+                game.start();
+                ex.Logger.getInstance().info('game resumed');
+            } else {
+                game.stop();
+                ex.Logger.getInstance().info('game paused');
+            }
+            gamePaused = !gamePaused;
+            break;
+        case ex.Input.Keys.Semicolon :
+            game.isDebug = !game.isDebug;
+            break;
+    }
+});
+// --------------------------------------- //
 
+game.start(loader).then(() => {
+    game.goToScene('main');
 });

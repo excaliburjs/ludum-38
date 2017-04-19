@@ -4,6 +4,7 @@
 	"editor.insertSpaces": true,
 	"files.exclude": {
 		"**/.git": true,
-		"game/*.js": { "when": "$(basename).ts" }
+		"game/*.js": { "when": "$(basename).ts" },
+		"node_modules/": true
 	}
 }
