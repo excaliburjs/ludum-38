@@ -17,7 +17,7 @@ echo "Compiling TSC"
 npm run build
 
 echo "Copying built files"
-cp -R $(ls | grep -v '^\(out\|excalibur\)$') out
+cp -R $(ls | grep -v '^\(out\|lib\\excalibur\|\.vscode)$') out
 cd out
 
 echo "Setting commit number ${CURRENT_COMMIT}"
