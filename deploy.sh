@@ -34,7 +34,7 @@ git add -A
 git commit --allow-empty -m "Deploying game for $CURRENT_COMMIT" || exit 1
 git checkout gh-pages
 git merge master --squash 
-git push -f origin gh-pages > /dev/null 2>&1 || exit 1
+git push origin gh-pages > /dev/null 2>&1 || exit 1
 
 echo "Pushed deployment successfully"
 exit 0
