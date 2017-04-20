@@ -19,10 +19,13 @@ npm run build
 
 echo "Setting commit number ${CURRENT_COMMIT}"
 sed -i "s/COMMIT_NUMBER/${CURRENT_COMMIT}/g" ./index.html
+
+echo "Building new .gitignore"
 rm .gitignore
 echo "node_modules/" > .gitignore
 echo "**.ts" >> .gitignore
 echo "**.yml" >> .gitignore
+echo .gitignore
 
 echo "Committing and pushing to GH"
 git config user.name "Travis-CI"
