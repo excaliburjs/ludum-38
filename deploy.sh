@@ -11,6 +11,7 @@ echo "Cloning master branch..."
 git clone -b master "https://${GH_TOKEN}@${GH_REF}" out > /dev/null 2>&1 || exit 1
 
 cd out
+git fetch origin
 
 echo "Compiling TSC"
 
@@ -18,6 +19,10 @@ npm run build
 
 echo "Setting commit number ${CURRENT_COMMIT}"
 sed -i "s/COMMIT_NUMBER/${CURRENT_COMMIT}/g" ./index.html
+rm .gitignore
+echo "node_modules/" > .gitignore
+echo "**.ts" >> .gitignore
+echo "**.yml" >> .gitignore
 
 echo "Committing and pushing to GH"
 git config user.name "Travis-CI"
