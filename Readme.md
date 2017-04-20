@@ -31,3 +31,6 @@ To update local copy of Excalibur from submodule:
 ## Using VSCode
 
 `Ctrl+Shift+b` will run `npm start` and compile on changes
+
+## Git workflow
+- use "Pull (Rebase)" from the Source Control panel of VSCode
