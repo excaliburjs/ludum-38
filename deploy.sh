@@ -8,7 +8,7 @@ npm install typescript@2.2.2 -g
 
 echo "Cloning gh-pages branch..."
 
-git clone -b gh-pages "https://${GH_TOKEN}@${GH_REF}" out > /dev/null 2>&1 || exit 1
+git clone -b master "https://${GH_TOKEN}@${GH_REF}" out > /dev/null 2>&1 || exit 1
 
 cd out
 
