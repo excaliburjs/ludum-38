@@ -19,7 +19,12 @@
          //uses Yeoman generator 'npm start' command
          "taskName": "start",
          "isBuildCommand": true,
+         "isBackground": true,         
          "args": ["start"]
+      },
+      {
+         "taskName": "copy",
+         "args": ["run", "copy"]
       }
    ]
 }

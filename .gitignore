@@ -1,2 +1,3 @@
-/game/game.js
-/node_modules/
+node_modules/
+**.ts
+**.yml

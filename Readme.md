@@ -12,7 +12,8 @@ Set up Excalibur submodule:
 
 Build Excalibur (from lib/excalibur/) to generate lib/excalibur/build/dist
 
-    grunt
+    npm install
+    npm run all
 
 ## Compiling the game
 
@@ -23,6 +24,13 @@ To compile:
     npm install
     npm start
 
+To update local copy of Excalibur from submodule:
+
+    npm run copy 
+
 ## Using VSCode
 
 `Ctrl+Shift+b` will run `npm start` and compile on changes
+
+## Git workflow
+- use "Pull (Rebase)" from the Source Control panel of VSCode
