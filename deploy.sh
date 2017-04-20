@@ -10,7 +10,7 @@ echo "Cloning gh-pages branch..."
 
 git clone -b gh-pages "https://${GH_TOKEN}@${GH_REF}" out > /dev/null 2>&1 || exit 1
 
-rm -r out/*
+cd out
 
 echo "Compiling TSC"
 
