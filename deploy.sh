@@ -24,7 +24,7 @@ git config user.name "Travis-CI"
 git config user.email "travis@excaliburjs.com"
 git add -A
 git commit --allow-empty -m "Deploying game for $CURRENT_COMMIT" || exit 1
-git push origin gh-pages #> /dev/null 2>&1 || exit 1
+git push -f origin gh-pages #> /dev/null 2>&1 || exit 1
 
 echo "Pushed deployment successfully"
 exit 0
