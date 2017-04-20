@@ -20,6 +20,10 @@
          "taskName": "start",
          "isBuildCommand": true,
          "args": ["start"]
+      },
+      {
+         "taskName": "copy",
+         "args": ["run", "copy"]
       }
    ]
 }

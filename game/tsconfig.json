@@ -2,8 +2,7 @@
     "compileOnSave": true,
     "compilerOptions": {
         "target": "es5",
-        "outFile": "game.js",
-        "watch": true
+        "outFile": "game.js"
     },
 
     "files": [

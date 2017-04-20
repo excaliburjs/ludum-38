@@ -3,9 +3,11 @@
     "private": true,
     "version": "0.0.0",
     "scripts": {
-        "start": "./node_modules/.bin/tsc -p game/tsconfig.json"
+        "start": "./node_modules/.bin/tsc -p game/tsconfig.json --watch",        
+        "build": "./node_modules/.bin/tsc -p game/tsconfig.json",
+        "copy": "powershell -noprofile -command \"copy lib/excalibur/build/dist/excalibur.min.js lib/excalibur.min.js\""        
     },
     "devDependencies": {
-        "typescript": "latest"
+        "typescript": "2.2.2"
     }
 }
