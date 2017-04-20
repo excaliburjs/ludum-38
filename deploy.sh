@@ -14,7 +14,7 @@ rm -r out/*
 
 echo "Compiling TSC"
 
-tsc --config "./game/tsconfig.json" --sourcemap "./game/game.ts" --out "./game/game.js"
+npm run build
 
 echo "Copying built files"
 cp -R $(ls | grep -v '^\(out\|Excalibur\)$') out
