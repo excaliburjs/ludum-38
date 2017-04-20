@@ -1,0 +1,19 @@
+body {
+   text-align: center;
+}
+
+#commit {
+   position: absolute;
+   bottom: 0.5em;
+   right: 0.5em;
+   font-size: 0.6em;
+   font-family: Consolas, Monospace;
+   width: 50px;
+   overflow: hidden;
+   opacity: .5;
+   color: black;
+}
+
+#commit:hover {
+   color: red;
+}
