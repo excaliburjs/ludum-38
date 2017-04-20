@@ -11,7 +11,7 @@ echo "Cloning master branch..."
 git clone -b master "https://${GH_TOKEN}@${GH_REF}" out > /dev/null 2>&1 || exit 1
 
 cd out
-git fetch origin
+git fetch origin gh-pages
 
 echo "Compiling TSC"
 
@@ -25,14 +25,14 @@ rm .gitignore
 echo "node_modules/" > .gitignore
 echo "**.ts" >> .gitignore
 echo "**.yml" >> .gitignore
-echo .gitignore
+cat .gitignore
 
 echo "Committing and pushing to GH"
 git config user.name "Travis-CI"
 git config user.email "travis@excaliburjs.com"
 git add -A
 git commit --allow-empty -m "Deploying game for $CURRENT_COMMIT" || exit 1
-git push -f origin gh-pages #> /dev/null 2>&1 || exit 1
+git push -f origin gh-pages > /dev/null 2>&1 || exit 1
 
 echo "Pushed deployment successfully"
 exit 0
