@@ -7,6 +7,6 @@
 
     "files": [
       "game.ts",
-      "../lib/excalibur/build/dist/excalibur.d.ts"
+      "../lib/excalibur-dist/excalibur.d.ts"
    ]
 }
