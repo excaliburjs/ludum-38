@@ -6,7 +6,7 @@ CURRENT_COMMIT=`git rev-parse HEAD`
 
 npm install typescript@2.2.2 -g
 
-echo "Cloning gh-pages branch..."
+echo "Cloning master branch..."
 
 git clone -b master "https://${GH_TOKEN}@${GH_REF}" out > /dev/null 2>&1 || exit 1
 
