@@ -50,6 +50,8 @@ var Player = (function (_super) {
             _this.vel.setTo(0, 0);
         });
     };
+    Player.prototype.raycast = function (ray) {
+    };
     return Player;
 }(ex.Actor));
 var Resources = {
@@ -67,8 +69,9 @@ var Config = {
     playerVel: 100,
     enemyWidth: 50,
     enemyHeight: 50,
-    enemyRayCastAngle: 45,
+    enemyRayCastAngle: Math.PI / 4,
     enemyRayLength: 200,
+    enemyRayCount: 5,
     foodWidth: 100,
     foodHeight: 100
 };
@@ -96,15 +99,37 @@ var Enemy = (function (_super) {
     function Enemy(x, y) {
         var _this = _super.call(this, x, y, Config.enemyWidth, Config.enemyHeight) || this;
         _this.rays = [];
-        _this.originalRays = [];
         _this.addDrawing(Resources.enemySheet);
+        _this.actions.moveTo(x + 300, y, 20)
+            .moveTo(x + 300, y - 100, 20)
+            .moveTo(x, y - 100, 20)
+            .moveTo(x, y, 20).repeatForever();
+        _this.rays = new Array(Config.enemyRayCount);
         return _this;
     }
     Enemy.prototype.onInitialize = function (engine) {
+        var _this = this;
         this.collisionType = ex.CollisionType.Passive;
         this.on('postupdate', function (evt) {
             // calculate the forward vector of enemy
+            _this.forward = _this.vel.normalize();
+            var forwardAngle = _this.vel.toAngle();
+            var angleStep = Config.enemyRayCastAngle / Config.enemyRayCount;
+            var angleStart = forwardAngle - (Config.enemyRayCastAngle / 2);
+            for (var i = 0; i < Config.enemyRayCount; i++) {
+                _this.rays[i] = new ex.Ray(ex.Vector.Zero.clone(), ex.Vector.fromAngle(angleStart + angleStep * i).scale(Config.enemyRayLength));
+            }
         });
+        // set this to postdebugdraw on production
+        this.on('postdraw', function (evt) {
+            for (var _i = 0, _a = _this.rays; _i < _a.length; _i++) {
+                var ray = _a[_i];
+                // Re-calc distance for debug only
+                ex.Util.DrawUtil.vector(evt.ctx, ex.Color.Red, ex.Vector.Zero.clone(), ray.dir, Config.enemyRayLength);
+            }
+        });
+    };
+    Enemy.prototype.rayCastForPlayer = function (player) {
     };
     return Enemy;
 }(ex.Actor));
