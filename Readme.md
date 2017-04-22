@@ -13,7 +13,7 @@ Set up Excalibur submodule:
 Build Excalibur (from lib/excalibur/) to generate lib/excalibur/build/dist
 
     npm install
-    npm run all
+    npm run build
 
 ## Compiling the game
 

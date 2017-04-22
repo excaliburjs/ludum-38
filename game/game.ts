@@ -1,8 +1,15 @@
+<<<<<<< HEAD
+/// <reference path="../lib/excalibur-dist/excalibur.d.ts" />
+/// <reference path="Player.ts" />
+=======
 /// <reference path="../lib/excalibur-tiled/dist/excalibur-tiled.d.ts" />
+>>>>>>> da54487d5aaa943fc08ef11be8118b29e52bf97b
 /// <reference path="Resources.ts" />
 /// <reference path="Config.ts" />
 /// <reference path="Stats.ts" />
 /// <reference path="ScnMain.ts" />
+/// <reference path="Food.ts" />
+/// <reference path="ShoppingList.ts" />
 
 var game = new ex.Engine({
     width: Config.gameWidth,
