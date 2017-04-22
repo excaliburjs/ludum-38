@@ -178,7 +178,6 @@ var ShoppingList = (function () {
     };
     return ShoppingList;
 }());
-/// <reference path="../lib/excalibur-dist/excalibur.d.ts" />
 /// <reference path="../lib/excalibur-tiled/dist/excalibur-tiled.d.ts" />
 /// <reference path="Player.ts" />
 /// <reference path="Resources.ts" />
