@@ -30,8 +30,8 @@ mkdir -p out/lib/excalibur-dist
 mkdir -p out/lib/excalibur-tiled/dist
 
 cd lib
-cp -R excalibur-dist/ ../out/lib/excalibur-dist
-cp -R excalibur-tiled/dist/ ../out/lib/excalibur-tiled/dist
+cp -R excalibur-dist/ ../out/lib
+cp -R excalibur-tiled/dist/ ../out/lib/excalibur-tiled
 cd ..
 cd out
 
