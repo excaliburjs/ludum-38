@@ -47,6 +47,10 @@ var Player = (function (_super) {
                         State.gameOver = true;
                     }
                 }
+                if (e.other instanceof Food) {
+                    player.shoppingList.removeItem(e.other.ShoppingListId);
+                    e.other.kill();
+                }
             });
         });
         this.on('postupdate', function (evt) {
@@ -102,7 +106,6 @@ var ScnMain = (function (_super) {
     ScnMain.prototype.onInitialize = function (engine) {
         var map = Resources.map.getTileMap();
         this.add(map);
-        // player is added to scene global context
         Resources.map.data.layers.filter(function (l) { return l.name === LAYER_IMPASSABLE; }).forEach(function (l) {
             if (typeof l.data == 'string')
                 return;
@@ -136,6 +139,9 @@ var Food = (function (_super) {
         _this.addDrawing(Resources.foodSheet);
         return _this;
     }
+    Food.prototype.onInitialize = function (engine) {
+        this.collisionType = ex.CollisionType.Passive;
+    };
     return Food;
 }(ex.Actor));
 var Enemy = (function (_super) {
