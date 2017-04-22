@@ -10,6 +10,9 @@ var game = new ex.Engine({
     canvasElementId: "game",
 });
 
+// turn off anti-aliasing
+game.setAntialiasing(false);
+
 // create an asset loader
 var loader = new ex.Loader();
 for (var r in Resources) {
