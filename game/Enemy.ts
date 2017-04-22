@@ -78,6 +78,13 @@ class Enemy extends ex.Actor {
       });
    }
 
+   public update(engine: ex.Engine, delta: number) {
+      super.update(engine, delta);
+      if (State.gameOver) {
+         this.actionQueue.clearActions();
+      }
+   }
+
    public checkForPlayer(): boolean {
       var result = false;
       for(var ray of this.rays){
