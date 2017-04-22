@@ -127,6 +127,24 @@ var ScnMain = (function (_super) {
     };
     return ScnMain;
 }(ex.Scene));
+var ShoppingList = (function () {
+    function ShoppingList(items) {
+        this.items = items;
+    }
+    ShoppingList.prototype.removeItem = function (id) {
+        if (this.items && this.items.length) {
+            var idxsToRemove = this.items.map(function (obj, index) {
+                if (obj.ShoppingListId == id) {
+                    return index;
+                }
+            });
+            if (idxsToRemove && idxsToRemove.length) {
+                this.items.splice(idxsToRemove[0], 1);
+            }
+        }
+    };
+    return ShoppingList;
+}());
 var game = new ex.Engine({
     width: Config.gameWidth,
     height: Config.gameHeight,
