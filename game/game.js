@@ -92,6 +92,7 @@ var Config = {
     enemyRayCastAngle: Math.PI / 4,
     enemyRayLength: 200,
     enemyRayCount: 5,
+    enemySpeed: 20,
     foodWidth: 48,
     foodHeight: 48,
     foodSpawnCount: 4,
@@ -154,8 +155,8 @@ var ScnMain = (function (_super) {
                 }
             }
         });
+        // get all tiles where placing food should be allowed 
         var floorTiles = new Array();
-        //get all tiles where placing food should be allowed 
         Resources.map.data.layers.filter(function (l) { return l.name !== LAYER_IMPASSABLE; }).forEach(function (l) {
             if (typeof l.data == 'string')
                 return;
@@ -167,6 +168,8 @@ var ScnMain = (function (_super) {
                 }
             }
         });
+        // Build waypoint grid for pathfinding based on 
+        var grid = new WaypointGrid(floorTiles);
         // player is added to scene global context
         var foodArr = new Array();
         var rand = new ex.Random();
@@ -178,7 +181,7 @@ var ScnMain = (function (_super) {
         }
         var shoppingList = new ShoppingList(foodArr);
         player.shoppingList = shoppingList;
-        var enemy = new Enemy(300, 300);
+        var enemy = new Enemy(grid);
         this.enemies.push(enemy);
         this.add(enemy);
     };
@@ -200,16 +203,21 @@ var Food = (function (_super) {
 var Enemy = (function (_super) {
     __extends(Enemy, _super);
     // todo need reference to the waypoint grid
-    function Enemy(x, y) {
-        var _this = _super.call(this, x, y, Config.enemyWidth, Config.enemyHeight) || this;
+    function Enemy(grid) {
+        var _this = _super.call(this, 0, 0, Config.enemyWidth, Config.enemyHeight) || this;
         _this.rays = [];
         _this.attack = false;
         _this.isAttacking = false;
         _this.addDrawing(Resources.enemySheet);
-        _this.actions.moveTo(x + 300, y, 20)
-            .moveTo(x + 300, y - 100, 20)
-            .moveTo(x, y - 100, 20)
-            .moveTo(x, y, 20).repeatForever();
+        var ran = new ex.Random(12);
+        var start = ran.pickOne(grid.nodes);
+        _this.pos = start.pos;
+        var end = ran.pickOne(grid.nodes);
+        var path = grid.findPath(start, end);
+        for (var _i = 0, path_1 = path; _i < path_1.length; _i++) {
+            var node = path_1[_i];
+            _this.actions.moveTo(node.pos.x, node.pos.y, Config.enemySpeed);
+        }
         _this.rays = new Array(Config.enemyRayCount);
         return _this;
     }
@@ -244,14 +252,6 @@ var Enemy = (function (_super) {
                 _this.vel = newVel;
             }
             else {
-                // return to patrol, this will be different later on
-                _this.isAttacking = false;
-                if (_this.actions._queues[0]._actions.length === 0) {
-                    _this.actions.moveTo(_this.pos.x + 300, _this.pos.y, 20)
-                        .moveTo(_this.pos.x + 300, _this.pos.y - 100, 20)
-                        .moveTo(_this.pos.x, _this.pos.y - 100, 20)
-                        .moveTo(_this.pos.x, _this.pos.y, 20).repeatForever();
-                }
             }
         });
         // set this to postdebugdraw on production
@@ -302,15 +302,106 @@ var ShoppingList = (function () {
     return ShoppingList;
 }());
 var WaypointGrid = (function () {
-    function WaypointGrid() {
+    function WaypointGrid(tileMapCells) {
+        this.nodes = [];
+        this._cellWidth = 0;
+        this._cellHeight = 0;
+        this._cellWidth = tileMapCells[0].width;
+        this._cellHeight = tileMapCells[0].height;
+        for (var _i = 0, tileMapCells_1 = tileMapCells; _i < tileMapCells_1.length; _i++) {
+            var cell = tileMapCells_1[_i];
+            this.nodes.push(new WaypointNode(cell.x, cell.y));
+        }
+        this._processNeighbors();
     }
+    WaypointGrid.prototype._processNeighbors = function () {
+        for (var _i = 0, _a = this.nodes; _i < _a.length; _i++) {
+            var node = _a[_i];
+            node.neighbors = this.findNeighbors(node);
+        }
+    };
+    WaypointGrid.prototype.findNode = function (x, y) {
+        return this.nodes.filter(function (n) {
+            return n.pos.x === x && n.pos.y === y;
+        })[0] || null;
+    };
+    WaypointGrid.prototype.findNeighbors = function (node) {
+        var nodes = [this.findNode(node.pos.x, node.pos.y - this._cellHeight),
+            this.findNode(node.pos.x - this._cellWidth, node.pos.y),
+            this.findNode(node.pos.x, node.pos.y + this._cellHeight),
+            this.findNode(node.pos.x + this._cellWidth, node.pos.y)].filter(function (n) { return !!n; });
+        return nodes;
+    };
+    // by default admissible heuristic of manhattan distance
+    WaypointGrid.prototype.heuristicFcn = function (start, end) {
+        return (Math.abs(start.pos.x - end.pos.x) + Math.abs(start.pos.y - end.pos.y));
+    };
+    WaypointGrid.prototype._buildPath = function (node) {
+        var path = [];
+        while (node._previousNode) {
+            path.unshift(node);
+            node = node._previousNode;
+        }
+        path.unshift(node);
+        return path;
+    };
     WaypointGrid.prototype.findPath = function (start, end) {
+        var _this = this;
+        // reset each node
+        this.nodes.forEach(function (n) { return n.reset(); });
+        var startingNode = start;
+        var endingNode = end;
+        startingNode._gscore = 0;
+        startingNode._hscore = startingNode._gscore + this.heuristicFcn(startingNode, endingNode);
+        var openNodes = [startingNode];
+        var closedNodes = [];
+        while (openNodes.length > 0) {
+            // Find the lowest heuristic node in the open nodes list
+            var current = openNodes.sort(function (a, b) {
+                return a._hscore - b._hscore;
+            })[0];
+            // Done
+            if (current == endingNode) {
+                return this._buildPath(current);
+            }
+            // Remove current node from open
+            ex.Util.removeItemToArray(current, openNodes);
+            closedNodes.push(current);
+            // Find neighbors we haven't explored
+            var neighbors = current.neighbors.filter(function (n) { return !ex.Util.contains(closedNodes, n); });
+            // Calculate neighbor heuristics
+            neighbors.forEach(function (n) {
+                if (!ex.Util.contains(openNodes, n)) {
+                    n._previousNode = current;
+                    n._gscore = n._weight + current._gscore;
+                    n._hscore = n._gscore + _this.heuristicFcn(n, endingNode);
+                    openNodes.push(n);
+                }
+            });
+        }
+        // no path found
+        return [];
     };
     return WaypointGrid;
 }());
 var WaypointNode = (function () {
-    function WaypointNode() {
+    function WaypointNode(x, y) {
+        this._hscore = 0;
+        this._gscore = 0;
+        this._weight = 1;
+        this._previousNode = null;
+        this.pos = new ex.Vector(x, y);
     }
+    WaypointNode.prototype.reset = function () {
+        this._hscore = 0;
+        this._gscore = 0;
+        this._previousNode = null;
+    };
+    WaypointNode.prototype.distance = function (node) {
+        var xdiff = node.pos.x - this.pos.x;
+        var ydiff = node.pos.y - this.pos.y;
+        return Math.sqrt(xdiff * xdiff + ydiff * ydiff);
+    };
     return WaypointNode;
 }());
 var SoundManager = (function () {
@@ -429,8 +520,6 @@ var game = new ex.Engine({
 // initialize sound
 loadPreferences();
 SoundManager.init();
-// turn off anti-aliasing
-game.setAntialiasing(false);
 // create an asset loader
 var loader = new ex.Loader();
 for (var r in Resources) {
@@ -463,6 +552,8 @@ game.input.keyboard.on('down', function (keyDown) {
 });
 // --------------------------------------- //
 game.start(loader).then(function () {
+    // turn off anti-aliasing
+    game.setAntialiasing(false);
     game.goToScene('main');
     SoundManager.startBackgroundMusic();
 });
