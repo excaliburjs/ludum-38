@@ -27,9 +27,11 @@ npm run build
 echo "Copying built files"
 cp -R $(ls | grep -v '^\(out\|lib\|\.vscode\|deploy\.sh\)$') out
 mkdir out/lib
+mkdir out/lib/excalibur-dist
+mkdir out/lib/excalibur-tiled/dist
 cd lib
-cp -R excalibur-dist/ ../out/lib
-cp -R excalibur-tiled/dist/ ../out/lib
+cp -R excalibur-dist/ ../out/lib/excalibur-dist
+cp -R excalibur-tiled/dist/ ../out/lib/excalibur-tiled/dist
 cd ..
 cd out
 
