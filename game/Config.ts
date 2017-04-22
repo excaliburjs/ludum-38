@@ -11,8 +11,9 @@ var Config = {
 
    enemyWidth: 50,
    enemyHeight: 50,
-   enemyRayCastAngle: 45,
+   enemyRayCastAngle: Math.PI / 4,
    enemyRayLength: 200,
+   enemyRayCount: 5,
 
    foodWidth: 100,
    foodHeight: 100

@@ -12,10 +12,6 @@ git clone -b gh-pages "https://${GH_TOKEN}@${GH_REF}" out > /dev/null 2>&1 || ex
 
 rm -r out/*
 
-echo "Compiling TSC"
-
-npm run build
-
 echo "Install excalibur-tiled deps"
 cd lib/excalibur-tiled
 
@@ -23,6 +19,10 @@ bower install
 
 cd ..
 cd ..
+
+echo "Compiling TSC"
+
+npm run build
 
 echo "Copying built files"
 cp -R $(ls | grep -v '^\(out\|lib\|\.vscode\|deploy\.sh\)$') out

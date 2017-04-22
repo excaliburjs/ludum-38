@@ -43,6 +43,11 @@ class Player extends ex.Actor {
       });
    }
 
+
+   public raycast(ray: ex.Ray) {
+
+   }
+
    
 
    
