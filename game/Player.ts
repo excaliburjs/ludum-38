@@ -43,6 +43,7 @@ class Player extends ex.Actor {
             } else if (e.other instanceof Food) {
                player.shoppingList.removeItem(e.other.ShoppingListId);
                e.other.kill();
+               scnMain.spawnEnemy();
             }
          }
       });

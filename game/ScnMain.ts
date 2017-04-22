@@ -1,9 +1,10 @@
 const LAYER_IMPASSABLE = 'Impassable'
 
 class ScnMain extends ex.Scene {
-   /**
-    * The main scene for the game
-    */
+
+   private _grid: WaypointGrid;
+   private _floorTiles;
+
    constructor(engine: ex.Engine) {
       super(engine);            
    }
@@ -28,7 +29,7 @@ class ScnMain extends ex.Scene {
 
 
       // get all tiles where placing food should be allowed 
-      var floorTiles = new Array<ex.Cell>();
+      this._floorTiles = new Array<ex.Cell>();
       Resources.map.data.layers.filter(l => l.name !== LAYER_IMPASSABLE).forEach( l => {
          if (typeof l.data == 'string') return;
          if (!l.data) return;
@@ -36,21 +37,21 @@ class ScnMain extends ex.Scene {
          for (let i = 0; i < l.data.length; i++) {
             if (l.data[i] !== 0) {
                if (! map.data[i].solid){
-                  floorTiles.push(map.data[i]);
+                  this._floorTiles.push(map.data[i]);
                }
             }
          }
       })
 
       // Build waypoint grid for pathfinding based on 
-      var grid = new WaypointGrid(floorTiles);
+      this._grid = new WaypointGrid(this._floorTiles);
       
       // player is added to scene global context
       var foodArr = new Array<Food>();
       var rand = new ex.Random();
 
       for(var i = 0; i < Config.foodSpawnCount; i++){
-         var randomCell = floorTiles[rand.integer(0, floorTiles.length - 1)];
+         var randomCell = this._floorTiles[rand.integer(0, this._floorTiles.length - 1)];
          var food = new Food(randomCell.getCenter().x, randomCell.getCenter().y, i);
          this.add(food);
          foodArr.push(food);
@@ -58,7 +59,13 @@ class ScnMain extends ex.Scene {
       var shoppingList = new ShoppingList(foodArr);
       player.shoppingList = shoppingList;
 
-      var enemy = new Enemy(grid);
+      this.spawnEnemy();
+   }
+
+   //TODO if we don't create a new WaypointGrid, the enemies spawn in at the current location of the existing enemies
+   // the WaypointGrid is being modified in an unexpected fashion
+   spawnEnemy() {
+      var enemy = new Enemy(new WaypointGrid(this._floorTiles));
       this.enemies.push(enemy);
       this.add(enemy);
    }
