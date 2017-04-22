@@ -10,7 +10,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var Resources = {
     playerSheet: new ex.Texture('img/player.png'),
-    foodSheet: new ex.Texture('img/food.png')
+    foodSheet: new ex.Texture('img/food.png'),
+    enemySheet: new ex.Texture('img/enemy.png')
 };
 var Config = {
     gameWidth: 800,
@@ -19,6 +20,10 @@ var Config = {
     playerWidth: 50,
     playerHeight: 50,
     playerVel: 100,
+    enemyWidth: 50,
+    enemyHeight: 50,
+    enemyRayCastAngle: 45,
+    enemyRayLength: 200,
     foodWidth: 100,
     foodHeight: 100
 };
@@ -83,8 +88,29 @@ var Food = (function (_super) {
     }
     return Food;
 }(ex.Actor));
+/// <reference path="../lib/excalibur-dist/excalibur.d.ts" />
+/// <reference path="Resources.ts" />
+/// <reference path="Config.ts" />
+var Enemy = (function (_super) {
+    __extends(Enemy, _super);
+    // todo need reference to the waypoint grid
+    function Enemy(x, y) {
+        var _this = _super.call(this, x, y, Config.enemyWidth, Config.enemyHeight) || this;
+        _this.rays = [];
+        _this.originalRays = [];
+        _this.addDrawing(Resources.enemySheet);
+        return _this;
+    }
+    Enemy.prototype.onInitialize = function (engine) {
+        this.on('postupdate', function (evt) {
+            // calculate the forward vector of enemy
+        });
+    };
+    return Enemy;
+}(ex.Actor));
 /// <reference path="./Player.ts" />
 /// <reference path="./Food.ts" />
+/// <reference path="./Enemy.ts" />
 var ScnMain = (function (_super) {
     __extends(ScnMain, _super);
     /**
@@ -96,6 +122,8 @@ var ScnMain = (function (_super) {
         _this.add(player);
         var food = new Food(100, 100);
         _this.add(food);
+        var enemy = new Enemy(300, 300);
+        _this.add(enemy);
         return _this;
     }
     ScnMain.prototype.onInitialize = function (engine) {
