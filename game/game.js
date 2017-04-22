@@ -91,8 +91,8 @@ var Config = {
     enemyRayCastAngle: Math.PI / 4,
     enemyRayLength: 200,
     enemyRayCount: 5,
-    foodWidth: 100,
-    foodHeight: 100,
+    foodWidth: 48,
+    foodHeight: 48,
     foodSpawnCount: 4,
     soundVolume: 1,
     backgroundVolume: 0.1
