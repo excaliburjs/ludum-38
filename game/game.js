@@ -90,8 +90,8 @@ var ScnMain = (function (_super) {
     /**
      * The main scene for the game
      */
-    function ScnMain() {
-        var _this = _super.call(this) || this;
+    function ScnMain(engine) {
+        var _this = _super.call(this, engine) || this;
         var player = new Player(Config.playerStart.x, Config.playerStart.y);
         _this.add(player);
         var food = new Food(100, 100);
