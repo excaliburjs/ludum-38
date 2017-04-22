@@ -22,36 +22,38 @@ var Player = (function (_super) {
         var _this = this;
         this.collisionType = ex.CollisionType.Active;
         game.input.keyboard.on('hold', function (keyHeld) {
-            switch (keyHeld.key) {
-                case ex.Input.Keys.Up:
-                case ex.Input.Keys.W:
-                    _this.vel.setTo(_this.vel.x, -Config.playerVel);
-                    break;
-                case ex.Input.Keys.Down:
-                case ex.Input.Keys.S:
-                    _this.vel.setTo(_this.vel.x, Config.playerVel);
-                    break;
-                case ex.Input.Keys.Left:
-                case ex.Input.Keys.A:
-                    _this.vel.setTo(-Config.playerVel, _this.vel.y);
-                    break;
-                case ex.Input.Keys.Right:
-                case ex.Input.Keys.D:
-                    _this.vel.setTo(Config.playerVel, _this.vel.y);
-                    break;
-            }
-            _this.on('collision', function (e) {
-                if (e.other instanceof Enemy) {
-                    if (!State.gameOver) {
-                        ex.Logger.getInstance().info('game over');
-                        State.gameOver = true;
-                    }
+            if (!State.gameOver) {
+                switch (keyHeld.key) {
+                    case ex.Input.Keys.Up:
+                    case ex.Input.Keys.W:
+                        _this.vel.setTo(_this.vel.x, -Config.playerVel);
+                        break;
+                    case ex.Input.Keys.Down:
+                    case ex.Input.Keys.S:
+                        _this.vel.setTo(_this.vel.x, Config.playerVel);
+                        break;
+                    case ex.Input.Keys.Left:
+                    case ex.Input.Keys.A:
+                        _this.vel.setTo(-Config.playerVel, _this.vel.y);
+                        break;
+                    case ex.Input.Keys.Right:
+                    case ex.Input.Keys.D:
+                        _this.vel.setTo(Config.playerVel, _this.vel.y);
+                        break;
                 }
-                if (e.other instanceof Food) {
+            }
+        });
+        this.on('collision', function (e) {
+            if (!State.gameOver) {
+                if (e.other instanceof Enemy) {
+                    ex.Logger.getInstance().info('game over');
+                    State.gameOver = true;
+                }
+                else if (e.other instanceof Food) {
                     player.shoppingList.removeItem(e.other.ShoppingListId);
                     e.other.kill();
                 }
-            });
+            }
         });
         this.on('postupdate', function (evt) {
             _this.vel.setTo(0, 0);
