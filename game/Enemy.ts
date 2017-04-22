@@ -19,7 +19,7 @@ class Enemy extends ex.Actor {
       this.pos = start.pos;
 
       var end = ran.pickOne<WaypointNode>(grid.nodes);
-      debugger;
+      
       var path = grid.findPath(start, end);
       
       for(var node of path){
