@@ -9,6 +9,11 @@ var Config = {
 
    playerVel: 100,
 
+   enemyWidth: 50,
+   enemyHeight: 50,
+   enemyRayCastAngle: 45,
+   enemyRayLength: 200,
+
    foodWidth: 100,
    foodHeight: 100
 

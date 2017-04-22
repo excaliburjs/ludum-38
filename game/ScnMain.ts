@@ -1,4 +1,7 @@
 
+/// <reference path="./Player.ts" />
+/// <reference path="./Food.ts" />
+/// <reference path="./Enemy.ts" />
 class ScnMain extends ex.Scene {
    /**
     * The main scene for the game
@@ -14,6 +17,8 @@ class ScnMain extends ex.Scene {
       foodArr.push(food);
       var shoppingList = new ShoppingList(foodArr);
 
+      var enemy = new Enemy(300, 300);
+      this.add(enemy);
    }
 
    public onInitialize(engine: ex.Engine) {
