@@ -13,9 +13,8 @@ var Player = (function (_super) {
     /**
      * Build the player for the game
      */
-    function Player(x, y, shoppingList) {
+    function Player(x, y) {
         var _this = _super.call(this, x, y, Config.playerWidth, Config.playerHeight) || this;
-        _this.shoppingList = shoppingList;
         _this.addDrawing(Resources.playerSheet);
         return _this;
     }
@@ -78,7 +77,8 @@ var Config = {
     enemyRayLength: 200,
     enemyRayCount: 5,
     foodWidth: 100,
-    foodHeight: 100
+    foodHeight: 100,
+    foodSpawnCount: 4
 };
 var State = {
     gameOver: false
@@ -102,23 +102,26 @@ var ScnMain = (function (_super) {
     ScnMain.prototype.onInitialize = function (engine) {
         var map = Resources.map.getTileMap();
         this.add(map);
+        // player is added to scene global context
         Resources.map.data.layers.filter(function (l) { return l.name === LAYER_IMPASSABLE; }).forEach(function (l) {
             if (typeof l.data == 'string')
                 return;
-            for (var i = 0; i < l.data.length; i++) {
-                if (l.data[i] !== 0) {
-                    map.data[i].solid = true;
+            for (var i_1 = 0; i_1 < l.data.length; i_1++) {
+                if (l.data[i_1] !== 0) {
+                    map.data[i_1].solid = true;
                 }
             }
         });
         // player is added to scene global context
-        var food = new Food(100, 100, "test");
-        this.add(food);
         var foodArr = new Array();
-        foodArr.push(food);
+        var rand = new ex.Random();
+        for (var i = 0; i < Config.foodSpawnCount; i++) {
+            var food = new Food(rand.integer(0, game.canvasWidth), rand.integer(0, game.canvasHeight), i);
+            this.add(food);
+            foodArr.push(food);
+        }
         var shoppingList = new ShoppingList(foodArr);
-        var player = new Player(Config.playerStart.x, Config.playerStart.y, shoppingList);
-        this.add(player);
+        player.shoppingList = shoppingList;
         var enemy = new Enemy(300, 300);
         this.enemies.push(enemy);
         this.add(enemy);
