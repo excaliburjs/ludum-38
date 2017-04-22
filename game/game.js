@@ -205,6 +205,18 @@ var ShoppingList = (function () {
     };
     return ShoppingList;
 }());
+var WaypointGrid = (function () {
+    function WaypointGrid() {
+    }
+    WaypointGrid.prototype.findPath = function (start, end) {
+    };
+    return WaypointGrid;
+}());
+var WaypointNode = (function () {
+    function WaypointNode() {
+    }
+    return WaypointNode;
+}());
 /// <reference path="../lib/excalibur-tiled/dist/excalibur-tiled.d.ts" />
 /// <reference path="Player.ts" />
 /// <reference path="Resources.ts" />
@@ -215,6 +227,8 @@ var ShoppingList = (function () {
 /// <reference path="Food.ts" />
 /// <reference path="Enemy.ts" />
 /// <reference path="ShoppingList.ts" />
+/// <reference path="WaypointGrid.ts" />
+/// <reference path="WaypointNode.ts" />
 var game = new ex.Engine({
     width: Config.gameWidth,
     height: Config.gameHeight,
