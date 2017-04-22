@@ -43,7 +43,10 @@ var Player = (function (_super) {
             _this.collisionType = ex.CollisionType.Passive;
             _this.on('collision', function (e) {
                 if (e.other instanceof Enemy) {
-                    ex.Logger.getInstance().info('game over');
+                    if (!State.gameOver) {
+                        ex.Logger.getInstance().info('game over');
+                        State.gameOver = true;
+                    }
                 }
             });
         });
@@ -75,6 +78,9 @@ var Config = {
     enemyRayCount: 5,
     foodWidth: 100,
     foodHeight: 100
+};
+var State = {
+    gameOver: false
 };
 var Stats = (function () {
     function Stats() {
@@ -176,6 +182,7 @@ var ShoppingList = (function () {
 /// <reference path="Player.ts" />
 /// <reference path="Resources.ts" />
 /// <reference path="Config.ts" />
+/// <reference path="State.ts" />
 /// <reference path="Stats.ts" />
 /// <reference path="ScnMain.ts" />
 /// <reference path="Food.ts" />
