@@ -32,7 +32,10 @@ class Player extends ex.Actor {
          this.collisionType = ex.CollisionType.Passive;
          this.on('collision', (e?: ex.CollisionEvent) => {
             if (e.other instanceof Enemy) {
-               ex.Logger.getInstance().info('game over');
+               if (!State.gameOver) {
+                  ex.Logger.getInstance().info('game over');
+                  State.gameOver = true;
+               }
             }
          });
 

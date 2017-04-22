@@ -2,6 +2,7 @@
 /// <reference path="Player.ts" />
 /// <reference path="Resources.ts" />
 /// <reference path="Config.ts" />
+/// <reference path="State.ts" />
 /// <reference path="Stats.ts" />
 /// <reference path="ScnMain.ts" />
 /// <reference path="Food.ts" />
