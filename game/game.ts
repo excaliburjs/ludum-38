@@ -27,6 +27,10 @@ for (var r in Resources) {
 var scnMain = new ScnMain(game);
 game.addScene('main', scnMain);
 
+// create the player in global context
+var player = new Player(Config.playerStart.x, Config.playerStart.y);
+scnMain.add(player);
+
 //TODO Remove debug mode
 var gamePaused = false;
 game.input.keyboard.on('down', (keyDown?: ex.Input.KeyEvent) => {

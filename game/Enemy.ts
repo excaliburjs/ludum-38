@@ -4,6 +4,8 @@ class Enemy extends ex.Actor {
    public rays: ex.Ray[] = [];
    public forward: ex.Vector;
 
+   public attack = false;
+
    // todo need reference to the waypoint grid
 
    constructor(x, y) {
@@ -21,6 +23,7 @@ class Enemy extends ex.Actor {
    onInitialize(engine: ex.Engine) {
       this.collisionType = ex.CollisionType.Passive;
       this.on('postupdate', (evt: ex.PostUpdateEvent) => {
+         this.attack = false;
          // calculate the forward vector of enemy
          this.forward = this.vel.normalize();
 
@@ -29,21 +32,26 @@ class Enemy extends ex.Actor {
          var angleStart = forwardAngle - (Config.enemyRayCastAngle / 2);
 
          for (var i = 0; i < Config.enemyRayCount; i++) {
-            this.rays[i] = new ex.Ray(ex.Vector.Zero.clone(), ex.Vector.fromAngle(angleStart + angleStep * i).scale(Config.enemyRayLength));
+            this.rays[i] = new ex.Ray(this.pos.clone(), ex.Vector.fromAngle(angleStart + angleStep * i).scale(Config.enemyRayLength));
          }
+
+         this.attack = this.checkForPlayer();
       });
 
       // set this to postdebugdraw on production
       this.on('postdraw', (evt: ex.PostDrawEvent) => {
          for (var ray of this.rays) {
             // Re-calc distance for debug only
-            ex.Util.DrawUtil.vector(evt.ctx, ex.Color.Red, ex.Vector.Zero.clone(), ray.dir, Config.enemyRayLength);
-         }                  
+            ex.Util.DrawUtil.vector(evt.ctx, this.attack ? ex.Color.Red : ex.Color.Green, ex.Vector.Zero.clone(), ray.dir, Config.enemyRayLength);
+         }
       });
    }
 
-   public rayCastForPlayer(player: Player) {
-      
+   public checkForPlayer(): boolean {
+      var result = false;
+      for(var ray of this.rays){
+         result = result || player.raycast(ray, Config.enemyRayLength);
+      }
+      return result;
    }
-
 }

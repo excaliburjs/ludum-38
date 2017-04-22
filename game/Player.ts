@@ -47,11 +47,8 @@ class Player extends ex.Actor {
    }
 
 
-   public raycast(ray: ex.Ray) {
-
+   public raycast(ray: ex.Ray, clip: number): boolean {
+      return this.getBounds().rayCast(ray, clip);
    }
-
-   
-
-   
+  
 }
