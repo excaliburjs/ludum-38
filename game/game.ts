@@ -27,9 +27,6 @@ var game = new ex.Engine({
 loadPreferences();
 SoundManager.init();
 
-// turn off anti-aliasing
-game.setAntialiasing(false);
-
 // create an asset loader
 var loader = new ex.Loader();
 for (var r in Resources) {
@@ -65,7 +62,9 @@ game.input.keyboard.on('down', (keyDown?: ex.Input.KeyEvent) => {
 // --------------------------------------- //
 
 game.start(loader).then(() => {
-    game.goToScene('main');
+   // turn off anti-aliasing
+   game.setAntialiasing(false);
+   game.goToScene('main');
 
-    SoundManager.startBackgroundMusic();
+   SoundManager.startBackgroundMusic();
 });

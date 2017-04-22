@@ -39,6 +39,9 @@ class ScnMain extends ex.Scene {
             }
          }
       })
+
+      // Build waypoint grid for pathfinding based on 
+      var grid = new WaypointGrid(Resources.map);
       
       // player is added to scene global context
       var foodArr = new Array<Food>();
