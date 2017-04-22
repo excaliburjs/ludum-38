@@ -1,0 +1,5 @@
+var State = {
+
+   gameOver: false
+   
+}

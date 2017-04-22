@@ -8,6 +8,9 @@ class ScnMain extends ex.Scene {
       super(engine);            
    }
 
+
+   public enemies: Enemy[] = [];
+
    public onInitialize(engine: ex.Engine) {
       var map = Resources.map.getTileMap();
       this.add(map);
@@ -22,6 +25,7 @@ class ScnMain extends ex.Scene {
          }
       })
       
+      // player is added to scene global context
       var food = new Food(100, 100, "test");
       this.add(food);
       var foodArr = new Array<Food>();
@@ -32,6 +36,7 @@ class ScnMain extends ex.Scene {
       this.add(player)
 
       var enemy = new Enemy(300, 300);
+      this.enemies.push(enemy);
       this.add(enemy);
    }
 }

@@ -2,6 +2,7 @@
 /// <reference path="Player.ts" />
 /// <reference path="Resources.ts" />
 /// <reference path="Config.ts" />
+/// <reference path="State.ts" />
 /// <reference path="Stats.ts" />
 /// <reference path="ScnMain.ts" />
 /// <reference path="Food.ts" />
@@ -25,6 +26,10 @@ for (var r in Resources) {
 
 var scnMain = new ScnMain(game);
 game.addScene('main', scnMain);
+
+// create the player in global context
+var player = new Player(Config.playerStart.x, Config.playerStart.y);
+scnMain.add(player);
 
 //TODO Remove debug mode
 var gamePaused = false;

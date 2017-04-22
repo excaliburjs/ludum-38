@@ -33,7 +33,10 @@ class Player extends ex.Actor {
          
          this.on('collision', (e?: ex.CollisionEvent) => {
             if (e.other instanceof Enemy) {
-               ex.Logger.getInstance().info('game over');
+               if (!State.gameOver) {
+                  ex.Logger.getInstance().info('game over');
+                  State.gameOver = true;
+               }
             }
          });
 
@@ -45,11 +48,8 @@ class Player extends ex.Actor {
    }
 
 
-   public raycast(ray: ex.Ray) {
-
+   public raycast(ray: ex.Ray, clip: number): boolean {
+      return this.getBounds().rayCast(ray, clip);
    }
-
-   
-
-   
+  
 }
