@@ -1,7 +1,3 @@
-/// <reference path="../lib/excalibur-dist/excalibur.d.ts" />
-/// <reference path="Resources.ts" />
-/// <reference path="Config.ts" />
-
 class Player extends ex.Actor {
    /**
     * Build the player for the game

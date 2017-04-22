@@ -1,4 +1,4 @@
-/// <reference path="../lib/excalibur-dist/excalibur.d.ts" />
+/// <reference path="../lib/excalibur-tiled/dist/excalibur-tiled.d.ts" />
 /// <reference path="Resources.ts" />
 /// <reference path="Config.ts" />
 /// <reference path="Stats.ts" />
