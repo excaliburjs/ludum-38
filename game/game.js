@@ -9,13 +9,14 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 var Resources = {
+    map: new Extensions.Tiled.TiledResource('assets/map.json'),
     playerSheet: new ex.Texture('img/player.png'),
     foodSheet: new ex.Texture('img/food.png'),
     enemySheet: new ex.Texture('img/enemy.png')
 };
 var Config = {
-    gameWidth: 800,
-    gameHeight: 600,
+    gameWidth: 720,
+    gameHeight: 720,
     playerStart: new ex.Vector(0, 0),
     playerWidth: 50,
     playerHeight: 50,
@@ -32,9 +33,6 @@ var Stats = (function () {
     }
     return Stats;
 }());
-/// <reference path="../lib/excalibur-dist/excalibur.d.ts" />
-/// <reference path="Resources.ts" />
-/// <reference path="Config.ts" />
 var Player = (function (_super) {
     __extends(Player, _super);
     /**
@@ -73,9 +71,6 @@ var Player = (function (_super) {
     };
     return Player;
 }(ex.Actor));
-/// <reference path="../lib/excalibur-dist/excalibur.d.ts" />
-/// <reference path="Resources.ts" />
-/// <reference path="Config.ts" />
 var Food = (function (_super) {
     __extends(Food, _super);
     /**
@@ -117,20 +112,21 @@ var ScnMain = (function (_super) {
      * The main scene for the game
      */
     function ScnMain(engine) {
-        var _this = _super.call(this, engine) || this;
-        var player = new Player(Config.playerStart.x, Config.playerStart.y);
-        _this.add(player);
-        var food = new Food(100, 100);
-        _this.add(food);
-        var enemy = new Enemy(300, 300);
-        _this.add(enemy);
-        return _this;
+        return _super.call(this, engine) || this;
     }
     ScnMain.prototype.onInitialize = function (engine) {
+        var map = Resources.map.getTileMap();
+        this.add(map);
+        var player = new Player(Config.playerStart.x, Config.playerStart.y);
+        this.add(player);
+        var food = new Food(100, 100);
+        this.add(food);
+        var enemy = new Enemy(300, 300);
+        this.add(enemy);
     };
     return ScnMain;
 }(ex.Scene));
-/// <reference path="../lib/excalibur-dist/excalibur.d.ts" />
+/// <reference path="../lib/excalibur-tiled/dist/excalibur-tiled.d.ts" />
 /// <reference path="Resources.ts" />
 /// <reference path="Config.ts" />
 /// <reference path="Stats.ts" />

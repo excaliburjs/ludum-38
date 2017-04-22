@@ -4,9 +4,7 @@
         "target": "es5",
         "outFile": "game.js"
     },
-
-    "files": [
-      "game.ts",
-      "../lib/excalibur-dist/excalibur.d.ts"
-   ]
+    "include": [
+       "game.ts"
+    ]
 }
