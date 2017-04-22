@@ -39,6 +39,12 @@ var Player = (function (_super) {
                     _this.vel.setTo(Config.playerVel, _this.vel.y);
                     break;
             }
+            _this.collisionType = ex.CollisionType.Passive;
+            _this.on('collision', function (e) {
+                if (e.other instanceof Enemy) {
+                    ex.Logger.getInstance().info('game over');
+                }
+            });
         });
         this.on('postupdate', function (evt) {
             _this.vel.setTo(0, 0);
@@ -95,6 +101,7 @@ var Enemy = (function (_super) {
         return _this;
     }
     Enemy.prototype.onInitialize = function (engine) {
+        this.collisionType = ex.CollisionType.Passive;
         this.on('postupdate', function (evt) {
             // calculate the forward vector of enemy
         });
