@@ -15,15 +15,16 @@ class ScnMain extends ex.Scene {
       this.add(map);
       
       // player is added to scene global context
-
-      var food = new Food(100, 100, "test");
-      this.add(food);
       var foodArr = new Array<Food>();
-      foodArr.push(food);
-      var shoppingList = new ShoppingList(foodArr);
+      var rand = new ex.Random();
 
-      var player = new Player(Config.playerStart.x, Config.playerStart.y, shoppingList);
-      this.add(player)
+      for(var i = 0; i < Config.foodSpawnCount; i++){
+         var food = new Food(rand.integer(0, game.canvasWidth), rand.integer(0, game.canvasHeight), i);
+         this.add(food);
+         foodArr.push(food);
+      }
+      var shoppingList = new ShoppingList(foodArr);
+      player.shoppingList = shoppingList;
 
       var enemy = new Enemy(300, 300);
       this.enemies.push(enemy);

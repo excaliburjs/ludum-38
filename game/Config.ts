@@ -16,8 +16,8 @@ var Config = {
    enemyRayCount: 5,
 
    foodWidth: 100,
-   foodHeight: 100
-
+   foodHeight: 100,
+   foodSpawnCount: 4
 
    
 }

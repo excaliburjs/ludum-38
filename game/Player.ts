@@ -2,10 +2,12 @@ class Player extends ex.Actor {
    /**
     * Build the player for the game
     */
-   constructor(x, y, public shoppingList: ShoppingList) {
+   constructor(x, y) {
       super(x, y, Config.playerWidth, Config.playerHeight);
       this.addDrawing(Resources.playerSheet);
    }
+
+   public shoppingList : ShoppingList;
 
    public onInitialize(engine: ex.Engine) {
       game.input.keyboard.on('hold', (keyHeld?: ex.Input.KeyEvent) => {
