@@ -60,6 +60,7 @@ var Player = (function (_super) {
                 else if (e.other instanceof Food) {
                     player.shoppingList.removeItem(e.other.ShoppingListId);
                     e.other.kill();
+                    scnMain.spawnEnemy();
                 }
             }
         });
@@ -135,15 +136,13 @@ var Stats = (function () {
 var LAYER_IMPASSABLE = 'Impassable';
 var ScnMain = (function (_super) {
     __extends(ScnMain, _super);
-    /**
-     * The main scene for the game
-     */
     function ScnMain(engine) {
         var _this = _super.call(this, engine) || this;
         _this.enemies = [];
         return _this;
     }
     ScnMain.prototype.onInitialize = function (engine) {
+        var _this = this;
         var map = Resources.map.getTileMap();
         this.add(map);
         Resources.map.data.layers.filter(function (l) { return l.name === LAYER_IMPASSABLE; }).forEach(function (l) {
@@ -158,7 +157,7 @@ var ScnMain = (function (_super) {
             }
         });
         // get all tiles where placing food should be allowed 
-        var floorTiles = new Array();
+        this._floorTiles = new Array();
         Resources.map.data.layers.filter(function (l) { return l.name !== LAYER_IMPASSABLE; }).forEach(function (l) {
             if (typeof l.data == 'string')
                 return;
@@ -167,25 +166,30 @@ var ScnMain = (function (_super) {
             for (var i_2 = 0; i_2 < l.data.length; i_2++) {
                 if (l.data[i_2] !== 0) {
                     if (!map.data[i_2].solid) {
-                        floorTiles.push(map.data[i_2]);
+                        _this._floorTiles.push(map.data[i_2]);
                     }
                 }
             }
         });
         // Build waypoint grid for pathfinding based on 
-        var grid = new WaypointGrid(floorTiles);
+        this._grid = new WaypointGrid(this._floorTiles);
         // player is added to scene global context
         var foodArr = new Array();
         var rand = new ex.Random();
         for (var i = 0; i < Config.foodSpawnCount; i++) {
-            var randomCell = floorTiles[rand.integer(0, floorTiles.length - 1)];
+            var randomCell = this._floorTiles[rand.integer(0, this._floorTiles.length - 1)];
             var food = new Food(randomCell.getCenter().x, randomCell.getCenter().y, i);
             this.add(food);
             foodArr.push(food);
         }
         var shoppingList = new ShoppingList(foodArr);
         player.shoppingList = shoppingList;
-        var enemy = new Enemy(grid);
+        this.spawnEnemy();
+    };
+    //TODO if we don't create a new WaypointGrid, the enemies spawn in at the current location of the existing enemies
+    // the WaypointGrid is being modified in an unexpected fashion
+    ScnMain.prototype.spawnEnemy = function () {
+        var enemy = new Enemy(new WaypointGrid(this._floorTiles));
         this.enemies.push(enemy);
         this.add(enemy);
     };
