@@ -5,6 +5,7 @@ class Enemy extends ex.Actor {
    public forward: ex.Vector;
 
    public attack = false;
+   public isAttacking = false;
 
    // todo need reference to the waypoint grid
 
@@ -60,6 +61,7 @@ class Enemy extends ex.Actor {
             this.vel = newVel;
          } else {
             // return to patrol, this will be different later on
+            this.isAttacking = false;
             if( (<any>this.actions)._queues[0]._actions.length === 0 ) {
                this.actions.moveTo(this.pos.x + 300, this.pos.y, 20)
                      .moveTo(this.pos.x + 300, this.pos.y - 100, 20)
@@ -89,6 +91,10 @@ class Enemy extends ex.Actor {
       var result = false;
       for(var ray of this.rays){
          result = result || player.raycast(ray, Config.enemyRayLength);
+         if(!this.isAttacking && result){
+            this.isAttacking = true;
+            SoundManager.playPlayerSpotted();
+         }
       }
       return result;
    }

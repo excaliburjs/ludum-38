@@ -83,6 +83,11 @@ class SoundManager {
       SoundManager._updateMusicButton();
    }
 
+   static playPlayerSpotted(){
+      Resources.playerSpottedSound.setVolume(Config.soundVolume);
+      Resources.playerSpottedSound.play();
+   }
+
    private static _updateMusicButton() {
       $('#mute-music i').get(0).className = classNames('fa', { 
          'fa-music': !Preferences.muteBackgroundMusic, 
