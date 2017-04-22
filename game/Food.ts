@@ -10,4 +10,8 @@ class Food extends ex.Actor {
       this.addDrawing(Resources.foodSheet);
    }
 
+   public onInitialize(engine: ex.Engine){
+      this.collisionType = ex.CollisionType.Passive;
+   }
+
 }

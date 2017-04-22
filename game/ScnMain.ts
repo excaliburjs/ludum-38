@@ -15,7 +15,6 @@ class ScnMain extends ex.Scene {
       var map = Resources.map.getTileMap();
       this.add(map);
       
-      // player is added to scene global context
       Resources.map.data.layers.filter(l => l.name === LAYER_IMPASSABLE).forEach(l => {
          if (typeof l.data == 'string') return;
 
