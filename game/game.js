@@ -21,6 +21,7 @@ var Player = (function (_super) {
     }
     Player.prototype.onInitialize = function (engine) {
         var _this = this;
+        this.collisionType = ex.CollisionType.Active;
         game.input.keyboard.on('hold', function (keyHeld) {
             switch (keyHeld.key) {
                 case ex.Input.Keys.Up:
@@ -40,7 +41,6 @@ var Player = (function (_super) {
                     _this.vel.setTo(Config.playerVel, _this.vel.y);
                     break;
             }
-            _this.collisionType = ex.CollisionType.Passive;
             _this.on('collision', function (e) {
                 if (e.other instanceof Enemy) {
                     if (!State.gameOver) {
@@ -68,7 +68,7 @@ var Resources = {
 var Config = {
     gameWidth: 720,
     gameHeight: 720,
-    playerStart: new ex.Vector(0, 0),
+    playerStart: new ex.Vector(3 * 24, 27 * 24),
     playerWidth: 50,
     playerHeight: 50,
     playerVel: 100,
@@ -88,6 +88,7 @@ var Stats = (function () {
     }
     return Stats;
 }());
+var LAYER_IMPASSABLE = 'Impassable';
 var ScnMain = (function (_super) {
     __extends(ScnMain, _super);
     /**
@@ -101,6 +102,15 @@ var ScnMain = (function (_super) {
     ScnMain.prototype.onInitialize = function (engine) {
         var map = Resources.map.getTileMap();
         this.add(map);
+        Resources.map.data.layers.filter(function (l) { return l.name === LAYER_IMPASSABLE; }).forEach(function (l) {
+            if (typeof l.data == 'string')
+                return;
+            for (var i = 0; i < l.data.length; i++) {
+                if (l.data[i] !== 0) {
+                    map.data[i].solid = true;
+                }
+            }
+        });
         // player is added to scene global context
         var food = new Food(100, 100, "test");
         this.add(food);
