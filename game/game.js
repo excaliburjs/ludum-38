@@ -8,31 +8,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var Resources = {
-    map: new Extensions.Tiled.TiledResource('assets/map.json'),
-    playerSheet: new ex.Texture('img/player.png'),
-    foodSheet: new ex.Texture('img/food.png'),
-    enemySheet: new ex.Texture('img/enemy.png')
-};
-var Config = {
-    gameWidth: 720,
-    gameHeight: 720,
-    playerStart: new ex.Vector(0, 0),
-    playerWidth: 50,
-    playerHeight: 50,
-    playerVel: 100,
-    enemyWidth: 50,
-    enemyHeight: 50,
-    enemyRayCastAngle: 45,
-    enemyRayLength: 200,
-    foodWidth: 100,
-    foodHeight: 100
-};
-var Stats = (function () {
-    function Stats() {
-    }
-    return Stats;
-}());
 var Player = (function (_super) {
     __extends(Player, _super);
     /**
@@ -71,13 +46,36 @@ var Player = (function (_super) {
     };
     return Player;
 }(ex.Actor));
+var Resources = {
+    map: new Extensions.Tiled.TiledResource('assets/map.json'),
+    playerSheet: new ex.Texture('img/player.png'),
+    foodSheet: new ex.Texture('img/food.png'),
+    enemySheet: new ex.Texture('img/enemy.png')
+};
+var Config = {
+    gameWidth: 720,
+    gameHeight: 720,
+    playerStart: new ex.Vector(0, 0),
+    playerWidth: 50,
+    playerHeight: 50,
+    playerVel: 100,
+    enemyWidth: 50,
+    enemyHeight: 50,
+    enemyRayCastAngle: 45,
+    enemyRayLength: 200,
+    foodWidth: 100,
+    foodHeight: 100
+};
+var Stats = (function () {
+    function Stats() {
+    }
+    return Stats;
+}());
 var Food = (function (_super) {
     __extends(Food, _super);
-    /**
-     *
-     */
-    function Food(x, y) {
+    function Food(x, y, shoppingListId) {
         var _this = _super.call(this, x, y, Config.foodWidth, Config.foodHeight) || this;
+        _this.ShoppingListId = shoppingListId;
         _this.addDrawing(Resources.foodSheet);
         return _this;
     }
@@ -119,18 +117,16 @@ var ScnMain = (function (_super) {
         this.add(map);
         var player = new Player(Config.playerStart.x, Config.playerStart.y);
         this.add(player);
-        var food = new Food(100, 100);
+        var food = new Food(100, 100, "test");
         this.add(food);
+        var foodArr = new Array();
+        foodArr.push(food);
+        var shoppingList = new ShoppingList(foodArr);
         var enemy = new Enemy(300, 300);
         this.add(enemy);
     };
     return ScnMain;
 }(ex.Scene));
-/// <reference path="../lib/excalibur-tiled/dist/excalibur-tiled.d.ts" />
-/// <reference path="Resources.ts" />
-/// <reference path="Config.ts" />
-/// <reference path="Stats.ts" />
-/// <reference path="ScnMain.ts" />
 var game = new ex.Engine({
     width: Config.gameWidth,
     height: Config.gameHeight,
