@@ -149,6 +149,8 @@ var ScnMain = (function (_super) {
         Resources.map.data.layers.filter(function (l) { return l.name === LAYER_IMPASSABLE; }).forEach(function (l) {
             if (typeof l.data == 'string')
                 return;
+            if (!l.data)
+                return;
             for (var i_1 = 0; i_1 < l.data.length; i_1++) {
                 if (l.data[i_1] !== 0) {
                     map.data[i_1].solid = true;
@@ -159,6 +161,8 @@ var ScnMain = (function (_super) {
         var floorTiles = new Array();
         Resources.map.data.layers.filter(function (l) { return l.name !== LAYER_IMPASSABLE; }).forEach(function (l) {
             if (typeof l.data == 'string')
+                return;
+            if (!l.data)
                 return;
             for (var i_2 = 0; i_2 < l.data.length; i_2++) {
                 if (l.data[i_2] !== 0) {
