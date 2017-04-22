@@ -51,19 +51,19 @@ var Player = (function (_super) {
             switch (keyHeld.key) {
                 case ex.Input.Keys.Up:
                 case ex.Input.Keys.W:
-                    _this.vel.setTo(0, -Config.playerVel);
+                    _this.vel.setTo(_this.vel.x, -Config.playerVel);
                     break;
                 case ex.Input.Keys.Down:
                 case ex.Input.Keys.S:
-                    _this.vel.setTo(0, Config.playerVel);
+                    _this.vel.setTo(_this.vel.x, Config.playerVel);
                     break;
                 case ex.Input.Keys.Left:
                 case ex.Input.Keys.A:
-                    _this.vel.setTo(-Config.playerVel, 0);
+                    _this.vel.setTo(-Config.playerVel, _this.vel.y);
                     break;
                 case ex.Input.Keys.Right:
                 case ex.Input.Keys.D:
-                    _this.vel.setTo(Config.playerVel, 0);
+                    _this.vel.setTo(Config.playerVel, _this.vel.y);
                     break;
             }
         });
