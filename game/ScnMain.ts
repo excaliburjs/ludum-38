@@ -1,9 +1,4 @@
 
-/// <reference path="./Player.ts" />
-/// <reference path="./Food.ts" />
-/// <reference path="./Enemy.ts" />
-
-
 class ScnMain extends ex.Scene {
    /**
     * The main scene for the game

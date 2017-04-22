@@ -1,6 +1,4 @@
 
- 
-
 class ShoppingList {
     constructor(public items: Array<Food>) {
 
