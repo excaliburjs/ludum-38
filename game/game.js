@@ -81,6 +81,29 @@ var Stats = (function () {
     }
     return Stats;
 }());
+var ScnMain = (function (_super) {
+    __extends(ScnMain, _super);
+    /**
+     * The main scene for the game
+     */
+    function ScnMain(engine) {
+        return _super.call(this, engine) || this;
+    }
+    ScnMain.prototype.onInitialize = function (engine) {
+        var map = Resources.map.getTileMap();
+        this.add(map);
+        var food = new Food(100, 100, "test");
+        this.add(food);
+        var foodArr = new Array();
+        foodArr.push(food);
+        var shoppingList = new ShoppingList(foodArr);
+        var player = new Player(Config.playerStart.x, Config.playerStart.y, shoppingList);
+        this.add(player);
+        var enemy = new Enemy(300, 300);
+        this.add(enemy);
+    };
+    return ScnMain;
+}(ex.Scene));
 var Food = (function (_super) {
     __extends(Food, _super);
     function Food(x, y, shoppingListId) {
@@ -91,9 +114,6 @@ var Food = (function (_super) {
     }
     return Food;
 }(ex.Actor));
-/// <reference path="../lib/excalibur-dist/excalibur.d.ts" />
-/// <reference path="Resources.ts" />
-/// <reference path="Config.ts" />
 var Enemy = (function (_super) {
     __extends(Enemy, _super);
     // todo need reference to the waypoint grid
@@ -134,32 +154,6 @@ var Enemy = (function (_super) {
     };
     return Enemy;
 }(ex.Actor));
-/// <reference path="./Player.ts" />
-/// <reference path="./Food.ts" />
-/// <reference path="./Enemy.ts" />
-var ScnMain = (function (_super) {
-    __extends(ScnMain, _super);
-    /**
-     * The main scene for the game
-     */
-    function ScnMain(engine) {
-        return _super.call(this, engine) || this;
-    }
-    ScnMain.prototype.onInitialize = function (engine) {
-        var map = Resources.map.getTileMap();
-        this.add(map);
-        var food = new Food(100, 100, "test");
-        this.add(food);
-        var foodArr = new Array();
-        foodArr.push(food);
-        var shoppingList = new ShoppingList(foodArr);
-        var player = new Player(Config.playerStart.x, Config.playerStart.y, shoppingList);
-        this.add(player);
-        var enemy = new Enemy(300, 300);
-        this.add(enemy);
-    };
-    return ScnMain;
-}(ex.Scene));
 var ShoppingList = (function () {
     function ShoppingList(items) {
         this.items = items;
@@ -185,6 +179,7 @@ var ShoppingList = (function () {
 /// <reference path="Stats.ts" />
 /// <reference path="ScnMain.ts" />
 /// <reference path="Food.ts" />
+/// <reference path="Enemy.ts" />
 /// <reference path="ShoppingList.ts" />
 var game = new ex.Engine({
     width: Config.gameWidth,
