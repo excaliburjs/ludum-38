@@ -9,15 +9,23 @@ class Enemy extends ex.Actor {
 
    // todo need reference to the waypoint grid
 
-   constructor(x, y) {
-      super(x, y, Config.enemyWidth, Config.enemyHeight);
+   constructor(grid: WaypointGrid) {      
+      super(0, 0, Config.enemyWidth, Config.enemyHeight);
       this.addDrawing(Resources.enemySheet);
 
+      var ran = new ex.Random(12);
+      var start = ran.pickOne<WaypointNode>(grid.nodes);
+
+      this.pos = start.pos;
+
+      var end = ran.pickOne<WaypointNode>(grid.nodes);
       
-      this.actions.moveTo(x + 300, y, 20)
-                  .moveTo(x + 300, y - 100, 20)
-                  .moveTo(x, y - 100, 20)
-                  .moveTo(x, y, 20).repeatForever();
+      var path = grid.findPath(start, end);
+      
+      for(var node of path){
+         this.actions.moveTo(node.pos.x, node.pos.y, Config.enemySpeed);
+      }
+
       this.rays = new Array<ex.Ray>(Config.enemyRayCount);
       
    }
@@ -60,14 +68,7 @@ class Enemy extends ex.Actor {
             var newVel = new ex.Vector(max === vectorToPlayer.x ? vectorToPlayer.x : 0, max === vectorToPlayer.y ? vectorToPlayer.y : 0);
             this.vel = newVel;
          } else {
-            // return to patrol, this will be different later on
-            this.isAttacking = false;
-            if( (<any>this.actions)._queues[0]._actions.length === 0 ) {
-               this.actions.moveTo(this.pos.x + 300, this.pos.y, 20)
-                     .moveTo(this.pos.x + 300, this.pos.y - 100, 20)
-                     .moveTo(this.pos.x, this.pos.y - 100, 20)
-                     .moveTo(this.pos.x, this.pos.y, 20).repeatForever();
-            }
+            
          }
       });
 
