@@ -1,3 +1,4 @@
+const LAYER_IMPASSABLE = 'Impassable'
 
 class ScnMain extends ex.Scene {
    /**
@@ -13,6 +14,17 @@ class ScnMain extends ex.Scene {
    public onInitialize(engine: ex.Engine) {
       var map = Resources.map.getTileMap();
       this.add(map);
+      
+      // player is added to scene global context
+      Resources.map.data.layers.filter(l => l.name === LAYER_IMPASSABLE).forEach(l => {
+         if (typeof l.data == 'string') return;
+
+         for (let i = 0; i < l.data.length; i++) {
+            if (l.data[i] !== 0) {
+               map.data[i].solid = true;
+            }
+         }
+      })
       
       // player is added to scene global context
       var foodArr = new Array<Food>();

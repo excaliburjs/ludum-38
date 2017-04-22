@@ -10,6 +10,8 @@ class Player extends ex.Actor {
    public shoppingList : ShoppingList;
 
    public onInitialize(engine: ex.Engine) {
+      this.collisionType = ex.CollisionType.Active;
+      
       game.input.keyboard.on('hold', (keyHeld?: ex.Input.KeyEvent) => {
 
          switch(keyHeld.key) {
@@ -30,8 +32,7 @@ class Player extends ex.Actor {
                this.vel.setTo(Config.playerVel, this.vel.y);
                break;
          }
-
-         this.collisionType = ex.CollisionType.Passive;
+         
          this.on('collision', (e?: ex.CollisionEvent) => {
             if (e.other instanceof Enemy) {
                if (!State.gameOver) {
