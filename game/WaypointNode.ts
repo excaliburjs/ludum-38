@@ -7,7 +7,7 @@ class WaypointNode {
    public _weight: number = 1;
    public _previousNode: WaypointNode = null;
 
-   constructor(x, y) {
+   constructor(x: number, y: number) {
       this.pos = new ex.Vector(x, y);
    }
 

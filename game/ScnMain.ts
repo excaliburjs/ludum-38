@@ -25,9 +25,9 @@ class ScnMain extends ex.Scene {
          }
       });
 
-      var floorTiles = new Array<ex.Cell>();
 
-      //get all tiles where placing food should be allowed 
+      // get all tiles where placing food should be allowed 
+      var floorTiles = new Array<ex.Cell>();
       Resources.map.data.layers.filter(l => l.name !== LAYER_IMPASSABLE).forEach( l => {
          if (typeof l.data == 'string') return;
 
@@ -41,7 +41,7 @@ class ScnMain extends ex.Scene {
       })
 
       // Build waypoint grid for pathfinding based on 
-      var grid = new WaypointGrid(Resources.map);
+      var grid = new WaypointGrid(floorTiles);
       
       // player is added to scene global context
       var foodArr = new Array<Food>();
@@ -56,7 +56,7 @@ class ScnMain extends ex.Scene {
       var shoppingList = new ShoppingList(foodArr);
       player.shoppingList = shoppingList;
 
-      var enemy = new Enemy(300, 300);
+      var enemy = new Enemy(grid);
       this.enemies.push(enemy);
       this.add(enemy);
    }

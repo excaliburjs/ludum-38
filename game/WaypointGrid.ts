@@ -1,31 +1,48 @@
 class WaypointGrid {
-   public nodes: WaypointNode[];
+   public nodes: WaypointNode[] = [];
+   private _cellWidth: number = 0;
+   private _cellHeight: number = 0;
 
-   constructor(tileMap: Extensions.Tiled.TiledResource) {
 
-      tileMap.data.layers.filter(l => l.name === LAYER_IMPASSABLE).forEach(l => {
-         if (typeof l.data == 'string') return;
+   constructor(tileMapCells: ex.Cell[]) {
+      this._cellWidth = tileMapCells[0].width;
+      this._cellHeight = tileMapCells[0].height;
+      for(var cell of tileMapCells){
+         this.nodes.push(new WaypointNode(cell.x, cell.y));  
+      }
 
-         for (let i = 0; i < l.data.length; i++) {
-            if (l.data[i] !== 0) {
-               tileMap.data[i].solid = true;
-            }
-         }
-      })
+      this._processNeighbors();
    }
 
-   public findClosestNode(x, y): WaypointNode {
-      return null;
+   private _processNeighbors(){
+      for(var node of this.nodes){
+         node.neighbors = this.findNeighbors(node);
+      }
    }
 
+   public findNode(x, y): WaypointNode {
+      return this.nodes.filter(n => {
+         return n.pos.x === x && n.pos.y === y;
+      })[0] || null;
+   }
 
+   public findNeighbors(node: WaypointNode): WaypointNode[] {
+      var nodes = [this.findNode(node.pos.x, node.pos.y - this._cellHeight),
+                   this.findNode(node.pos.x - this._cellWidth, node.pos.y),
+                   this.findNode(node.pos.x, node.pos.y + this._cellHeight),
+                   this.findNode(node.pos.x + this._cellWidth, node.pos.y)].filter(n => {return !!n});
+
+      return nodes;      
+   }
+
+   
    // by default admissible heuristic of manhattan distance
    public heuristicFcn(start: WaypointNode, end: WaypointNode): number {
       return (Math.abs(start.pos.x - end.pos.x) + Math.abs(start.pos.y - end.pos.y));
    }
 
    private _buildPath(node: WaypointNode): WaypointNode[] {
-      var path: WaypointNode[];
+      var path: WaypointNode[] = [];
       while(node._previousNode) {
          path.unshift(node);
          node = node._previousNode;
@@ -49,10 +66,7 @@ class WaypointGrid {
       var openNodes: WaypointNode[] = [startingNode];
       var closedNodes: WaypointNode[] = []
 
-      var path = {}
-      var bestPathScore = 0;
-
-      while(openNodes.length > 0){
+     while(openNodes.length > 0){
          // Find the lowest heuristic node in the open nodes list
          var current = openNodes.sort((a,b) => {
            return a._hscore - b._hscore;
@@ -67,8 +81,10 @@ class WaypointGrid {
          ex.Util.removeItemToArray(current, openNodes);
          closedNodes.push(current);
 
-         var neighbors = current.neighbors;
+         // Find neighbors we haven't explored
+         var neighbors = current.neighbors.filter(n => { return !ex.Util.contains(closedNodes, n) });
 
+         // Calculate neighbor heuristics
          neighbors.forEach(n => {
             if(!ex.Util.contains(openNodes, n)){
                n._previousNode = current;
