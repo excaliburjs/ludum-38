@@ -117,11 +117,25 @@ var ScnMain = (function (_super) {
                 }
             }
         });
+        var floorTiles = new Array();
+        //get all tiles where placing food should be allowed 
+        Resources.map.data.layers.filter(function (l) { return l.name !== LAYER_IMPASSABLE; }).forEach(function (l) {
+            if (typeof l.data == 'string')
+                return;
+            for (var i_2 = 0; i_2 < l.data.length; i_2++) {
+                if (l.data[i_2] !== 0) {
+                    if (!map.data[i_2].solid) {
+                        floorTiles.push(map.data[i_2]);
+                    }
+                }
+            }
+        });
         // player is added to scene global context
         var foodArr = new Array();
         var rand = new ex.Random();
         for (var i = 0; i < Config.foodSpawnCount; i++) {
-            var food = new Food(rand.integer(0, game.canvasWidth), rand.integer(0, game.canvasHeight), i);
+            var randomCell = floorTiles[rand.integer(0, floorTiles.length - 1)];
+            var food = new Food(randomCell.getCenter().x, randomCell.getCenter().y, i);
             this.add(food);
             foodArr.push(food);
         }
