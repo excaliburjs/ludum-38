@@ -17,6 +17,7 @@ class ScnMain extends ex.Scene {
       
       Resources.map.data.layers.filter(l => l.name === LAYER_IMPASSABLE).forEach(l => {
          if (typeof l.data == 'string') return;
+         if (!l.data) return;
 
          for (let i = 0; i < l.data.length; i++) {
             if (l.data[i] !== 0) {
@@ -30,7 +31,8 @@ class ScnMain extends ex.Scene {
       var floorTiles = new Array<ex.Cell>();
       Resources.map.data.layers.filter(l => l.name !== LAYER_IMPASSABLE).forEach( l => {
          if (typeof l.data == 'string') return;
-
+         if (!l.data) return;
+         
          for (let i = 0; i < l.data.length; i++) {
             if (l.data[i] !== 0) {
                if (! map.data[i].solid){
