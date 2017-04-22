@@ -224,6 +224,12 @@ var Enemy = (function (_super) {
             }
         });
     };
+    Enemy.prototype.update = function (engine, delta) {
+        _super.prototype.update.call(this, engine, delta);
+        if (State.gameOver) {
+            this.actionQueue.clearActions();
+        }
+    };
     Enemy.prototype.checkForPlayer = function () {
         var result = false;
         for (var _i = 0, _a = this.rays; _i < _a.length; _i++) {
