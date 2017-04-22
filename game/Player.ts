@@ -29,6 +29,13 @@ class Player extends ex.Actor {
                break;
          }
 
+         this.collisionType = ex.CollisionType.Passive;
+         this.on('collision', (e?: ex.CollisionEvent) => {
+            if (e.other instanceof Enemy) {
+               ex.Logger.getInstance().info('game over');
+            }
+         });
+
       });
 
       this.on('postupdate', (evt: ex.PostUpdateEvent) => {

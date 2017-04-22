@@ -13,10 +13,10 @@ class Enemy extends ex.Actor {
    constructor(x, y) {
       super(x, y, Config.enemyWidth, Config.enemyHeight);
       this.addDrawing(Resources.enemySheet);
-      
    }
 
    onInitialize(engine: ex.Engine) {
+      this.collisionType = ex.CollisionType.Passive;
       this.on('postupdate', (evt: ex.PostUpdateEvent) => {
          // calculate the forward vector of enemy
       });
