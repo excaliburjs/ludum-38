@@ -8,6 +8,9 @@
 /// <reference path="Food.ts" />
 /// <reference path="Enemy.ts" />
 /// <reference path="ShoppingList.ts" />
+/// <reference path="WaypointGrid.ts" />
+/// <reference path="WaypointNode.ts" />
+
 
 var game = new ex.Engine({
     width: Config.gameWidth,
