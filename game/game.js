@@ -13,8 +13,9 @@ var Player = (function (_super) {
     /**
      * Build the player for the game
      */
-    function Player(x, y) {
+    function Player(x, y, shoppingList) {
         var _this = _super.call(this, x, y, Config.playerWidth, Config.playerHeight) || this;
+        _this.shoppingList = shoppingList;
         _this.addDrawing(Resources.playerSheet);
         return _this;
     }
@@ -147,13 +148,13 @@ var ScnMain = (function (_super) {
     ScnMain.prototype.onInitialize = function (engine) {
         var map = Resources.map.getTileMap();
         this.add(map);
-        var player = new Player(Config.playerStart.x, Config.playerStart.y);
-        this.add(player);
         var food = new Food(100, 100, "test");
         this.add(food);
         var foodArr = new Array();
         foodArr.push(food);
         var shoppingList = new ShoppingList(foodArr);
+        var player = new Player(Config.playerStart.x, Config.playerStart.y, shoppingList);
+        this.add(player);
         var enemy = new Enemy(300, 300);
         this.add(enemy);
     };
