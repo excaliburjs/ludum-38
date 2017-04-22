@@ -7,24 +7,18 @@ class Enemy extends ex.Actor {
    public attack = false;
    public isAttacking = false;
 
+   private _random: ex.Random;
+
+   private _grid: WaypointGrid;
+
    // todo need reference to the waypoint grid
 
    constructor(grid: WaypointGrid) {      
       super(0, 0, Config.enemyWidth, Config.enemyHeight);
       this.addDrawing(Resources.enemySheet);
 
-      var ran = new ex.Random(12);
-      var start = ran.pickOne<WaypointNode>(grid.nodes);
-
-      this.pos = start.pos;
-
-      var end = ran.pickOne<WaypointNode>(grid.nodes);
-      
-      var path = grid.findPath(start, end);
-      
-      for(var node of path){
-         this.actions.moveTo(node.pos.x, node.pos.y, Config.enemySpeed);
-      }
+      this._random = new ex.Random(12);
+      this._grid = grid;
 
       this.rays = new Array<ex.Ray>(Config.enemyRayCount);
       
@@ -68,7 +62,11 @@ class Enemy extends ex.Actor {
             var newVel = new ex.Vector(max === vectorToPlayer.x ? vectorToPlayer.x : 0, max === vectorToPlayer.y ? vectorToPlayer.y : 0);
             this.vel = newVel;
          } else {
-            
+            if((<any>this.actions)._queues[0]._actions.length === 0){
+
+               var start = this._grid.findNode(this.pos.x, this.pos.y);
+               this._wander(start);
+            }
          }
       });
 
@@ -86,6 +84,21 @@ class Enemy extends ex.Actor {
       if (State.gameOver) {
          this.actionQueue.clearActions();
       }
+   }
+
+   private _wander(startNode?: WaypointNode) {
+      var start = startNode || this._random.pickOne<WaypointNode>(this._grid.nodes);
+
+      this.pos = start.pos;
+
+      var end = this._random.pickOne<WaypointNode>(this._grid.nodes);
+      
+      var path = this._grid.findPath(start, end);
+      
+      for(var node of path){
+         this.actions.moveTo(node.pos.x, node.pos.y, Config.enemySpeed);
+      }
+
    }
 
    public checkForPlayer(): boolean {
