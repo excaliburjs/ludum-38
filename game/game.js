@@ -8,6 +8,14 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 var Player = (function (_super) {
     __extends(Player, _super);
     /**
@@ -68,7 +76,8 @@ var Resources = {
     map: new Extensions.Tiled.TiledResource('assets/map.json'),
     playerSheet: new ex.Texture('img/player.png'),
     foodSheet: new ex.Texture('img/food.png'),
-    enemySheet: new ex.Texture('img/enemy.png')
+    enemySheet: new ex.Texture('img/enemy.png'),
+    music: new ex.Sound('assets/snd/bossa_nova.mp3')
 };
 var Config = {
     gameWidth: 720,
@@ -84,11 +93,38 @@ var Config = {
     enemyRayCount: 5,
     foodWidth: 100,
     foodHeight: 100,
-    foodSpawnCount: 4
+    foodSpawnCount: 4,
+    soundVolume: 1,
+    backgroundVolume: 0.1
 };
 var State = {
     gameOver: false
 };
+var _origState = __assign({}, State);
+function resetState() {
+    State = __assign({}, _origState);
+}
+function saveState() {
+    store.set('game', State);
+}
+function loadState() {
+    State = $.extend({}, State, store.get('game'));
+}
+var Preferences = {
+    muteBackgroundMusic: false,
+    muteAll: false
+};
+var _origPreferences = __assign({}, Preferences);
+function resetPreferences() {
+    Preferences = __assign({}, _origPreferences);
+}
+function savePreferences() {
+    store.set('pref', Preferences);
+}
+function loadPreferences() {
+    // overwrite but allow new properties
+    Preferences = $.extend({}, Preferences, store.get('pref'));
+}
 var Stats = (function () {
     function Stats() {
     }
@@ -270,11 +306,102 @@ var WaypointNode = (function () {
     }
     return WaypointNode;
 }());
+var SoundManager = (function () {
+    function SoundManager() {
+    }
+    SoundManager.init = function () {
+        SoundManager._updateMusicButton();
+        SoundManager._updateMuteAllButton();
+        $('#mute-music').on('click', function () {
+            if (Preferences.muteBackgroundMusic) {
+                SoundManager.unmuteBackgroundMusic();
+            }
+            else {
+                SoundManager.muteBackgroundMusic();
+            }
+            savePreferences();
+            return false;
+        });
+        $('#mute-all').on('click', function () {
+            if (Preferences.muteAll) {
+                SoundManager.unmuteAll();
+            }
+            else {
+                SoundManager.muteAll();
+            }
+            savePreferences();
+            return false;
+        });
+    };
+    SoundManager.muteAll = function () {
+        Preferences.muteAll = true;
+        Preferences.muteBackgroundMusic = true;
+        for (var r in Resources) {
+            var snd = Resources[r];
+            if (snd instanceof ex.Sound) {
+                snd.setVolume(0);
+            }
+        }
+        SoundManager.muteBackgroundMusic();
+        SoundManager._updateMuteAllButton();
+    };
+    SoundManager.unmuteAll = function () {
+        Preferences.muteAll = false;
+        Preferences.muteBackgroundMusic = false;
+        for (var r in Resources) {
+            var snd = Resources[r];
+            if (snd instanceof ex.Sound) {
+                snd.setVolume(Config.soundVolume);
+            }
+        }
+        SoundManager.unmuteBackgroundMusic();
+        SoundManager._updateMuteAllButton();
+    };
+    SoundManager.startBackgroundMusic = function () {
+        // start bg music
+        Resources.music.setVolume(Preferences.muteBackgroundMusic ? 0 : Config.backgroundVolume);
+        Resources.music.setLoop(true);
+        Resources.music.play();
+    };
+    SoundManager.stopBackgroundMusic = function () {
+        // stop bg music
+        Resources.music.setLoop(false);
+        Resources.music.stop();
+    };
+    SoundManager.muteBackgroundMusic = function () {
+        Preferences.muteBackgroundMusic = true;
+        // mute bg music
+        Resources.music.setVolume(0);
+        SoundManager._updateMusicButton();
+    };
+    SoundManager.unmuteBackgroundMusic = function () {
+        Preferences.muteBackgroundMusic = false;
+        // unmute bg music
+        Resources.music.setVolume(Config.backgroundVolume);
+        SoundManager._updateMusicButton();
+    };
+    SoundManager._updateMusicButton = function () {
+        $('#mute-music i').get(0).className = classNames('fa', {
+            'fa-music': !Preferences.muteBackgroundMusic,
+            'fa-play': Preferences.muteBackgroundMusic
+        });
+    };
+    SoundManager._updateMuteAllButton = function () {
+        $('#mute-all i').get(0).className = classNames('fa', {
+            'fa-volume-up': !Preferences.muteAll,
+            'fa-volume-off': Preferences.muteAll
+        });
+    };
+    return SoundManager;
+}());
 /// <reference path="../lib/excalibur-tiled/dist/excalibur-tiled.d.ts" />
+/// <reference path="../node_modules/@types/zepto/index.d.ts" />
+/// <reference path="../node_modules/@types/classnames/index.d.ts" />
 /// <reference path="Player.ts" />
 /// <reference path="Resources.ts" />
 /// <reference path="Config.ts" />
 /// <reference path="State.ts" />
+/// <reference path="Preferences.ts" />
 /// <reference path="Stats.ts" />
 /// <reference path="ScnMain.ts" />
 /// <reference path="Food.ts" />
@@ -282,11 +409,15 @@ var WaypointNode = (function () {
 /// <reference path="ShoppingList.ts" />
 /// <reference path="WaypointGrid.ts" />
 /// <reference path="WaypointNode.ts" />
+/// <reference path="SoundManager.ts" />
 var game = new ex.Engine({
     width: Config.gameWidth,
     height: Config.gameHeight,
     canvasElementId: "game",
 });
+// initialize sound
+loadPreferences();
+SoundManager.init();
 // turn off anti-aliasing
 game.setAntialiasing(false);
 // create an asset loader
@@ -322,4 +453,6 @@ game.input.keyboard.on('down', function (keyDown) {
 // --------------------------------------- //
 game.start(loader).then(function () {
     game.goToScene('main');
+    SoundManager.startBackgroundMusic();
 });
+//# sourceMappingURL=game.js.map
