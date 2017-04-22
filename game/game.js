@@ -112,6 +112,8 @@ var game = new ex.Engine({
     height: Config.gameHeight,
     canvasElementId: "game",
 });
+// turn off anti-aliasing
+game.setAntialiasing(false);
 // create an asset loader
 var loader = new ex.Loader();
 for (var r in Resources) {
