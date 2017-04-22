@@ -16,6 +16,14 @@ echo "Compiling TSC"
 
 npm run build
 
+echo "Install excalibur-tiled deps"
+cd lib/excalibur-tiled
+
+bower install
+
+cd ..
+cd ..
+
 echo "Copying built files"
 cp -R $(ls | grep -v '^\(out\|lib\|\.vscode\|deploy\.sh\)$') out
 mkdir out/lib
