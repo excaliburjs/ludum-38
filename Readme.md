@@ -10,10 +10,16 @@ Set up Excalibur submodule:
     git submodule update
     git fetch
 
-Build Excalibur (from lib/excalibur/) to generate lib/excalibur/build/dist
+Build excalibur and excalibur-tiled:
 
+    cd lib/excalibur
     npm install
     npm run build
+
+    cd ..
+
+    cd lib/excalibur-tiled
+    bower install
 
 ## Compiling the game
 
