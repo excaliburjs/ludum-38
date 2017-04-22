@@ -20,7 +20,8 @@ echo "Copying built files"
 cp -R $(ls | grep -v '^\(out\|lib\|\.vscode\|deploy\.sh\)$') out
 mkdir out/lib
 cd lib
-cp -R $(ls | grep -v '^\(excalibur\)$') ../out/lib
+cp -R excalibur-dist/ ../out/lib
+cp -R excalibur-tiled/dist/ ../out/lib
 cd ..
 cd out
 

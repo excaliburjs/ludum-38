@@ -3,3 +3,7 @@
 	url = https://github.com/excaliburjs/Excalibur.git
 	branch = ludum-dare-38
 	ignore = dirty 
+[submodule "lib/excalibur-tiled"]
+	path = lib/excalibur-tiled
+	url = https://github.com/excaliburjs/excalibur-tiled
+   ignore = dirty 
