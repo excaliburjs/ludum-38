@@ -152,6 +152,15 @@ var ShoppingList = (function () {
     };
     return ShoppingList;
 }());
+/// <reference path="../lib/excalibur-dist/excalibur.d.ts" />
+/// <reference path="../lib/excalibur-tiled/dist/excalibur-tiled.d.ts" />
+/// <reference path="Player.ts" />
+/// <reference path="Resources.ts" />
+/// <reference path="Config.ts" />
+/// <reference path="Stats.ts" />
+/// <reference path="ScnMain.ts" />
+/// <reference path="Food.ts" />
+/// <reference path="ShoppingList.ts" />
 var game = new ex.Engine({
     width: Config.gameWidth,
     height: Config.gameHeight,
