@@ -10,6 +10,8 @@ notifications:
 env:
   global:
   - GH_REF: github.com/excaliburjs/ludum-38.git
+before_script:
+- npm install bower -g
 script:
 - chmod ugo+x deploy.sh
 - '[ "${TRAVIS_PULL_REQUEST}" != "false" ] || ./deploy.sh'
