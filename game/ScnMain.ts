@@ -15,13 +15,27 @@ class ScnMain extends ex.Scene {
       var map = Resources.map.getTileMap();
       this.add(map);
       
-      // player is added to scene global context
       Resources.map.data.layers.filter(l => l.name === LAYER_IMPASSABLE).forEach(l => {
          if (typeof l.data == 'string') return;
 
          for (let i = 0; i < l.data.length; i++) {
             if (l.data[i] !== 0) {
                map.data[i].solid = true;
+            }
+         }
+      });
+
+      var floorTiles = new Array<ex.Cell>();
+
+      //get all tiles where placing food should be allowed 
+      Resources.map.data.layers.filter(l => l.name !== LAYER_IMPASSABLE).forEach( l => {
+         if (typeof l.data == 'string') return;
+
+         for (let i = 0; i < l.data.length; i++) {
+            if (l.data[i] !== 0) {
+               if (! map.data[i].solid){
+                  floorTiles.push(map.data[i]);
+               }
             }
          }
       })
@@ -31,7 +45,8 @@ class ScnMain extends ex.Scene {
       var rand = new ex.Random();
 
       for(var i = 0; i < Config.foodSpawnCount; i++){
-         var food = new Food(rand.integer(0, game.canvasWidth), rand.integer(0, game.canvasHeight), i);
+         var randomCell = floorTiles[rand.integer(0, floorTiles.length - 1)];
+         var food = new Food(randomCell.getCenter().x, randomCell.getCenter().y, i);
          this.add(food);
          foodArr.push(food);
       }
