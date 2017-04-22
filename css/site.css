@@ -6,6 +6,15 @@ body {
    font-size: 14px;
 }
 
+#sound {      
+   font-size: 2em; 
+   padding: 1em 0;  
+}
+
+#sound a {
+   margin-right: 1em;
+}
+
 a {
    color: orangered;
 }

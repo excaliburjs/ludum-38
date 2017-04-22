@@ -1,8 +1,12 @@
 /// <reference path="../lib/excalibur-tiled/dist/excalibur-tiled.d.ts" />
+/// <reference path="../node_modules/@types/zepto/index.d.ts" />
+/// <reference path="../node_modules/@types/classnames/index.d.ts" />
+
 /// <reference path="Player.ts" />
 /// <reference path="Resources.ts" />
 /// <reference path="Config.ts" />
 /// <reference path="State.ts" />
+/// <reference path="Preferences.ts" />
 /// <reference path="Stats.ts" />
 /// <reference path="ScnMain.ts" />
 /// <reference path="Food.ts" />
@@ -10,6 +14,7 @@
 /// <reference path="ShoppingList.ts" />
 /// <reference path="WaypointGrid.ts" />
 /// <reference path="WaypointNode.ts" />
+/// <reference path="SoundManager.ts" />
 
 
 var game = new ex.Engine({
@@ -17,6 +22,10 @@ var game = new ex.Engine({
     height: Config.gameHeight,
     canvasElementId: "game",
 });
+
+// initialize sound
+loadPreferences();
+SoundManager.init();
 
 // turn off anti-aliasing
 game.setAntialiasing(false);
@@ -57,4 +66,6 @@ game.input.keyboard.on('down', (keyDown?: ex.Input.KeyEvent) => {
 
 game.start(loader).then(() => {
     game.goToScene('main');
+
+    SoundManager.startBackgroundMusic();
 });

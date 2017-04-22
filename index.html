@@ -4,11 +4,23 @@
     <meta charset="UTF-8">
     <title>GAME TITLE - Ludum Dare 38</title>
     <link rel="stylesheet" href="css/site.css?COMMIT_NUMBER">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     <canvas id="game"></canvas>
+
+    <div id="sound">
+      <a id="mute-music" href="#mute-music"><i class="fa fa-music"></i></a>
+      
+      <a id="mute-all" href="#mute-all"><i class="fa fa-volume-up"></i></a>
+    </div>
+
     <script src="lib/excalibur-dist/excalibur.min.js?COMMIT_NUMBER" type="text/javascript"></script>
     <script src="lib/excalibur-tiled/dist/excalibur-tiled.js?COMMIT_NUMBER" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/classnames/2.2.5/index.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/store.js/1.3.20/store.min.js"></script>
+    
     <script src="game/game.js?COMMIT_NUMBER" type="text/javascript"></script>
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

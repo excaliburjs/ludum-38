@@ -17,7 +17,8 @@ var Config = {
 
    foodWidth: 100,
    foodHeight: 100,
-   foodSpawnCount: 4
+   foodSpawnCount: 4,
 
-   
+   soundVolume: 1,
+   backgroundVolume: 0.1
 }
