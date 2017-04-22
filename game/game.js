@@ -77,7 +77,8 @@ var Resources = {
     playerSheet: new ex.Texture('img/player.png'),
     foodSheet: new ex.Texture('img/food.png'),
     enemySheet: new ex.Texture('img/enemy.png'),
-    music: new ex.Sound('assets/snd/bossa_nova.mp3')
+    music: new ex.Sound('assets/snd/bossa_nova.mp3'),
+    playerSpottedSound: new ex.Sound('assets/snd/playerSpotted.mp3', 'assets/snd/playerSpotted.wav')
 };
 var Config = {
     gameWidth: 720,
@@ -203,6 +204,7 @@ var Enemy = (function (_super) {
         var _this = _super.call(this, x, y, Config.enemyWidth, Config.enemyHeight) || this;
         _this.rays = [];
         _this.attack = false;
+        _this.isAttacking = false;
         _this.addDrawing(Resources.enemySheet);
         _this.actions.moveTo(x + 300, y, 20)
             .moveTo(x + 300, y - 100, 20)
@@ -243,6 +245,7 @@ var Enemy = (function (_super) {
             }
             else {
                 // return to patrol, this will be different later on
+                _this.isAttacking = false;
                 if (_this.actions._queues[0]._actions.length === 0) {
                     _this.actions.moveTo(_this.pos.x + 300, _this.pos.y, 20)
                         .moveTo(_this.pos.x + 300, _this.pos.y - 100, 20)
@@ -271,6 +274,10 @@ var Enemy = (function (_super) {
         for (var _i = 0, _a = this.rays; _i < _a.length; _i++) {
             var ray = _a[_i];
             result = result || player.raycast(ray, Config.enemyRayLength);
+            if (!this.isAttacking && result) {
+                this.isAttacking = true;
+                SoundManager.playPlayerSpotted();
+            }
         }
         return result;
     };
@@ -379,6 +386,10 @@ var SoundManager = (function () {
         // unmute bg music
         Resources.music.setVolume(Config.backgroundVolume);
         SoundManager._updateMusicButton();
+    };
+    SoundManager.playPlayerSpotted = function () {
+        Resources.playerSpottedSound.setVolume(Config.soundVolume);
+        Resources.playerSpottedSound.play();
     };
     SoundManager._updateMusicButton = function () {
         $('#mute-music i').get(0).className = classNames('fa', {
