@@ -213,15 +213,8 @@ var Enemy = (function (_super) {
         _this.attack = false;
         _this.isAttacking = false;
         _this.addDrawing(Resources.enemySheet);
-        var ran = new ex.Random(12);
-        var start = ran.pickOne(grid.nodes);
-        _this.pos = start.pos;
-        var end = ran.pickOne(grid.nodes);
-        var path = grid.findPath(start, end);
-        for (var _i = 0, path_1 = path; _i < path_1.length; _i++) {
-            var node = path_1[_i];
-            _this.actions.moveTo(node.pos.x, node.pos.y, Config.enemySpeed);
-        }
+        _this._random = new ex.Random(12);
+        _this._grid = grid;
         _this.rays = new Array(Config.enemyRayCount);
         return _this;
     }
@@ -256,6 +249,10 @@ var Enemy = (function (_super) {
                 _this.vel = newVel;
             }
             else {
+                if (_this.actions._queues[0]._actions.length === 0) {
+                    var start = _this._grid.findNode(_this.pos.x, _this.pos.y);
+                    _this._wander(start);
+                }
             }
         });
         // set this to postdebugdraw on production
@@ -271,6 +268,16 @@ var Enemy = (function (_super) {
         _super.prototype.update.call(this, engine, delta);
         if (State.gameOver) {
             this.actionQueue.clearActions();
+        }
+    };
+    Enemy.prototype._wander = function (startNode) {
+        var start = startNode || this._random.pickOne(this._grid.nodes);
+        this.pos = start.pos;
+        var end = this._random.pickOne(this._grid.nodes);
+        var path = this._grid.findPath(start, end);
+        for (var _i = 0, path_1 = path; _i < path_1.length; _i++) {
+            var node = path_1[_i];
+            this.actions.moveTo(node.pos.x, node.pos.y, Config.enemySpeed);
         }
     };
     Enemy.prototype.checkForPlayer = function () {
