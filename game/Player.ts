@@ -2,7 +2,7 @@ class Player extends ex.Actor {
    /**
     * Build the player for the game
     */
-   constructor(x, y) {
+   constructor(x, y, public shoppingList: ShoppingList) {
       super(x, y, Config.playerWidth, Config.playerHeight);
       this.addDrawing(Resources.playerSheet);
    }
