@@ -54,7 +54,8 @@ var Player = (function (_super) {
             _this.vel.setTo(0, 0);
         });
     };
-    Player.prototype.raycast = function (ray) {
+    Player.prototype.raycast = function (ray, clip) {
+        return this.getBounds().rayCast(ray, clip);
     };
     return Player;
 }(ex.Actor));
@@ -93,11 +94,14 @@ var ScnMain = (function (_super) {
      * The main scene for the game
      */
     function ScnMain(engine) {
-        return _super.call(this, engine) || this;
+        var _this = _super.call(this, engine) || this;
+        _this.enemies = [];
+        return _this;
     }
     ScnMain.prototype.onInitialize = function (engine) {
         var map = Resources.map.getTileMap();
         this.add(map);
+        // player is added to scene global context
         var food = new Food(100, 100, "test");
         this.add(food);
         var foodArr = new Array();
@@ -106,6 +110,7 @@ var ScnMain = (function (_super) {
         var player = new Player(Config.playerStart.x, Config.playerStart.y, shoppingList);
         this.add(player);
         var enemy = new Enemy(300, 300);
+        this.enemies.push(enemy);
         this.add(enemy);
     };
     return ScnMain;
@@ -126,6 +131,7 @@ var Enemy = (function (_super) {
     function Enemy(x, y) {
         var _this = _super.call(this, x, y, Config.enemyWidth, Config.enemyHeight) || this;
         _this.rays = [];
+        _this.attack = false;
         _this.addDrawing(Resources.enemySheet);
         _this.actions.moveTo(x + 300, y, 20)
             .moveTo(x + 300, y - 100, 20)
@@ -138,25 +144,33 @@ var Enemy = (function (_super) {
         var _this = this;
         this.collisionType = ex.CollisionType.Passive;
         this.on('postupdate', function (evt) {
+            _this.attack = false;
             // calculate the forward vector of enemy
             _this.forward = _this.vel.normalize();
             var forwardAngle = _this.vel.toAngle();
             var angleStep = Config.enemyRayCastAngle / Config.enemyRayCount;
             var angleStart = forwardAngle - (Config.enemyRayCastAngle / 2);
             for (var i = 0; i < Config.enemyRayCount; i++) {
-                _this.rays[i] = new ex.Ray(ex.Vector.Zero.clone(), ex.Vector.fromAngle(angleStart + angleStep * i).scale(Config.enemyRayLength));
+                _this.rays[i] = new ex.Ray(_this.pos.clone(), ex.Vector.fromAngle(angleStart + angleStep * i).scale(Config.enemyRayLength));
             }
+            _this.attack = _this.checkForPlayer();
         });
         // set this to postdebugdraw on production
         this.on('postdraw', function (evt) {
             for (var _i = 0, _a = _this.rays; _i < _a.length; _i++) {
                 var ray = _a[_i];
                 // Re-calc distance for debug only
-                ex.Util.DrawUtil.vector(evt.ctx, ex.Color.Red, ex.Vector.Zero.clone(), ray.dir, Config.enemyRayLength);
+                ex.Util.DrawUtil.vector(evt.ctx, _this.attack ? ex.Color.Red : ex.Color.Green, ex.Vector.Zero.clone(), ray.dir, Config.enemyRayLength);
             }
         });
     };
-    Enemy.prototype.rayCastForPlayer = function (player) {
+    Enemy.prototype.checkForPlayer = function () {
+        var result = false;
+        for (var _i = 0, _a = this.rays; _i < _a.length; _i++) {
+            var ray = _a[_i];
+            result = result || player.raycast(ray, Config.enemyRayLength);
+        }
+        return result;
     };
     return Enemy;
 }(ex.Actor));
@@ -202,6 +216,9 @@ for (var r in Resources) {
 }
 var scnMain = new ScnMain(game);
 game.addScene('main', scnMain);
+// create the player in global context
+var player = new Player(Config.playerStart.x, Config.playerStart.y);
+scnMain.add(player);
 //TODO Remove debug mode
 var gamePaused = false;
 game.input.keyboard.on('down', function (keyDown) {
