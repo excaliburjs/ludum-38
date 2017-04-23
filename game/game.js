@@ -325,7 +325,7 @@ var WaypointGrid = (function () {
         this._cellHeight = tileMapCells[0].height;
         for (var _i = 0, tileMapCells_1 = tileMapCells; _i < tileMapCells_1.length; _i++) {
             var cell = tileMapCells_1[_i];
-            this.nodes.push(new WaypointNode(cell.x, cell.y));
+            this.nodes.push(new WaypointNode(cell.x + this._cellWidth / 2, cell.y + this._cellHeight / 2));
         }
         this._processNeighbors();
     }
@@ -358,6 +358,7 @@ var WaypointGrid = (function () {
             node = node._previousNode;
         }
         path.unshift(node);
+        this.nodes.forEach(function (n) { return n.reset(); });
         return path;
     };
     WaypointGrid.prototype.findPath = function (start, end) {
@@ -383,7 +384,7 @@ var WaypointGrid = (function () {
             ex.Util.removeItemToArray(current, openNodes);
             closedNodes.push(current);
             // Find neighbors we haven't explored
-            var neighbors = current.neighbors.filter(function (n) { return !ex.Util.contains(closedNodes, n); });
+            var neighbors = this.findNeighbors(current).filter(function (n) { return !ex.Util.contains(closedNodes, n); });
             // Calculate neighbor heuristics
             neighbors.forEach(function (n) {
                 if (!ex.Util.contains(openNodes, n)) {
@@ -410,6 +411,7 @@ var WaypointNode = (function () {
     WaypointNode.prototype.reset = function () {
         this._hscore = 0;
         this._gscore = 0;
+        this._weight = 1;
         this._previousNode = null;
     };
     WaypointNode.prototype.distance = function (node) {
