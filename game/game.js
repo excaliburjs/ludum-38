@@ -187,7 +187,7 @@ var ScnMain = (function (_super) {
         }
         var shoppingList = new ShoppingList(foodArr);
         player.shoppingList = shoppingList;
-        this.spawnEnemy();
+        director.setup();
         this.on('postdraw', function (evt) {
             _this._grid.draw(evt.ctx);
         });
