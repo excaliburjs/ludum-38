@@ -7,8 +7,6 @@ class Enemy extends ex.Actor {
    public attack = false;
    public isAttacking = false;
 
-   private _random: ex.Random;
-
    private _grid: WaypointGrid;
 
    // todo need reference to the waypoint grid
@@ -17,7 +15,6 @@ class Enemy extends ex.Actor {
       super(Config.enemyStart.x, Config.enemyStart.y, Config.enemyWidth, Config.enemyHeight);
       this.addDrawing(Resources.enemySheet);
 
-      this._random = new ex.Random();
       this._grid = grid;
 
       var start = this._grid.findClosestNode(Config.enemyStart.x, Config.enemyStart.y);
@@ -88,7 +85,7 @@ class Enemy extends ex.Actor {
       
       this.pos = start.pos.clone();
 
-      var end = this._random.pickOne<WaypointNode>(this._grid.nodes);
+      var end = gameRandom.pickOne<WaypointNode>(this._grid.nodes);
       
       var path = this._grid.findPath(start, end);
       

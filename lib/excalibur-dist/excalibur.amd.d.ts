@@ -835,7 +835,7 @@ declare module "Promises" {
 declare module "Camera" {
     import { Engine } from "Engine";
     import { EasingFunction } from "Util/EasingFunctions";
-    import { IPromise } from "Promises";
+    import { IPromise, Promise } from "Promises";
     import { Vector } from "Algebra";
     import { Actor } from "Actor";
     /**
@@ -874,9 +874,9 @@ declare module "Camera" {
         private _xShake;
         private _yShake;
         protected _isZooming: boolean;
-        private _currentZoomScale;
         private _maxZoomScale;
         private _zoomDuration;
+        private _zoomPromise;
         private _zoomIncrement;
         private _easing;
         /**
@@ -925,12 +925,11 @@ declare module "Camera" {
          * @param scale    The scale of the zoom
          * @param duration The duration of the zoom in milliseconds
          */
-        zoom(scale: number, duration?: number): void;
+        zoom(scale: number, duration?: number): Promise<boolean>;
         /**
          * Gets the current zoom scale
          */
         getZoom(): number;
-        private _setCurrentZoomScale(zoomScale);
         update(_engine: Engine, delta: number): void;
         /**
          * Applies the relevant transformations to the game canvas to "move" or apply effects to the Camera

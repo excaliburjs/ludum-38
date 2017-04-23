@@ -30,6 +30,8 @@ SoundManager.init();
 
 var gameDebug = false;
 
+var gameRandom = new ex.Random();
+
 // create an asset loader
 var loader = new ex.Loader();
 for (var r in Resources) {

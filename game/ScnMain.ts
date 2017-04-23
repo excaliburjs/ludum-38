@@ -174,14 +174,14 @@ class ScnMain extends ex.Scene {
    spawnFood(){
       // player is added to scene global context
       var foodArr = new Array<Food>();
-      var rand = new ex.Random();
+      
 
-         var chosenFoodZones = rand.pickSet(FoodTypes, Config.foodSpawnCount);
+         var chosenFoodZones = gameRandom.pickSet(FoodTypes, Config.foodSpawnCount);
 
          for (var i = 0; i < chosenFoodZones.length; i++){
             var chosenFoodZone = chosenFoodZones[i];
             var validTiles = this.getCellsInFoodZone(chosenFoodZone);
-            var chosenCell = validTiles[rand.integer(0, validTiles.length - 1)];
+            var chosenCell = validTiles[gameRandom.integer(0, validTiles.length - 1)];
             //make a dummy cell so we can easily get the center
             var cell = new ex.Cell(chosenCell.x, chosenCell.y, 24, 24, 0);
             var food = new Food(cell.getCenter().x, cell.getCenter().y, i);
