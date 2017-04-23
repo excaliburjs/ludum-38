@@ -73,7 +73,9 @@ class ScnMain extends ex.Scene {
       director.setup();
 
       this.on('postdraw', (evt: ex.PostDrawEvent) => {
-         this._grid.draw(evt.ctx);
+         if(gameDebug){
+            this._grid.draw(evt.ctx);
+         }
       });
    }
 

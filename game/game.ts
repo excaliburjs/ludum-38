@@ -28,6 +28,8 @@ var game = new ex.Engine({
 loadPreferences();
 SoundManager.init();
 
+var gameDebug = false;
+
 // create an asset loader
 var loader = new ex.Loader();
 for (var r in Resources) {
@@ -60,6 +62,9 @@ game.input.keyboard.on('down', (keyDown?: ex.Input.KeyEvent) => {
             break;
         case ex.Input.Keys.Semicolon :
             game.isDebug = !game.isDebug;
+            break;
+        case ex.Input.Keys.Num0 : 
+            gameDebug = !gameDebug
             break;
     }
 });

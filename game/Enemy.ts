@@ -66,9 +66,11 @@ class Enemy extends ex.Actor {
 
       // set this to postdebugdraw on production
       this.on('postdraw', (evt: ex.PostDrawEvent) => {
-         for (var ray of this.rays) {
-            // Re-calc distance for debug only
-            ex.Util.DrawUtil.vector(evt.ctx, this.attack ? ex.Color.Red : ex.Color.Green, ex.Vector.Zero.clone(), ray.dir, Config.enemyRayLength);
+         if(gameDebug) {
+            for (var ray of this.rays) {
+               // Re-calc distance for debug only
+               ex.Util.DrawUtil.vector(evt.ctx, this.attack ? ex.Color.Red : ex.Color.Green, ex.Vector.Zero.clone(), ray.dir, Config.enemyRayLength);
+            }
          }
       });
    }
