@@ -37,8 +37,7 @@ class Director extends ex.Actor {
 
    //3. spawn in food
    private _spawnFood() {
-      console.log('spawn food');
-      //TODO
+      scnMain.spawnFood();
    }
 
    //4. the first antagonist arrives

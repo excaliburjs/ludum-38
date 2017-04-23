@@ -70,26 +70,6 @@ class ScnMain extends ex.Scene {
       // Build waypoint grid for pathfinding based on 
       this._grid = new WaypointGrid(this._nodes, this._wallTiles);
       
-      // player is added to scene global context
-      var foodArr = new Array<Food>();
-      var rand = new ex.Random();
-
-         var chosenFoodZones = rand.pickSet(FoodTypes, Config.foodSpawnCount);
-
-         for (var i = 0; i < chosenFoodZones.length; i++){
-            var chosenFoodZone = chosenFoodZones[i];
-            var validTiles = this.getCellsInFoodZone(chosenFoodZone);
-            var chosenCell = validTiles[rand.integer(0, validTiles.length - 1)];
-            //make a dummy cell so we can easily get the center
-            var cell = new ex.Cell(chosenCell.x, chosenCell.y, 24, 24, 0);
-            var food = new Food(cell.getCenter().x, cell.getCenter().y, i);
-            this.add(food);
-            foodArr.push(food);
-         }
-
-      var shoppingList = new ShoppingList(foodArr);
-      player.shoppingList = shoppingList;
-
       director.setup();
 
       this.on('postdraw', (evt: ex.PostDrawEvent) => {
@@ -163,5 +143,27 @@ class ScnMain extends ex.Scene {
       this.enemies.push(enemy);
       this.add(enemy);
       SoundManager.playSpawnEnemy();
+   }
+
+   spawnFood(){
+      // player is added to scene global context
+      var foodArr = new Array<Food>();
+      var rand = new ex.Random();
+
+         var chosenFoodZones = rand.pickSet(FoodTypes, Config.foodSpawnCount);
+
+         for (var i = 0; i < chosenFoodZones.length; i++){
+            var chosenFoodZone = chosenFoodZones[i];
+            var validTiles = this.getCellsInFoodZone(chosenFoodZone);
+            var chosenCell = validTiles[rand.integer(0, validTiles.length - 1)];
+            //make a dummy cell so we can easily get the center
+            var cell = new ex.Cell(chosenCell.x, chosenCell.y, 24, 24, 0);
+            var food = new Food(cell.getCenter().x, cell.getCenter().y, i);
+            this.add(food);
+            foodArr.push(food);
+         }
+
+      var shoppingList = new ShoppingList(foodArr);
+      player.shoppingList = shoppingList;
    }
 }
