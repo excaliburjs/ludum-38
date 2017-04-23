@@ -98,6 +98,7 @@ var Config = {
     enemyRayLength: 200,
     enemyRayCount: 5,
     enemySpeed: 20,
+    enemyChaseSpeed: 100,
     foodWidth: 48,
     foodHeight: 48,
     foodSpawnCount: 4,
@@ -138,6 +139,7 @@ var Stats = (function () {
     return Stats;
 }());
 var LAYER_IMPASSABLE = 'Impassable';
+var LAYER_WAYPOINTS = 'Waypoints';
 var LAYER_FLOOR = 'Floor';
 var LAYER_ZONES = 'Zones';
 var ZONE_MEAT = 'Meat';
@@ -153,6 +155,7 @@ var ScnMain = (function (_super) {
     __extends(ScnMain, _super);
     function ScnMain(engine) {
         var _this = _super.call(this, engine) || this;
+        _this._wallTiles = [];
         _this._floorTiles = [];
         _this._zones = [];
         _this.enemies = [];
@@ -163,12 +166,13 @@ var ScnMain = (function (_super) {
         this.map = Resources.map.getTileMap();
         this.add(this.map);
         Resources.map.data.layers.forEach(function (layer) {
+            _this.collectWayPoints(layer);
             _this.collectSolidTiles(layer);
             _this.collectFloorTiles(layer);
             _this.collectZones(layer);
         });
         // Build waypoint grid for pathfinding based on 
-        this._grid = new WaypointGrid(this._floorTiles);
+        this._grid = new WaypointGrid(this._nodes, this._wallTiles);
         // player is added to scene global context
         var foodArr = new Array();
         var rand = new ex.Random();
@@ -181,6 +185,20 @@ var ScnMain = (function (_super) {
         var shoppingList = new ShoppingList(foodArr);
         player.shoppingList = shoppingList;
         this.spawnEnemy();
+        this.on('postdraw', function (evt) {
+            _this._grid.draw(evt.ctx);
+        });
+    };
+    ScnMain.prototype.collectWayPoints = function (layer) {
+        if (layer.name !== LAYER_WAYPOINTS ||
+            !layer.objects)
+            return;
+        var nodes = [];
+        for (var _i = 0, _a = layer.objects; _i < _a.length; _i++) {
+            var o = _a[_i];
+            nodes.push(new WaypointNode(o.x, o.y));
+        }
+        this._nodes = nodes;
     };
     ScnMain.prototype.collectSolidTiles = function (layer) {
         if (layer.name !== LAYER_IMPASSABLE ||
@@ -190,6 +208,7 @@ var ScnMain = (function (_super) {
         for (var i = 0; i < layer.data.length; i++) {
             if (layer.data[i] !== 0) {
                 this.map.data[i].solid = true;
+                this._wallTiles.push(this.map.data[i]);
             }
         }
     };
@@ -279,14 +298,7 @@ var Enemy = (function (_super) {
                 _this.actions.clearActions();
                 // Chase only in orthogonal directions
                 var max = Math.max(Math.abs(vectorToPlayer.x), Math.abs(vectorToPlayer.y));
-                if (max === Math.abs(vectorToPlayer.x)) {
-                    max = vectorToPlayer.x;
-                }
-                if (max === Math.abs(vectorToPlayer.y)) {
-                    max = vectorToPlayer.y;
-                }
-                var newVel = new ex.Vector(max === vectorToPlayer.x ? vectorToPlayer.x : 0, max === vectorToPlayer.y ? vectorToPlayer.y : 0);
-                _this.vel = newVel;
+                _this.vel = vectorToPlayer.normalize().scale(Config.enemyChaseSpeed);
             }
             else {
                 if (_this.actions._queues[0]._actions.length === 0) {
@@ -311,8 +323,8 @@ var Enemy = (function (_super) {
         }
     };
     Enemy.prototype._wander = function (startNode) {
-        var start = startNode; // || this._random.pickOne<WaypointNode>(this._grid.nodes);
-        this.pos = start.pos;
+        var start = startNode;
+        this.pos = start.pos.clone();
         var end = this._random.pickOne(this._grid.nodes);
         var path = this._grid.findPath(start, end);
         for (var _i = 0, path_1 = path; _i < path_1.length; _i++) {
@@ -353,15 +365,15 @@ var ShoppingList = (function () {
     return ShoppingList;
 }());
 var WaypointGrid = (function () {
-    function WaypointGrid(tileMapCells) {
+    function WaypointGrid(nodes, impassableCells) {
         this.nodes = [];
         this._cellWidth = 0;
         this._cellHeight = 0;
-        this._cellWidth = tileMapCells[0].width;
-        this._cellHeight = tileMapCells[0].height;
-        for (var _i = 0, tileMapCells_1 = tileMapCells; _i < tileMapCells_1.length; _i++) {
-            var cell = tileMapCells_1[_i];
-            this.nodes.push(new WaypointNode(cell.x + this._cellWidth / 2, cell.y + this._cellHeight / 2));
+        this._wallBounds = [];
+        this.nodes = nodes;
+        for (var _i = 0, impassableCells_1 = impassableCells; _i < impassableCells_1.length; _i++) {
+            var wall = impassableCells_1[_i];
+            this._wallBounds.push(wall.getBounds());
         }
         this._processNeighbors();
     }
@@ -378,11 +390,13 @@ var WaypointGrid = (function () {
     };
     WaypointGrid.prototype.findClosestNode = function (x, y) {
         var minNode;
+        var oldMinNode;
         var minDistance = Infinity;
         var point = new ex.Vector(x, y);
         for (var _i = 0, _a = this.nodes; _i < _a.length; _i++) {
             var n = _a[_i];
-            if (n.pos.distance(point) < minDistance) {
+            if (n.pos.distance(point) <= minDistance) {
+                oldMinNode = minNode;
                 minNode = n;
                 minDistance = n.pos.distance(point);
             }
@@ -390,11 +404,53 @@ var WaypointGrid = (function () {
         return minNode;
     };
     WaypointGrid.prototype.findNeighbors = function (node) {
-        var nodes = [this.findNode(node.pos.x, node.pos.y - this._cellHeight),
-            this.findNode(node.pos.x - this._cellWidth, node.pos.y),
-            this.findNode(node.pos.x, node.pos.y + this._cellHeight),
-            this.findNode(node.pos.x + this._cellWidth, node.pos.y)].filter(function (n) { return !!n; });
+        var nodes = this.findOrthogonalNeighbors(node); /*[this.findNode(node.pos.x, node.pos.y - this._cellHeight),
+                     this.findNode(node.pos.x - this._cellWidth, node.pos.y),
+                     this.findNode(node.pos.x, node.pos.y + this._cellHeight),
+                     this.findNode(node.pos.x + this._cellWidth, node.pos.y)].filter(n => {return !!n}); */
         return nodes;
+    };
+    WaypointGrid.prototype.findOrthogonalNeighbors = function (node) {
+        var x = node.pos.x;
+        var y = node.pos.y;
+        var sameX = this.nodes.filter(function (n) {
+            return n.pos.x === x && n != node;
+        });
+        var sameY = this.nodes.filter(function (n) {
+            return n.pos.y === y && n != node;
+        });
+        var minX = Infinity;
+        var minXNode;
+        var oldMinXNode;
+        for (var i = 0; i < sameX.length; i++) {
+            var distanceX = sameX[i].pos.distance(node.pos);
+            if (distanceX < minX) {
+                minX = distanceX;
+                oldMinXNode = minXNode;
+                minXNode = sameX[i];
+            }
+        }
+        var minY = Infinity;
+        var minYNode;
+        var oldMinYNode;
+        for (var j = 0; j < sameY.length; j++) {
+            var distanceY = sameY[j].pos.distance(node.pos);
+            if (distanceY < minY) {
+                minY = distanceY;
+                oldMinYNode = minYNode;
+                minYNode = sameY[j];
+            }
+        }
+        var potentialNeighbors = [minXNode, oldMinXNode, minYNode, oldMinYNode].filter(function (n) { return n != null; });
+        var result = [];
+        for (var _i = 0, potentialNeighbors_1 = potentialNeighbors; _i < potentialNeighbors_1.length; _i++) {
+            var n = potentialNeighbors_1[_i];
+            var tempRay = new ex.Ray(node.pos.clone(), n.pos.sub(node.pos));
+            if (!this.rayCast(tempRay, n.pos.sub(node.pos).magnitude())) {
+                result.push(n);
+            }
+        }
+        return result;
     };
     // by default admissible heuristic of manhattan distance
     WaypointGrid.prototype.heuristicFcn = function (start, end) {
@@ -409,6 +465,11 @@ var WaypointGrid = (function () {
         path.unshift(node);
         this.nodes.forEach(function (n) { return n.reset(); });
         return path;
+    };
+    WaypointGrid.prototype.rayCast = function (ray, distance) {
+        for (var i = 0; i < this._wallBounds.length; i++) {
+            return this._wallBounds[i].rayCast(ray, distance);
+        }
     };
     WaypointGrid.prototype.findPath = function (start, end) {
         var _this = this;
@@ -446,6 +507,16 @@ var WaypointGrid = (function () {
         }
         // no path found
         return [];
+    };
+    WaypointGrid.prototype.draw = function (ctx) {
+        for (var _i = 0, _a = this.nodes; _i < _a.length; _i++) {
+            var node = _a[_i];
+            ex.Util.DrawUtil.point(ctx, ex.Color.Green, node.pos);
+            for (var _b = 0, _c = node.neighbors; _b < _c.length; _b++) {
+                var neighbor = _c[_b];
+                ex.Util.DrawUtil.line(ctx, ex.Color.Green, node.pos.x, node.pos.y, neighbor.pos.x, neighbor.pos.y);
+            }
+        }
     };
     return WaypointGrid;
 }());
