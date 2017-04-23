@@ -31,6 +31,8 @@ interface FoodZone {
 class ScnMain extends ex.Scene {
 
    private _grid: WaypointGrid;
+   private _floorTiles;
+   private _wallTiles;
    private _floorTiles: ex.Cell[] = [];
    private _zones: FoodZone[] = [];
 
@@ -52,7 +54,7 @@ class ScnMain extends ex.Scene {
       });
 
       // Build waypoint grid for pathfinding based on 
-      this._grid = new WaypointGrid(this._floorTiles);
+      this._grid = new WaypointGrid(this._floorTiles, this._wallTiles);
       
       // player is added to scene global context
       var foodArr = new Array<Food>();
@@ -78,6 +80,7 @@ class ScnMain extends ex.Scene {
       for (let i = 0; i < layer.data.length; i++) {
          if (layer.data[i] !== 0) {
             this.map.data[i].solid = true;
+            this._wallTiles.push(map.data[i]);
          }
       }
    }
