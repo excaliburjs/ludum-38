@@ -1,4 +1,5 @@
 const LAYER_IMPASSABLE = 'Impassable';
+const LAYER_GAMEOVER = 'GameOver';
 const LAYER_WAYPOINTS = 'Waypoints';
 const LAYER_FLOOR = 'Floor';
 const LAYER_ZONES = 'Zones';
@@ -48,6 +49,7 @@ class ScnMain extends ex.Scene {
    private _wallTiles: ex.Cell[] = [];
    private _floorTiles: ex.Cell[] = [];
    private _foodSpawnPoints: IFoodSpawnPoint[] = [];
+   private _gameOverZone: ex.Cell[] = [];
 
    constructor(engine: ex.Engine) {
       super(engine);            
@@ -64,8 +66,16 @@ class ScnMain extends ex.Scene {
          this.collectWayPoints(layer);
          this.collectSolidTiles(layer);
          this.collectFloorTiles(layer); 
-         this.collectFoodZones(layer);     
+         this.collectFoodZones(layer);    
+         this.collectGameOverZones(layer); 
       });
+
+      // Build game over triggers
+      for (var go of this._gameOverZone) {
+         let goc = go.getCenter();
+         this.add(new ex.Trigger(goc.x, goc.y, this.map.cellWidth, this.map.cellHeight, 
+            this.handleGameOverTrigger));
+      }
 
       // Build waypoint grid for pathfinding based on 
       this._grid = new WaypointGrid(this._nodes, this._wallTiles);
@@ -128,6 +138,20 @@ class ScnMain extends ex.Scene {
             type: <FoodZone>o.type
          });
       }
+   }
+
+   collectGameOverZones(layer: Extensions.Tiled.ITiledMapLayer) {
+      if (layer.name !== LAYER_GAMEOVER) return;
+
+      for (let i = 0; i < layer.data.length; i++) {
+         if (layer.data[i] > 0) {
+            this._gameOverZone.push(this.map.data[i]);
+         }
+      }
+   }
+
+   handleGameOverTrigger = () => {
+      director.gameOver();
    }
 
    getCellsInFoodZone(foodZone: string): IFoodSpawnPoint[] {

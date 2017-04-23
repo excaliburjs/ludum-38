@@ -67,8 +67,7 @@ class Player extends ex.Actor {
       this.on('collision', (e?: ex.CollisionEvent) => {
          if (!State.gameOver) {
             if (e.other instanceof Enemy) {
-                  ex.Logger.getInstance().info('game over');
-                  State.gameOver = true;
+               director.gameOver();
             } else if (e.other instanceof Food) {
                player.shoppingList.removeItem(e.other.ShoppingListId);
                e.other.kill();

@@ -48,5 +48,12 @@ class Director extends ex.Actor {
    //4b. add more antagonists
 
    //5. checkout - game ends
-   // 
+   public gameOver() {
+      // already called (could be triggered multiple times)
+      if (State.gameOver) return;
+
+      ex.Logger.getInstance().info('game over');
+      State.gameOver = true;
+   }
+   
 }
