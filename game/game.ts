@@ -1,4 +1,4 @@
-/// <reference path="../lib/excalibur-tiled/dist/excalibur-tiled.d.ts" />
+/// <reference path="../lib/excalibur-dist/excalibur-tiled.d.ts" />
 /// <reference path="../node_modules/@types/zepto/index.d.ts" />
 /// <reference path="../node_modules/@types/classnames/index.d.ts" />
 

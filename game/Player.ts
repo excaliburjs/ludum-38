@@ -117,4 +117,9 @@ class Player extends ex.Actor {
       this.setDrawing('down');
    }
   
+
+   public raycastTime(ray: ex.Ray, clip: number): number {
+      return this.getBounds().rayCastTime(ray, clip);
+   }
+  
 }
