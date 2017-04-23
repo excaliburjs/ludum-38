@@ -435,6 +435,15 @@ var WaypointGrid = (function () {
                      this.findNode(node.pos.x + this._cellWidth, node.pos.y)].filter(n => {return !!n}); */
         return nodes;
     };
+    WaypointGrid.prototype._sameSign = function (num1, num2) {
+        if (num1 < 0 && num2 < 0) {
+            return true;
+        }
+        if (num1 > 0 && num2 > 0) {
+            return true;
+        }
+        return false;
+    };
     WaypointGrid.prototype.findOrthogonalNeighbors = function (node) {
         var x = node.pos.x;
         var y = node.pos.y;
@@ -455,6 +464,9 @@ var WaypointGrid = (function () {
                 minXNode = sameX[i];
             }
         }
+        if (oldMinXNode && this._sameSign(oldMinXNode.pos.y - node.pos.y, minXNode.pos.y - node.pos.y)) {
+            oldMinXNode = null;
+        }
         var minY = Infinity;
         var minYNode;
         var oldMinYNode;
@@ -466,12 +478,24 @@ var WaypointGrid = (function () {
                 minYNode = sameY[j];
             }
         }
+        if (oldMinYNode && this._sameSign(oldMinYNode.pos.x - node.pos.x, minYNode.pos.x - node.pos.x)) {
+            oldMinYNode = null;
+        }
         var potentialNeighbors = [minXNode, oldMinXNode, minYNode, oldMinYNode].filter(function (n) { return n != null; });
         var result = [];
         for (var _i = 0, potentialNeighbors_1 = potentialNeighbors; _i < potentialNeighbors_1.length; _i++) {
             var n = potentialNeighbors_1[_i];
             var tempRay = new ex.Ray(node.pos.clone(), n.pos.sub(node.pos));
-            if (!this.rayCast(tempRay, n.pos.sub(node.pos).magnitude())) {
+            if (tempRay.dir.x === 0) {
+                tempRay.dir.x = .0001;
+            }
+            if (tempRay.dir.y === 0) {
+                tempRay.dir.y = .0001;
+            }
+            if (this.rayCast(tempRay, node.pos.distance(n.pos))) {
+                console.log("invalid neighbor");
+            }
+            else {
                 result.push(n);
             }
         }
@@ -492,9 +516,11 @@ var WaypointGrid = (function () {
         return path;
     };
     WaypointGrid.prototype.rayCast = function (ray, distance) {
+        var result = false;
         for (var i = 0; i < this._wallBounds.length; i++) {
-            return this._wallBounds[i].rayCast(ray, distance);
+            result = result || this._wallBounds[i].rayCast(ray, distance);
         }
+        return result;
     };
     WaypointGrid.prototype.findPath = function (start, end) {
         var _this = this;
@@ -519,7 +545,7 @@ var WaypointGrid = (function () {
             ex.Util.removeItemToArray(current, openNodes);
             closedNodes.push(current);
             // Find neighbors we haven't explored
-            var neighbors = this.findNeighbors(current).filter(function (n) { return !ex.Util.contains(closedNodes, n); });
+            var neighbors = current.neighbors.filter(function (n) { return !ex.Util.contains(closedNodes, n); }); // this.findNeighbors(current).filter(n => { return !ex.Util.contains(closedNodes, n) });
             // Calculate neighbor heuristics
             neighbors.forEach(function (n) {
                 if (!ex.Util.contains(openNodes, n)) {
