@@ -205,7 +205,9 @@ var ScnMain = (function (_super) {
         player.shoppingList = shoppingList;
         director.setup();
         this.on('postdraw', function (evt) {
-            _this._grid.draw(evt.ctx);
+            if (gameDebug) {
+                _this._grid.draw(evt.ctx);
+            }
         });
     };
     ScnMain.prototype.collectWayPoints = function (layer) {
@@ -334,10 +336,12 @@ var Enemy = (function (_super) {
         });
         // set this to postdebugdraw on production
         this.on('postdraw', function (evt) {
-            for (var _i = 0, _a = _this.rays; _i < _a.length; _i++) {
-                var ray = _a[_i];
-                // Re-calc distance for debug only
-                ex.Util.DrawUtil.vector(evt.ctx, _this.attack ? ex.Color.Red : ex.Color.Green, ex.Vector.Zero.clone(), ray.dir, Config.enemyRayLength);
+            if (gameDebug) {
+                for (var _i = 0, _a = _this.rays; _i < _a.length; _i++) {
+                    var ray = _a[_i];
+                    // Re-calc distance for debug only
+                    ex.Util.DrawUtil.vector(evt.ctx, _this.attack ? ex.Color.Red : ex.Color.Green, ex.Vector.Zero.clone(), ray.dir, Config.enemyRayLength);
+                }
             }
         });
     };
@@ -754,6 +758,7 @@ var game = new ex.Engine({
 // initialize sound
 loadPreferences();
 SoundManager.init();
+var gameDebug = false;
 // create an asset loader
 var loader = new ex.Loader();
 for (var r in Resources) {
@@ -783,6 +788,9 @@ game.input.keyboard.on('down', function (keyDown) {
             break;
         case ex.Input.Keys.Semicolon:
             game.isDebug = !game.isDebug;
+            break;
+        case ex.Input.Keys.Num0:
+            gameDebug = !gameDebug;
             break;
     }
 });
