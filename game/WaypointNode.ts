@@ -14,6 +14,7 @@ class WaypointNode {
    public reset() {
       this._hscore = 0;
       this._gscore = 0;
+      this._weight = 1;      
       this._previousNode = null;
    }
 

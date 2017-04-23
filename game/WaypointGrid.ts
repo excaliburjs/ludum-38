@@ -8,7 +8,7 @@ class WaypointGrid {
       this._cellWidth = tileMapCells[0].width;
       this._cellHeight = tileMapCells[0].height;
       for(var cell of tileMapCells){
-         this.nodes.push(new WaypointNode(cell.x, cell.y));  
+         this.nodes.push(new WaypointNode(cell.x + this._cellWidth/2, cell.y + this._cellHeight/2));  
       }
 
       this._processNeighbors();
@@ -49,6 +49,8 @@ class WaypointGrid {
       }
       path.unshift(node);
 
+      this.nodes.forEach(n => n.reset());
+
       return path;
    }
 
@@ -82,7 +84,7 @@ class WaypointGrid {
          closedNodes.push(current);
 
          // Find neighbors we haven't explored
-         var neighbors = current.neighbors.filter(n => { return !ex.Util.contains(closedNodes, n) });
+         var neighbors = this.findNeighbors(current).filter(n => { return !ex.Util.contains(closedNodes, n) });
 
          // Calculate neighbor heuristics
          neighbors.forEach(n => {
