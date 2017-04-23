@@ -9,13 +9,7 @@ class Player extends ex.Actor {
    public shoppingList : ShoppingList;
 
    public onInitialize(engine: ex.Engine) {
-      var playerSheet = new ex.SpriteSheet(Resources.playerSheet, 4, 1, 45, 45);
-      this.addDrawing('down', playerSheet.getSprite(0));
-      this.addDrawing('up', playerSheet.getSprite(1));
-      this.addDrawing('left', playerSheet.getSprite(2));
-      this.addDrawing('right', playerSheet.getSprite(3));
-      
-      this.setDrawing('down');
+      this._setupDrawing();
 
       this.collisionType = ex.CollisionType.Active;
       
@@ -30,7 +24,7 @@ class Player extends ex.Actor {
                case ex.Input.Keys.Down :
                case ex.Input.Keys.S :
                   this.vel.setTo(this.vel.x, Config.playerVel);
-                  player.setDrawing('down');
+                  player.setDrawing('walkDown');
                   break;
                case ex.Input.Keys.Left :
                case ex.Input.Keys.A :
@@ -46,6 +40,30 @@ class Player extends ex.Actor {
          }
       });
 
+      game.input.keyboard.on('up', (keyUp?: ex.Input.KeyEvent) => {
+         if (!State.gameOver) {
+            switch(keyUp.key) {
+               case ex.Input.Keys.Up :
+               case ex.Input.Keys.W :
+                  player.setDrawing('up');
+                  break;
+               case ex.Input.Keys.Down :
+               case ex.Input.Keys.S :
+                  this.vel.setTo(this.vel.x, Config.playerVel);
+                  player.setDrawing('down');
+                  break;
+               case ex.Input.Keys.Left :
+               case ex.Input.Keys.A :
+                  player.setDrawing('left');
+                  break;
+               case ex.Input.Keys.Right :
+               case ex.Input.Keys.D :
+                  player.setDrawing('right');
+                  break;
+            }
+         }
+      });
+
       this.on('collision', (e?: ex.CollisionEvent) => {
          if (!State.gameOver) {
             if (e.other instanceof Enemy) {
@@ -55,7 +73,7 @@ class Player extends ex.Actor {
                player.shoppingList.removeItem(e.other.ShoppingListId);
                e.other.kill();
                e.other.collisionType = ex.CollisionType.PreventCollision;
-               console.log('spwan enemy for', e.other.id);
+               console.log('spawn enemy for', e.other.id);
                scnMain.spawnEnemy();
             }
          }
@@ -69,6 +87,20 @@ class Player extends ex.Actor {
 
    public raycast(ray: ex.Ray, clip: number): boolean {
       return this.getBounds().rayCast(ray, clip);
+   }
+
+   private _setupDrawing() {
+      var playerSheet = new ex.SpriteSheet(Resources.playerSheet, 7, 1, 45, 45);
+      this.addDrawing('down', playerSheet.getSprite(0));
+      this.addDrawing('up', playerSheet.getSprite(4));
+      this.addDrawing('left', playerSheet.getSprite(5));
+      this.addDrawing('right', playerSheet.getSprite(6));
+
+      var walkDownAnim = playerSheet.getAnimationBetween(game, 0, 4, 300);
+      walkDownAnim.loop = true;
+      this.addDrawing('walkDown', walkDownAnim);
+      
+      this.setDrawing('down');
    }
   
 }
