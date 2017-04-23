@@ -18,3 +18,10 @@ body {
 a {
    color: orangered;
 }
+
+#game-over-dialog {
+   height: 150px;
+   width: 200px;
+   top: 0;
+   margin-top: 90px;
+}

@@ -30,6 +30,8 @@ SoundManager.init();
 
 var gameDebug = false;
 
+var gameRandom = new ex.Random();
+
 // create an asset loader
 var loader = new ex.Loader();
 for (var r in Resources) {
@@ -63,7 +65,7 @@ game.input.keyboard.on('down', (keyDown?: ex.Input.KeyEvent) => {
         case ex.Input.Keys.Semicolon :
             game.isDebug = !game.isDebug;
             break;
-        case ex.Input.Keys.Num0 : 
+        case ex.Input.Keys.O : 
             gameDebug = !gameDebug
             break;
     }

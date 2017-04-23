@@ -54,6 +54,7 @@ class Director extends ex.Actor {
 
       ex.Logger.getInstance().info('game over');
       State.gameOver = true;
+      $('#game-over-dialog').show();
    }
    
 }
