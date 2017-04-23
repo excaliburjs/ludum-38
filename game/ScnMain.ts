@@ -12,7 +12,7 @@ const ZONE_BAKERY = 'Bakery';
 const ZONE_FRUIT = 'Fruit';
 const ZONE_VEGETABLES = 'Vegetables';
 
-type FoodZoneType = 
+type FoodZone = 
    | typeof ZONE_MEAT 
    | typeof ZONE_FREEZER
    | typeof ZONE_SNACKS
@@ -23,11 +23,23 @@ type FoodZoneType =
    | typeof ZONE_FRUIT
    | typeof ZONE_VEGETABLES;
 
-interface FoodZone {
-   x: number;
-   y: number;
-   type: FoodZoneType;
+interface IFoodSpawnPoint {
+   x: number,
+   y: number,
+   type: FoodZone
 }
+
+const FoodTypes: Array<FoodZone> = [
+    ZONE_MEAT, 
+    ZONE_FREEZER,
+    ZONE_SNACKS,
+    ZONE_PANTRY,
+    ZONE_CEREAL,
+    ZONE_TOILETRIES,
+    ZONE_BAKERY,
+    ZONE_FRUIT,
+    ZONE_VEGETABLES
+];
 
 class ScnMain extends ex.Scene {
 
@@ -35,7 +47,7 @@ class ScnMain extends ex.Scene {
    private _nodes: WaypointNode[];
    private _wallTiles: ex.Cell[] = [];
    private _floorTiles: ex.Cell[] = [];
-   private _zones: FoodZone[] = [];
+   private _foodSpawnPoints: IFoodSpawnPoint[] = [];
 
    constructor(engine: ex.Engine) {
       super(engine);            
@@ -52,29 +64,18 @@ class ScnMain extends ex.Scene {
          this.collectWayPoints(layer);
          this.collectSolidTiles(layer);
          this.collectFloorTiles(layer); 
-         this.collectZones(layer);     
+         this.collectFoodZones(layer);     
       });
 
       // Build waypoint grid for pathfinding based on 
       this._grid = new WaypointGrid(this._nodes, this._wallTiles);
       
-      // player is added to scene global context
-      var foodArr = new Array<Food>();
-      var rand = new ex.Random();
-
-      for(var i = 0; i < Config.foodSpawnCount; i++){
-         var randomCell = this._floorTiles[rand.integer(0, this._floorTiles.length - 1)];
-         var food = new Food(randomCell.getCenter().x, randomCell.getCenter().y, i);
-         this.add(food);
-         foodArr.push(food);
-      }
-      var shoppingList = new ShoppingList(foodArr);
-      player.shoppingList = shoppingList;
-
       director.setup();
 
       this.on('postdraw', (evt: ex.PostDrawEvent) => {
-         this._grid.draw(evt.ctx);
+         if(gameDebug){
+            this._grid.draw(evt.ctx);
+         }
       });
    }
 
@@ -116,17 +117,25 @@ class ScnMain extends ex.Scene {
       }
    }
 
-   collectZones(layer: Extensions.Tiled.ITiledMapLayer) {
+   collectFoodZones(layer: Extensions.Tiled.ITiledMapLayer) {
       if (layer.name !== LAYER_ZONES ||
           !layer.objects) return;
 
       for (var o of layer.objects) {
-         this._zones.push({
+         this._foodSpawnPoints.push({
             x: o.x,
             y: o.y,
-            type: <FoodZoneType>o.type
+            type: <FoodZone>o.type
          });
       }
+   }
+
+   getCellsInFoodZone(foodZone: string): IFoodSpawnPoint[] {
+      var validCells = this._foodSpawnPoints.filter((itm, idx) => {
+         return itm.type === foodZone;
+      });
+
+      return validCells;
    }
 
    //TODO if we don't create a new WaypointGrid, the enemies spawn in at the current location of the existing enemies
@@ -136,5 +145,27 @@ class ScnMain extends ex.Scene {
       this.enemies.push(enemy);
       this.add(enemy);
       SoundManager.playSpawnEnemy();
+   }
+
+   spawnFood(){
+      // player is added to scene global context
+      var foodArr = new Array<Food>();
+      var rand = new ex.Random();
+
+         var chosenFoodZones = rand.pickSet(FoodTypes, Config.foodSpawnCount);
+
+         for (var i = 0; i < chosenFoodZones.length; i++){
+            var chosenFoodZone = chosenFoodZones[i];
+            var validTiles = this.getCellsInFoodZone(chosenFoodZone);
+            var chosenCell = validTiles[rand.integer(0, validTiles.length - 1)];
+            //make a dummy cell so we can easily get the center
+            var cell = new ex.Cell(chosenCell.x, chosenCell.y, 24, 24, 0);
+            var food = new Food(cell.getCenter().x, cell.getCenter().y, i);
+            this.add(food);
+            foodArr.push(food);
+         }
+
+      var shoppingList = new ShoppingList(foodArr);
+      player.shoppingList = shoppingList;
    }
 }
