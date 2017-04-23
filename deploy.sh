@@ -35,7 +35,7 @@ mkdir -p out/lib/storejs
 mkdir -p out/lib/zepto
 
 cd lib
-cp -R classnames/ ../out/lib
+cp -R classnames ../out/lib
 cp -R excalibur-dist/ ../out/lib
 cp -R excalibur-tiled/dist/ ../out/lib/excalibur-tiled
 cp -R font-awesome/css ../out/lib/font-awesome
