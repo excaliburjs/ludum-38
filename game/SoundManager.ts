@@ -93,6 +93,11 @@ class SoundManager {
       Resources.spawnEnemySound.play();
    }
 
+   static playSpawnFood(){
+      Resources.spawnFoodSound.setVolume(0.3);
+      Resources.spawnFoodSound.play();
+   }
+
    private static _updateMusicButton() {
       $('#mute-music i').get(0).className = classNames('fa', { 
          'fa-music': !Preferences.muteBackgroundMusic, 

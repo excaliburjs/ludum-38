@@ -189,6 +189,8 @@ class ScnMain extends ex.Scene {
             foodArr.push(food);
          }
 
+         SoundManager.playSpawnFood();
+
       var shoppingList = new ShoppingList(foodArr);
       player.shoppingList = shoppingList;
    }
