@@ -121,6 +121,9 @@ var Player = (function (_super) {
         this.addDrawing('walkRight', walkRightAnim);
         this.setDrawing('down');
     };
+    Player.prototype.raycastTime = function (ray, clip) {
+        return this.getBounds().rayCastTime(ray, clip);
+    };
     return Player;
 }(ex.Actor));
 var Resources = {
@@ -146,7 +149,7 @@ var Config = {
     enemyRayLength: 200,
     enemyRayCount: 5,
     enemySpeed: 20,
-    enemyChaseSpeed: 100,
+    enemyChaseSpeed: 50,
     foodWidth: 48,
     foodHeight: 48,
     foodSpawnCount: 5,
@@ -381,6 +384,7 @@ var Enemy = (function (_super) {
                 if (_this.actions._queues[0]._actions.length === 0) {
                     var start = _this._grid.findClosestNode(_this.pos.x, _this.pos.y);
                     _this._wander(start);
+                    _this.isAttacking = false;
                 }
             }
         });
@@ -415,10 +419,20 @@ var Enemy = (function (_super) {
         var result = false;
         for (var _i = 0, _a = this.rays; _i < _a.length; _i++) {
             var ray = _a[_i];
-            result = result || player.raycast(ray, Config.enemyRayLength);
-            if (!this.isAttacking && result) {
-                this.isAttacking = true;
-                SoundManager.playPlayerSpotted();
+            var playerTime = player.raycastTime(ray, Config.enemyRayLength);
+            if (playerTime !== -1) {
+                var wallTime = this._grid.rayCastTime(ray, Config.enemyRayLength);
+                if (wallTime === -1) {
+                    wallTime = 99999999;
+                }
+                if (playerTime !== -1 && playerTime < wallTime) {
+                    result = true;
+                    if (!this.isAttacking && result) {
+                        this.isAttacking = true;
+                        SoundManager.playPlayerSpotted();
+                    }
+                    break;
+                }
             }
         }
         return result;
@@ -575,6 +589,21 @@ var WaypointGrid = (function () {
             result = result || this._wallBounds[i].rayCast(ray, distance);
         }
         return result;
+    };
+    WaypointGrid.prototype.rayCastTime = function (ray, distance) {
+        var minTime = Infinity;
+        for (var i = 0; i < this._wallBounds.length; i++) {
+            var time = this._wallBounds[i].rayCastTime(ray, distance);
+            if (time !== -1) {
+                if (time < minTime) {
+                    minTime = time;
+                }
+            }
+        }
+        if (minTime === Infinity) {
+            minTime = -1;
+        }
+        return minTime;
     };
     WaypointGrid.prototype.findPath = function (start, end) {
         var _this = this;
@@ -782,7 +811,7 @@ var Director = (function (_super) {
     };
     return Director;
 }(ex.Actor));
-/// <reference path="../lib/excalibur-tiled/dist/excalibur-tiled.d.ts" />
+/// <reference path="../lib/excalibur-dist/excalibur-tiled.d.ts" />
 /// <reference path="../node_modules/@types/zepto/index.d.ts" />
 /// <reference path="../node_modules/@types/classnames/index.d.ts" />
 /// <reference path="Player.ts" />
