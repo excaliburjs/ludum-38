@@ -138,42 +138,34 @@ var Stats = (function () {
     return Stats;
 }());
 var LAYER_IMPASSABLE = 'Impassable';
+var LAYER_FLOOR = 'Floor';
+var LAYER_ZONES = 'Zones';
+var ZONE_MEAT = 'Meat';
+var ZONE_FREEZER = 'Freezer';
+var ZONE_SNACKS = 'Snacks';
+var ZONE_PANTRY = 'Pantry';
+var ZONE_CEREAL = 'Cereal';
+var ZONE_TOILETRIES = 'Toiletries';
+var ZONE_BAKERY = 'Bakery';
+var ZONE_FRUIT = 'Fruit';
+var ZONE_VEGETABLES = 'Vegetables';
 var ScnMain = (function (_super) {
     __extends(ScnMain, _super);
     function ScnMain(engine) {
         var _this = _super.call(this, engine) || this;
+        _this._floorTiles = [];
+        _this._zones = [];
         _this.enemies = [];
         return _this;
     }
     ScnMain.prototype.onInitialize = function (engine) {
         var _this = this;
-        var map = Resources.map.getTileMap();
-        this.add(map);
-        Resources.map.data.layers.filter(function (l) { return l.name === LAYER_IMPASSABLE; }).forEach(function (l) {
-            if (typeof l.data == 'string')
-                return;
-            if (!l.data)
-                return;
-            for (var i_1 = 0; i_1 < l.data.length; i_1++) {
-                if (l.data[i_1] !== 0) {
-                    map.data[i_1].solid = true;
-                }
-            }
-        });
-        // get all tiles where placing food should be allowed 
-        this._floorTiles = new Array();
-        Resources.map.data.layers.filter(function (l) { return l.name !== LAYER_IMPASSABLE; }).forEach(function (l) {
-            if (typeof l.data == 'string')
-                return;
-            if (!l.data)
-                return;
-            for (var i_2 = 0; i_2 < l.data.length; i_2++) {
-                if (l.data[i_2] !== 0) {
-                    if (!map.data[i_2].solid) {
-                        _this._floorTiles.push(map.data[i_2]);
-                    }
-                }
-            }
+        this.map = Resources.map.getTileMap();
+        this.add(this.map);
+        Resources.map.data.layers.forEach(function (layer) {
+            _this.collectSolidTiles(layer);
+            _this.collectFloorTiles(layer);
+            _this.collectZones(layer);
         });
         // Build waypoint grid for pathfinding based on 
         this._grid = new WaypointGrid(this._floorTiles);
@@ -189,6 +181,43 @@ var ScnMain = (function (_super) {
         var shoppingList = new ShoppingList(foodArr);
         player.shoppingList = shoppingList;
         this.spawnEnemy();
+    };
+    ScnMain.prototype.collectSolidTiles = function (layer) {
+        if (layer.name !== LAYER_IMPASSABLE ||
+            typeof layer.data == 'string' ||
+            !layer.data)
+            return;
+        for (var i = 0; i < layer.data.length; i++) {
+            if (layer.data[i] !== 0) {
+                this.map.data[i].solid = true;
+            }
+        }
+    };
+    ScnMain.prototype.collectFloorTiles = function (layer) {
+        if (layer.name !== LAYER_FLOOR ||
+            typeof layer.data == 'string' ||
+            !layer.data)
+            return;
+        for (var i = 0; i < layer.data.length; i++) {
+            if (layer.data[i] !== 0) {
+                if (!this.map.data[i].solid) {
+                    this._floorTiles.push(this.map.data[i]);
+                }
+            }
+        }
+    };
+    ScnMain.prototype.collectZones = function (layer) {
+        if (layer.name !== LAYER_ZONES ||
+            !layer.objects)
+            return;
+        for (var _i = 0, _a = layer.objects; _i < _a.length; _i++) {
+            var o = _a[_i];
+            this._zones.push({
+                x: o.x,
+                y: o.y,
+                type: o.type
+            });
+        }
     };
     //TODO if we don't create a new WaypointGrid, the enemies spawn in at the current location of the existing enemies
     // the WaypointGrid is being modified in an unexpected fashion
