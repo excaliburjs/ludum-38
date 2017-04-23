@@ -16,6 +16,7 @@ var Config = {
    enemyRayLength: 200,
    enemyRayCount: 5,
    enemySpeed: 20,
+   enemyChaseSpeed: 100,
 
    foodWidth: 48,
    foodHeight: 48,

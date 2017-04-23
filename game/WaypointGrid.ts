@@ -4,13 +4,9 @@ class WaypointGrid {
    private _cellHeight: number = 0;
    private _wallBounds: ex.BoundingBox[] = [];
 
-   constructor(tileMapCells: ex.Cell[], impassableCells: ex.Cell[]) {
-      this._cellWidth = tileMapCells[0].width;
-      this._cellHeight = tileMapCells[0].height;
-      for(var cell of tileMapCells){
-         this.nodes.push(new WaypointNode(cell.x + this._cellWidth/2, cell.y + this._cellHeight/2));  
-      }
-
+   constructor(nodes: WaypointNode[], impassableCells: ex.Cell[]) {
+      this.nodes = nodes;  
+      
       for(var wall of impassableCells){
          this._wallBounds.push(wall.getBounds());
       }
@@ -75,8 +71,9 @@ class WaypointGrid {
       for(var i = 0; i < sameX.length; i++){
          var distanceX = sameX[i].pos.distance(node.pos);
          if(distanceX < minX) {
+            minX = distanceX
             oldMinXNode = minXNode;
-            minXNode = node;
+            minXNode = sameX[i];
          }
       }
 
@@ -86,8 +83,9 @@ class WaypointGrid {
       for(var j = 0; j < sameY.length; j++){
          var distanceY = sameY[j].pos.distance(node.pos);
          if(distanceY < minY) {
+            minY = distanceY
             oldMinYNode = minYNode;
-            minYNode = node;
+            minYNode = sameY[j];
          }
       }
 
@@ -174,6 +172,15 @@ class WaypointGrid {
       // no path found
       return [];
 
+   }
+
+   draw(ctx: CanvasRenderingContext2D){
+      for(var node of this.nodes){
+         ex.Util.DrawUtil.point(ctx, ex.Color.Green, node.pos);
+         for(var neighbor of node.neighbors){
+            ex.Util.DrawUtil.line(ctx, ex.Color.Green, node.pos.x, node.pos.y, neighbor.pos.x, neighbor.pos.y)
+         }
+      }
    }
 
 }
