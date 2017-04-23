@@ -1,47 +1,55 @@
-const LAYER_IMPASSABLE = 'Impassable'
+const LAYER_IMPASSABLE = 'Impassable';
+const LAYER_FLOOR = 'Floor';
+const LAYER_ZONES = 'Zones';
+const ZONE_MEAT = 'Meat';
+const ZONE_FREEZER = 'Freezer';
+const ZONE_SNACKS = 'Snacks';
+const ZONE_PANTRY = 'Pantry';
+const ZONE_CEREAL = 'Cereal';
+const ZONE_TOILETRIES = 'Toiletries';
+const ZONE_BAKERY = 'Bakery';
+const ZONE_FRUIT = 'Fruit';
+const ZONE_VEGETABLES = 'Vegetables';
+
+type FoodZoneType = 
+   | typeof ZONE_MEAT 
+   | typeof ZONE_FREEZER
+   | typeof ZONE_SNACKS
+   | typeof ZONE_PANTRY
+   | typeof ZONE_CEREAL
+   | typeof ZONE_TOILETRIES
+   | typeof ZONE_BAKERY
+   | typeof ZONE_FRUIT
+   | typeof ZONE_VEGETABLES;
+
+interface FoodZone {
+   x: number;
+   y: number;
+   type: FoodZoneType;
+}
 
 class ScnMain extends ex.Scene {
 
    private _grid: WaypointGrid;
-   private _floorTiles;
+   private _floorTiles: ex.Cell[] = [];
+   private _zones: FoodZone[] = [];
 
    constructor(engine: ex.Engine) {
       super(engine);            
    }
 
-
+   public map: ex.TileMap;
    public enemies: Enemy[] = [];
 
    public onInitialize(engine: ex.Engine) {
-      var map = Resources.map.getTileMap();
-      this.add(map);
+      this.map = Resources.map.getTileMap();
+      this.add(this.map);
       
-      Resources.map.data.layers.filter(l => l.name === LAYER_IMPASSABLE).forEach(l => {
-         if (typeof l.data == 'string') return;
-         if (!l.data) return;
-
-         for (let i = 0; i < l.data.length; i++) {
-            if (l.data[i] !== 0) {
-               map.data[i].solid = true;
-            }
-         }
+      Resources.map.data.layers.forEach(layer => {
+         this.collectSolidTiles(layer);
+         this.collectFloorTiles(layer); 
+         this.collectZones(layer);     
       });
-
-
-      // get all tiles where placing food should be allowed 
-      this._floorTiles = new Array<ex.Cell>();
-      Resources.map.data.layers.filter(l => l.name !== LAYER_IMPASSABLE).forEach( l => {
-         if (typeof l.data == 'string') return;
-         if (!l.data) return;
-         
-         for (let i = 0; i < l.data.length; i++) {
-            if (l.data[i] !== 0) {
-               if (! map.data[i].solid){
-                  this._floorTiles.push(map.data[i]);
-               }
-            }
-         }
-      })
 
       // Build waypoint grid for pathfinding based on 
       this._grid = new WaypointGrid(this._floorTiles);
@@ -60,6 +68,45 @@ class ScnMain extends ex.Scene {
       player.shoppingList = shoppingList;
 
       this.spawnEnemy();
+   }
+
+   collectSolidTiles(layer: Extensions.Tiled.ITiledMapLayer) {
+      if (layer.name !== LAYER_IMPASSABLE ||
+          typeof layer.data == 'string' ||
+          !layer.data) return;
+
+      for (let i = 0; i < layer.data.length; i++) {
+         if (layer.data[i] !== 0) {
+            this.map.data[i].solid = true;
+         }
+      }
+   }
+
+   collectFloorTiles(layer: Extensions.Tiled.ITiledMapLayer) {
+      if (layer.name !== LAYER_FLOOR ||
+          typeof layer.data == 'string' ||
+          !layer.data) return;
+      
+      for (let i = 0; i < layer.data.length; i++) {
+         if (layer.data[i] !== 0) {
+            if (!this.map.data[i].solid){
+               this._floorTiles.push(this.map.data[i]);
+            }
+         }
+      }
+   }
+
+   collectZones(layer: Extensions.Tiled.ITiledMapLayer) {
+      if (layer.name !== LAYER_ZONES ||
+          !layer.objects) return;
+
+      for (var o of layer.objects) {
+         this._zones.push({
+            x: o.x,
+            y: o.y,
+            type: <FoodZoneType>o.type
+         });
+      }
    }
 
    //TODO if we don't create a new WaypointGrid, the enemies spawn in at the current location of the existing enemies

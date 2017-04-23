@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="30" tilewidth="24" tileheight="24" nextobjectid="6">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="30" tilewidth="24" tileheight="24" nextobjectid="62">
  <tileset firstgid="1" name="map" tilewidth="24" tileheight="24" tilecount="400" columns="20">
   <image source="map.png" width="480" height="480"/>
  </tileset>
@@ -53,9 +53,9 @@
 21,0,0,0,0,0,0,0,0,0,0,0,0,0,86,88,0,0,86,87,88,0,0,0,86,88,0,0,86,88,0,0,0,86,88,0,0,0,0,0,0,0,0,0,163,164,165,0,0,110,
 21,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,110,
 21,103,104,104,104,104,104,104,104,105,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,110,
-21,163,164,164,164,164,164,164,164,165,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,46,47,48,0,0,0,0,0,64,64,0,64,110,
-21,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,66,67,68,0,0,0,0,0,64,0,0,0,110,
-21,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,103,104,104,104,104,104,104,104,104,104,104,104,104,104,105,0,0,0,0,66,67,68,0,0,0,0,0,64,0,0,0,110,
+21,163,164,164,164,164,164,164,164,165,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,110,
+21,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,110,
+21,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,103,104,104,104,104,104,104,104,104,104,104,104,104,104,105,0,0,0,0,46,47,48,0,0,0,0,0,64,64,0,64,110,
 21,103,104,104,104,104,104,104,104,105,0,0,0,0,0,0,0,0,163,164,164,164,164,164,164,164,164,164,164,164,164,164,165,0,0,0,0,66,67,68,0,0,0,0,0,64,0,0,0,110,
 21,163,164,164,164,164,164,164,164,165,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,66,67,68,0,0,0,0,0,64,0,0,0,110,
 21,0,0,0,0,0,0,0,0,0,0,0,0,0,43,45,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,66,67,68,0,0,0,0,0,64,0,0,0,110,
@@ -71,6 +71,167 @@
 181,64,64,64,64,64,64,64,64,181,188,188,188,183,184,185,186,187,188,188,188,188,188,44,182,182,182,182,182,182,189,189,189,189,189,189,189,189,189,189,189,189,64,64,64,64,64,64,64,190
 </data>
  </layer>
+ <objectgroup color="#d046d4" name="Zones">
+  <object id="6" type="Fruit" x="1092" y="72">
+   <ellipse/>
+  </object>
+  <object id="8" type="Fruit" x="1152" y="120">
+   <ellipse/>
+  </object>
+  <object id="9" type="Fruit" x="1032" y="96">
+   <ellipse/>
+  </object>
+  <object id="10" type="Fruit" x="1092" y="192">
+   <ellipse/>
+  </object>
+  <object id="11" type="Vegetables" x="1032" y="144">
+   <ellipse/>
+  </object>
+  <object id="12" type="Vegetables" x="912" y="120">
+   <ellipse/>
+  </object>
+  <object id="13" type="Vegetables" x="960" y="72">
+   <ellipse/>
+  </object>
+  <object id="14" type="Vegetables" x="984" y="192">
+   <ellipse/>
+  </object>
+  <object id="15" type="Vegetables" x="1032" y="240">
+   <ellipse/>
+  </object>
+  <object id="16" type="Vegetables" x="1152" y="240">
+   <ellipse/>
+  </object>
+  <object id="18" type="Bakery" x="48" y="528">
+   <ellipse/>
+  </object>
+  <object id="19" type="Bakery" x="132" y="576">
+   <ellipse/>
+  </object>
+  <object id="20" type="Bakery" x="192" y="528">
+   <ellipse/>
+  </object>
+  <object id="21" type="Bakery" x="48" y="624">
+   <ellipse/>
+  </object>
+  <object id="22" type="Bakery" x="192" y="624">
+   <ellipse/>
+  </object>
+  <object id="23" type="Meat" x="408" y="120">
+   <ellipse/>
+  </object>
+  <object id="24" type="Meat" x="408" y="192">
+   <ellipse/>
+  </object>
+  <object id="25" type="Meat" x="408" y="264">
+   <ellipse/>
+  </object>
+  <object id="26" type="Meat" x="480" y="192">
+   <ellipse/>
+  </object>
+  <object id="27" type="Freezer" x="552" y="120">
+   <ellipse/>
+  </object>
+  <object id="28" type="Meat" x="648" y="120">
+   <ellipse/>
+  </object>
+  <object id="29" type="Meat" x="648" y="192">
+   <ellipse/>
+  </object>
+  <object id="30" type="Meat" x="552" y="192">
+   <ellipse/>
+  </object>
+  <object id="31" type="Meat" x="552" y="264">
+   <ellipse/>
+  </object>
+  <object id="32" type="Meat" x="648" y="264">
+   <ellipse/>
+  </object>
+  <object id="33" type="Pantry" x="456" y="456">
+   <ellipse/>
+  </object>
+  <object id="34" type="Pantry" x="552" y="456">
+   <ellipse/>
+  </object>
+  <object id="35" type="Pantry" x="672" y="456">
+   <ellipse/>
+  </object>
+  <object id="36" type="Pantry" x="768" y="456">
+   <ellipse/>
+  </object>
+  <object id="37" type="Pantry" x="456" y="576">
+   <ellipse/>
+  </object>
+  <object id="38" type="Pantry" x="552" y="576">
+   <ellipse/>
+  </object>
+  <object id="39" type="Pantry" x="672" y="576">
+   <ellipse/>
+  </object>
+  <object id="40" type="Pantry" x="768" y="576">
+   <ellipse/>
+  </object>
+  <object id="41" type="Snacks" x="48" y="288">
+   <ellipse/>
+  </object>
+  <object id="42" type="Snacks" x="120" y="288">
+   <ellipse/>
+  </object>
+  <object id="43" type="Snacks" x="192" y="288">
+   <ellipse/>
+  </object>
+  <object id="44" type="Cereal" x="48" y="384">
+   <ellipse/>
+  </object>
+  <object id="45" type="Cereal" x="120" y="384">
+   <ellipse/>
+  </object>
+  <object id="46" type="Cereal" x="192" y="384">
+   <ellipse/>
+  </object>
+  <object id="47" type="Snacks" x="360" y="432">
+   <ellipse/>
+  </object>
+  <object id="48" type="Snacks" x="360" y="552">
+   <ellipse/>
+  </object>
+  <object id="49" type="Toiletries" x="456" y="672">
+   <ellipse/>
+  </object>
+  <object id="50" type="Toiletries" x="552" y="672">
+   <ellipse/>
+  </object>
+  <object id="51" type="Toiletries" x="648" y="672">
+   <ellipse/>
+  </object>
+  <object id="52" type="Meat" x="720" y="192">
+   <ellipse/>
+  </object>
+  <object id="53" type="Meat" x="792" y="192">
+   <ellipse/>
+  </object>
+  <object id="54" type="Snacks" x="96" y="192">
+   <ellipse/>
+  </object>
+  <object id="55" type="Snacks" x="96" y="72">
+   <ellipse/>
+  </object>
+  <object id="56" type="Snacks" x="216" y="72">
+   <ellipse/>
+  </object>
+  <object id="57" type="Snacks" x="216" y="192">
+   <ellipse/>
+  </object>
+  <object id="58" type="Toiletries" x="864" y="648">
+   <ellipse/>
+  </object>
+  <object id="59" type="Toiletries" x="864" y="552">
+   <ellipse/>
+  </object>
+  <object id="60" type="Toiletries" x="864" y="456">
+   <ellipse/>
+  </object>
+ </objectgroup>
  <objectgroup name="Waypoints" visible="0">
   <object id="5" x="72" y="72">
    <polyline points="0,0 600,0 600,264 456,264 456,120 600,120 456,120 456,0 312,0 312,264 168,264 168,0 0,0 0,576 168,576 168,264 312,264 312,576 168,576 456,576 456,264 0,264"/>
