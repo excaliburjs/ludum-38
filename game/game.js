@@ -154,13 +154,24 @@ var ZONE_TOILETRIES = 'Toiletries';
 var ZONE_BAKERY = 'Bakery';
 var ZONE_FRUIT = 'Fruit';
 var ZONE_VEGETABLES = 'Vegetables';
+var FoodTypes = [
+    ZONE_MEAT,
+    ZONE_FREEZER,
+    ZONE_SNACKS,
+    ZONE_PANTRY,
+    ZONE_CEREAL,
+    ZONE_TOILETRIES,
+    ZONE_BAKERY,
+    ZONE_FRUIT,
+    ZONE_VEGETABLES
+];
 var ScnMain = (function (_super) {
     __extends(ScnMain, _super);
     function ScnMain(engine) {
         var _this = _super.call(this, engine) || this;
         _this._wallTiles = [];
         _this._floorTiles = [];
-        _this._zones = [];
+        _this._foodSpawnPoints = [];
         _this.enemies = [];
         return _this;
     }
@@ -179,10 +190,10 @@ var ScnMain = (function (_super) {
         // player is added to scene global context
         var foodArr = new Array();
         var rand = new ex.Random();
-        var chosenFoodZones = rand.pickSet(this._zones, Config.foodSpawnCount);
+        var chosenFoodZones = rand.pickSet(FoodTypes, Config.foodSpawnCount);
         for (var i = 0; i < chosenFoodZones.length; i++) {
             var chosenFoodZone = chosenFoodZones[i];
-            var validTiles = this.getCellsInFoodZone(chosenFoodZone.type);
+            var validTiles = this.getCellsInFoodZone(chosenFoodZone);
             var chosenCell = validTiles[rand.integer(0, validTiles.length - 1)];
             //make a dummy cell so we can easily get the center
             var cell = new ex.Cell(chosenCell.x, chosenCell.y, 24, 24, 0);
@@ -239,7 +250,7 @@ var ScnMain = (function (_super) {
             return;
         for (var _i = 0, _a = layer.objects; _i < _a.length; _i++) {
             var o = _a[_i];
-            this._zones.push({
+            this._foodSpawnPoints.push({
                 x: o.x,
                 y: o.y,
                 type: o.type
@@ -247,7 +258,7 @@ var ScnMain = (function (_super) {
         }
     };
     ScnMain.prototype.getCellsInFoodZone = function (foodZone) {
-        var validCells = this._zones.filter(function (itm, idx) {
+        var validCells = this._foodSpawnPoints.filter(function (itm, idx) {
             return itm.type === foodZone;
         });
         return validCells;
