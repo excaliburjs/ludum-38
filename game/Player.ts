@@ -69,7 +69,7 @@ class Player extends ex.Actor {
             if (e.other instanceof Enemy) {
                director.gameOver();
             } else if (e.other instanceof Food) {
-               player.shoppingList.removeItem(e.other.ShoppingListId);
+               player.shoppingList.removeItem(e.other.shoppingListId);
                e.other.kill();
                e.other.collisionType = ex.CollisionType.PreventCollision;
                console.log('spawn enemy for', e.other.id);

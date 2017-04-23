@@ -14,11 +14,11 @@ const ZONE_FRUIT = 'Fruit';
 const ZONE_VEGETABLES = 'Vegetables';
 
 type FoodZone = 
-   | typeof ZONE_MEAT 
-   | typeof ZONE_FREEZER
-   | typeof ZONE_SNACKS
    | typeof ZONE_PANTRY
+   | typeof ZONE_SNACKS   
    | typeof ZONE_CEREAL
+   | typeof ZONE_FREEZER  
+   | typeof ZONE_MEAT        
    | typeof ZONE_TOILETRIES
    | typeof ZONE_BAKERY
    | typeof ZONE_FRUIT
@@ -30,12 +30,12 @@ interface IFoodSpawnPoint {
    type: FoodZone
 }
 
-const FoodTypes: Array<FoodZone> = [
-    ZONE_MEAT, 
-    ZONE_FREEZER,
-    ZONE_SNACKS,
+const FoodTypes: FoodZone[] = [
     ZONE_PANTRY,
+    ZONE_SNACKS,   
     ZONE_CEREAL,
+    ZONE_FREEZER, 
+    ZONE_MEAT,             
     ZONE_TOILETRIES,
     ZONE_BAKERY,
     ZONE_FRUIT,
@@ -179,12 +179,12 @@ class ScnMain extends ex.Scene {
          var chosenFoodZones = rand.pickSet(FoodTypes, Config.foodSpawnCount);
 
          for (var i = 0; i < chosenFoodZones.length; i++){
-            var chosenFoodZone = chosenFoodZones[i];
+            var chosenFoodZone: FoodZone = chosenFoodZones[i];
             var validTiles = this.getCellsInFoodZone(chosenFoodZone);
             var chosenCell = validTiles[rand.integer(0, validTiles.length - 1)];
             //make a dummy cell so we can easily get the center
             var cell = new ex.Cell(chosenCell.x, chosenCell.y, 24, 24, 0);
-            var food = new Food(cell.getCenter().x, cell.getCenter().y, i);
+            var food = new Food(cell.getCenter().x, cell.getCenter().y, i, chosenFoodZone);
             this.add(food);
             foodArr.push(food);
          }

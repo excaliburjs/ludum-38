@@ -20,6 +20,8 @@ var Config = {
 
    foodWidth: 48,
    foodHeight: 48,
+   foodSheetCols: 9,
+   foodSheetRows: 1,
    foodSpawnCount: 5,
    soundVolume: 0.15,
    backgroundVolume: 0.1,
