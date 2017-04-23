@@ -83,7 +83,7 @@ var Player = (function (_super) {
                     director.gameOver();
                 }
                 else if (e.other instanceof Food) {
-                    player.shoppingList.removeItem(e.other.ShoppingListId);
+                    player.shoppingList.removeItem(e.other.shoppingListId);
                     e.other.kill();
                     e.other.collisionType = ex.CollisionType.PreventCollision;
                     console.log('spawn enemy for', e.other.id);
@@ -152,6 +152,8 @@ var Config = {
     enemyChaseSpeed: 50,
     foodWidth: 48,
     foodHeight: 48,
+    foodSheetCols: 9,
+    foodSheetRows: 1,
     foodSpawnCount: 5,
     soundVolume: 0.15,
     backgroundVolume: 0.1,
@@ -207,11 +209,11 @@ var ZONE_BAKERY = 'Bakery';
 var ZONE_FRUIT = 'Fruit';
 var ZONE_VEGETABLES = 'Vegetables';
 var FoodTypes = [
-    ZONE_MEAT,
-    ZONE_FREEZER,
-    ZONE_SNACKS,
     ZONE_PANTRY,
+    ZONE_SNACKS,
     ZONE_CEREAL,
+    ZONE_FREEZER,
+    ZONE_MEAT,
     ZONE_TOILETRIES,
     ZONE_BAKERY,
     ZONE_FRUIT,
@@ -339,7 +341,7 @@ var ScnMain = (function (_super) {
             var chosenCell = validTiles[gameRandom.integer(0, validTiles.length - 1)];
             //make a dummy cell so we can easily get the center
             var cell = new ex.Cell(chosenCell.x, chosenCell.y, 24, 24, 0);
-            var food = new Food(cell.getCenter().x, cell.getCenter().y, i);
+            var food = new Food(cell.getCenter().x, cell.getCenter().y, i, chosenFoodZone);
             this.add(food);
             foodArr.push(food);
         }
@@ -351,17 +353,36 @@ var ScnMain = (function (_super) {
 }(ex.Scene));
 var Food = (function (_super) {
     __extends(Food, _super);
-    function Food(x, y, shoppingListId) {
+    function Food(x, y, shoppingListId, foodZone) {
         var _this = _super.call(this, x, y, Config.foodWidth, Config.foodHeight) || this;
-        _this.ShoppingListId = shoppingListId;
-        _this.addDrawing(Resources.foodSheet);
+        _this.shoppingListId = shoppingListId;
+        _this.foodZone = foodZone;
         return _this;
     }
     Food.prototype.onInitialize = function (engine) {
         this.collisionType = ex.CollisionType.Passive;
+        // init sprite sheet
+        if (Food.foodSheet === null) {
+            Food.foodSheet = new ex.SpriteSheet(Resources.foodSheet, Config.foodSheetCols, Config.foodSheetRows, Config.foodWidth, Config.foodHeight);
+        }
+        // get zone index
+        var zoneIdx = FoodTypes.indexOf(this.foodZone);
+        // get rand food from zone (each column in sheet indexed by zone)
+        // each row in sheet is another type of food in that zone
+        var foodIdx = gameRandom.integer(0, Config.foodSheetRows - 1);
+        var foodSprite = Food.foodSheet.getSprite(zoneIdx + foodIdx * Food.foodSheet.columns);
+        this.addDrawing(foodSprite);
+        var delay = gameRandom.integer(0, 700);
+        this.actions
+            .delay(delay)
+            .easeTo(this.x, this.y - 5, 750)
+            .easeTo(this.x, this.y, 750)
+            .repeatForever();
+        ex.Logger.getInstance().info('New food. Zone:', this.foodZone, 'anim delay:', delay);
     };
     return Food;
 }(ex.Actor));
+Food.foodSheet = null;
 var Enemy = (function (_super) {
     __extends(Enemy, _super);
     // todo need reference to the waypoint grid
