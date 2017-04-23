@@ -3,13 +3,13 @@ var Config = {
    gameWidth: 720,
    gameHeight: 720,
 
-   playerStart: new ex.Vector(3 * 24, 27 * 24),
+   playerStart: new ex.Vector(27 * 24, 27 * 24),
    playerWidth: 45,
    playerHeight: 45,
 
    playerVel: 100,
 
-   enemyStart: new ex.Vector(40, this.gameHeight + 100),
+   enemyStart: new ex.Vector(48, 720),
    enemyWidth: 50,
    enemyHeight: 50,
    enemyRayCastAngle: Math.PI / 4,

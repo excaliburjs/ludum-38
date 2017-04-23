@@ -20,6 +20,9 @@ class Enemy extends ex.Actor {
       this._random = new ex.Random();
       this._grid = grid;
 
+      var start = this._grid.findClosestNode(Config.enemyStart.x, Config.enemyStart.y);
+      this._wander(start);
+
       this.rays = new Array<ex.Ray>(Config.enemyRayCount);
       
    }
@@ -64,7 +67,7 @@ class Enemy extends ex.Actor {
          } else {
             if((<any>this.actions)._queues[0]._actions.length === 0){
 
-               var start = this._grid.findClosestNode(Config.enemyStart.x, Config.enemyStart.y);
+               var start = this._grid.findClosestNode(this.pos.x, this.pos.y);
                this._wander(start);
             }
          }
@@ -86,8 +89,8 @@ class Enemy extends ex.Actor {
       }
    }
 
-   private _wander(startNode?: WaypointNode) {
-      var start = startNode || this._random.pickOne<WaypointNode>(this._grid.nodes);
+   private _wander(startNode: WaypointNode) {
+      var start = startNode;// || this._random.pickOne<WaypointNode>(this._grid.nodes);
 
       this.pos = start.pos;
 

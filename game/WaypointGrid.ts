@@ -33,6 +33,7 @@ class WaypointGrid {
       for(var n of this.nodes){
          if(n.pos.distance(point) < minDistance){
             minNode = n;
+            minDistance = n.pos.distance(point);
          }
       }
       return minNode;
