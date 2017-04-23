@@ -339,9 +339,7 @@ var ScnMain = (function (_super) {
             var chosenFoodZone = chosenFoodZones[i];
             var validTiles = this.getCellsInFoodZone(chosenFoodZone);
             var chosenCell = validTiles[gameRandom.integer(0, validTiles.length - 1)];
-            //make a dummy cell so we can easily get the center
-            var cell = new ex.Cell(chosenCell.x, chosenCell.y, 24, 24, 0);
-            var food = new Food(cell.getCenter().x, cell.getCenter().y, i, chosenFoodZone);
+            var food = new Food(chosenCell.x, chosenCell.y, i, chosenFoodZone);
             this.add(food);
             foodArr.push(food);
         }
