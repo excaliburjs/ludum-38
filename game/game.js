@@ -132,7 +132,8 @@ var Resources = {
     enemySheet: new ex.Texture('img/enemy.png'),
     music: new ex.Sound('assets/snd/bossa_nova.mp3'),
     playerSpottedSound: new ex.Sound('assets/snd/playerSpotted.mp3', 'assets/snd/playerSpotted.wav'),
-    spawnEnemySound: new ex.Sound('assets/snd/spawnEnemy.mp3', 'assets/snd/spawnEnemy.wav')
+    spawnEnemySound: new ex.Sound('assets/snd/spawnEnemy.mp3', 'assets/snd/spawnEnemy.wav'),
+    spawnFoodSound: new ex.Sound('assets/snd/placeFood.mp3', 'assets/snd/placeFood.wav')
 };
 var Config = {
     gameWidth: 1200,
@@ -343,6 +344,7 @@ var ScnMain = (function (_super) {
             this.add(food);
             foodArr.push(food);
         }
+        SoundManager.playSpawnFood();
         var shoppingList = new ShoppingList(foodArr);
         player.shoppingList = shoppingList;
     };
@@ -776,6 +778,10 @@ var SoundManager = (function () {
     SoundManager.playSpawnEnemy = function () {
         Resources.spawnEnemySound.setVolume(Config.soundVolume);
         Resources.spawnEnemySound.play();
+    };
+    SoundManager.playSpawnFood = function () {
+        Resources.spawnFoodSound.setVolume(0.3);
+        Resources.spawnFoodSound.play();
     };
     SoundManager._updateMusicButton = function () {
         $('#mute-music i').get(0).className = classNames('fa', {
