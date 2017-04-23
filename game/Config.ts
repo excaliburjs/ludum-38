@@ -16,10 +16,15 @@ var Config = {
    enemyRayLength: 200,
    enemyRayCount: 5,
    enemySpeed: 20,
+   enemyChaseSpeed: 100,
 
    foodWidth: 48,
    foodHeight: 48,
    foodSpawnCount: 5,
    soundVolume: 0.15,
-   backgroundVolume: 0.1
+   backgroundVolume: 0.1,
+
+   groceryListTime: 1000,
+   spawnFoodTime: 2000,
+   spawnFirstEnemyTime: 7000
 }
