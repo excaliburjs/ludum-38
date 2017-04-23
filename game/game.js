@@ -902,7 +902,7 @@ game.input.keyboard.on('down', function (keyDown) {
         case ex.Input.Keys.Semicolon:
             game.isDebug = !game.isDebug;
             break;
-        case ex.Input.Keys.Num0:
+        case ex.Input.Keys.O:
             gameDebug = !gameDebug;
             break;
     }
