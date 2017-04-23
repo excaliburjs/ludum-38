@@ -90,25 +90,27 @@ class Player extends ex.Actor {
    }
 
    private _setupDrawing() {
-      var playerSheet = new ex.SpriteSheet(Resources.playerSheet, 12, 1, 45, 45);
+      var playerSheet = new ex.SpriteSheet(Resources.playerSheet, 10, 1, 45, 45);
       this.addDrawing('down', playerSheet.getSprite(0));
-      this.addDrawing('up', playerSheet.getSprite(4));
-      this.addDrawing('left', playerSheet.getSprite(8));
-      this.addDrawing('right', playerSheet.getSprite(10));
+      this.addDrawing('up', playerSheet.getSprite(3));
+      this.addDrawing('left', playerSheet.getSprite(7));
+      this.addDrawing('right', playerSheet.getSprite(9));
 
-      var walkDownAnim = playerSheet.getAnimationBetween(game, 0, 4, 180);
+      // var walkDownAnim = playerSheet.getAnimationBetween(game, 0, 4, 180);
+      var walkDownAnim = playerSheet.getAnimationByIndices(game, [0, 1, 0, 2], 180)
       walkDownAnim.loop = true;
       this.addDrawing('walkDown', walkDownAnim);
 
-      var walkUpAnim = playerSheet.getAnimationBetween(game, 4,8, 180);
+      // var walkUpAnim = playerSheet.getAnimationBetween(game, 4,8, 180);
+      var walkUpAnim = playerSheet.getAnimationByIndices(game, [3, 4, 3, 5], 180);
       walkUpAnim.loop = true;
       this.addDrawing('walkUp', walkUpAnim);
 
-      var walkLeftAnim = playerSheet.getAnimationByIndices(game, [8,9], 200);
+      var walkLeftAnim = playerSheet.getAnimationByIndices(game, [7,6], 200);
       walkLeftAnim.loop = true;
       this.addDrawing('walkLeft', walkLeftAnim);
 
-      var walkRightAnim = playerSheet.getAnimationByIndices(game, [10,11], 200);
+      var walkRightAnim = playerSheet.getAnimationByIndices(game, [9,8], 200);
       walkRightAnim.loop = true;
       this.addDrawing('walkRight', walkRightAnim);
       
