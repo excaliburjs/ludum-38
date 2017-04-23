@@ -34,7 +34,7 @@ var Player = (function (_super) {
                     case ex.Input.Keys.Up:
                     case ex.Input.Keys.W:
                         _this.vel.setTo(_this.vel.x, -Config.playerVel);
-                        player.setDrawing('up');
+                        player.setDrawing('walkUp');
                         break;
                     case ex.Input.Keys.Down:
                     case ex.Input.Keys.S:
@@ -44,12 +44,12 @@ var Player = (function (_super) {
                     case ex.Input.Keys.Left:
                     case ex.Input.Keys.A:
                         _this.vel.setTo(-Config.playerVel, _this.vel.y);
-                        player.setDrawing('left');
+                        player.setDrawing('walkLeft');
                         break;
                     case ex.Input.Keys.Right:
                     case ex.Input.Keys.D:
                         _this.vel.setTo(Config.playerVel, _this.vel.y);
-                        player.setDrawing('right');
+                        player.setDrawing('walkRight');
                         break;
                 }
             }
@@ -100,14 +100,23 @@ var Player = (function (_super) {
         return this.getBounds().rayCast(ray, clip);
     };
     Player.prototype._setupDrawing = function () {
-        var playerSheet = new ex.SpriteSheet(Resources.playerSheet, 7, 1, 45, 45);
+        var playerSheet = new ex.SpriteSheet(Resources.playerSheet, 12, 1, 45, 45);
         this.addDrawing('down', playerSheet.getSprite(0));
         this.addDrawing('up', playerSheet.getSprite(4));
-        this.addDrawing('left', playerSheet.getSprite(5));
-        this.addDrawing('right', playerSheet.getSprite(6));
+        this.addDrawing('left', playerSheet.getSprite(8));
+        this.addDrawing('right', playerSheet.getSprite(10));
         var walkDownAnim = playerSheet.getAnimationBetween(game, 0, 4, 180);
         walkDownAnim.loop = true;
         this.addDrawing('walkDown', walkDownAnim);
+        var walkUpAnim = playerSheet.getAnimationBetween(game, 4, 8, 180);
+        walkUpAnim.loop = true;
+        this.addDrawing('walkUp', walkUpAnim);
+        var walkLeftAnim = playerSheet.getAnimationByIndices(game, [8, 9], 200);
+        walkLeftAnim.loop = true;
+        this.addDrawing('walkLeft', walkLeftAnim);
+        var walkRightAnim = playerSheet.getAnimationByIndices(game, [10, 11], 200);
+        walkRightAnim.loop = true;
+        this.addDrawing('walkRight', walkRightAnim);
         this.setDrawing('down');
     };
     return Player;
