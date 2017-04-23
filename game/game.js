@@ -26,12 +26,7 @@ var Player = (function (_super) {
     }
     Player.prototype.onInitialize = function (engine) {
         var _this = this;
-        var playerSheet = new ex.SpriteSheet(Resources.playerSheet, 4, 1, 45, 45);
-        this.addDrawing('down', playerSheet.getSprite(0));
-        this.addDrawing('up', playerSheet.getSprite(1));
-        this.addDrawing('left', playerSheet.getSprite(2));
-        this.addDrawing('right', playerSheet.getSprite(3));
-        this.setDrawing('down');
+        this._setupDrawing();
         this.collisionType = ex.CollisionType.Active;
         game.input.keyboard.on('hold', function (keyHeld) {
             if (!State.gameOver) {
@@ -44,7 +39,7 @@ var Player = (function (_super) {
                     case ex.Input.Keys.Down:
                     case ex.Input.Keys.S:
                         _this.vel.setTo(_this.vel.x, Config.playerVel);
-                        player.setDrawing('down');
+                        player.setDrawing('walkDown');
                         break;
                     case ex.Input.Keys.Left:
                     case ex.Input.Keys.A:
@@ -54,6 +49,29 @@ var Player = (function (_super) {
                     case ex.Input.Keys.Right:
                     case ex.Input.Keys.D:
                         _this.vel.setTo(Config.playerVel, _this.vel.y);
+                        player.setDrawing('right');
+                        break;
+                }
+            }
+        });
+        game.input.keyboard.on('up', function (keyUp) {
+            if (!State.gameOver) {
+                switch (keyUp.key) {
+                    case ex.Input.Keys.Up:
+                    case ex.Input.Keys.W:
+                        player.setDrawing('up');
+                        break;
+                    case ex.Input.Keys.Down:
+                    case ex.Input.Keys.S:
+                        _this.vel.setTo(_this.vel.x, Config.playerVel);
+                        player.setDrawing('down');
+                        break;
+                    case ex.Input.Keys.Left:
+                    case ex.Input.Keys.A:
+                        player.setDrawing('left');
+                        break;
+                    case ex.Input.Keys.Right:
+                    case ex.Input.Keys.D:
                         player.setDrawing('right');
                         break;
                 }
@@ -69,7 +87,7 @@ var Player = (function (_super) {
                     player.shoppingList.removeItem(e.other.ShoppingListId);
                     e.other.kill();
                     e.other.collisionType = ex.CollisionType.PreventCollision;
-                    console.log('spwan enemy for', e.other.id);
+                    console.log('spawn enemy for', e.other.id);
                     scnMain.spawnEnemy();
                 }
             }
@@ -80,6 +98,17 @@ var Player = (function (_super) {
     };
     Player.prototype.raycast = function (ray, clip) {
         return this.getBounds().rayCast(ray, clip);
+    };
+    Player.prototype._setupDrawing = function () {
+        var playerSheet = new ex.SpriteSheet(Resources.playerSheet, 7, 1, 45, 45);
+        this.addDrawing('down', playerSheet.getSprite(0));
+        this.addDrawing('up', playerSheet.getSprite(4));
+        this.addDrawing('left', playerSheet.getSprite(5));
+        this.addDrawing('right', playerSheet.getSprite(6));
+        var walkDownAnim = playerSheet.getAnimationBetween(game, 0, 4, 300);
+        walkDownAnim.loop = true;
+        this.addDrawing('walkDown', walkDownAnim);
+        this.setDrawing('down');
     };
     return Player;
 }(ex.Actor));
