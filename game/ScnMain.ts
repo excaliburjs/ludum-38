@@ -71,7 +71,7 @@ class ScnMain extends ex.Scene {
       var shoppingList = new ShoppingList(foodArr);
       player.shoppingList = shoppingList;
 
-      this.spawnEnemy();
+      director.setup();
 
       this.on('postdraw', (evt: ex.PostDrawEvent) => {
          this._grid.draw(evt.ctx);
