@@ -96,7 +96,7 @@ class Player extends ex.Actor {
       this.addDrawing('left', playerSheet.getSprite(5));
       this.addDrawing('right', playerSheet.getSprite(6));
 
-      var walkDownAnim = playerSheet.getAnimationBetween(game, 0, 4, 300);
+      var walkDownAnim = playerSheet.getAnimationBetween(game, 0, 4, 180);
       walkDownAnim.loop = true;
       this.addDrawing('walkDown', walkDownAnim);
       
