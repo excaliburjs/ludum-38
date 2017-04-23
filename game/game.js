@@ -87,10 +87,11 @@ var Resources = {
 var Config = {
     gameWidth: 720,
     gameHeight: 720,
-    playerStart: new ex.Vector(3 * 24, 27 * 24),
+    playerStart: new ex.Vector(27 * 24, 27 * 24),
     playerWidth: 45,
     playerHeight: 45,
     playerVel: 100,
+    enemyStart: new ex.Vector(48, 720),
     enemyWidth: 50,
     enemyHeight: 50,
     enemyRayCastAngle: Math.PI / 4,
@@ -216,13 +217,15 @@ var Enemy = (function (_super) {
     __extends(Enemy, _super);
     // todo need reference to the waypoint grid
     function Enemy(grid) {
-        var _this = _super.call(this, 0, 0, Config.enemyWidth, Config.enemyHeight) || this;
+        var _this = _super.call(this, Config.enemyStart.x, Config.enemyStart.y, Config.enemyWidth, Config.enemyHeight) || this;
         _this.rays = [];
         _this.attack = false;
         _this.isAttacking = false;
         _this.addDrawing(Resources.enemySheet);
-        _this._random = new ex.Random(); //12);
+        _this._random = new ex.Random();
         _this._grid = grid;
+        var start = _this._grid.findClosestNode(Config.enemyStart.x, Config.enemyStart.y);
+        _this._wander(start);
         _this.rays = new Array(Config.enemyRayCount);
         return _this;
     }
@@ -258,7 +261,7 @@ var Enemy = (function (_super) {
             }
             else {
                 if (_this.actions._queues[0]._actions.length === 0) {
-                    var start = _this._grid.findNode(_this.pos.x, _this.pos.y);
+                    var start = _this._grid.findClosestNode(_this.pos.x, _this.pos.y);
                     _this._wander(start);
                 }
             }
@@ -279,7 +282,7 @@ var Enemy = (function (_super) {
         }
     };
     Enemy.prototype._wander = function (startNode) {
-        var start = startNode || this._random.pickOne(this._grid.nodes);
+        var start = startNode; // || this._random.pickOne<WaypointNode>(this._grid.nodes);
         this.pos = start.pos;
         var end = this._random.pickOne(this._grid.nodes);
         var path = this._grid.findPath(start, end);
@@ -343,6 +346,19 @@ var WaypointGrid = (function () {
         return this.nodes.filter(function (n) {
             return n.pos.x === x && n.pos.y === y;
         })[0] || null;
+    };
+    WaypointGrid.prototype.findClosestNode = function (x, y) {
+        var minNode;
+        var minDistance = Infinity;
+        var point = new ex.Vector(x, y);
+        for (var _i = 0, _a = this.nodes; _i < _a.length; _i++) {
+            var n = _a[_i];
+            if (n.pos.distance(point) < minDistance) {
+                minNode = n;
+                minDistance = n.pos.distance(point);
+            }
+        }
+        return minNode;
     };
     WaypointGrid.prototype.findNeighbors = function (node) {
         var nodes = [this.findNode(node.pos.x, node.pos.y - this._cellHeight),
