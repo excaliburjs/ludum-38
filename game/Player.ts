@@ -43,6 +43,9 @@ class Player extends ex.Actor {
             } else if (e.other instanceof Food) {
                player.shoppingList.removeItem(e.other.ShoppingListId);
                e.other.kill();
+               e.other.collisionType = ex.CollisionType.PreventCollision;
+               console.log('spwan enemy for', e.other.id);
+               scnMain.spawnEnemy();
             }
          }
       });
