@@ -22,12 +22,16 @@ var Player = (function (_super) {
      * Build the player for the game
      */
     function Player(x, y) {
-        var _this = _super.call(this, x, y, Config.playerWidth, Config.playerHeight) || this;
-        _this.addDrawing(Resources.playerSheet);
-        return _this;
+        return _super.call(this, x, y, Config.playerWidth, Config.playerHeight) || this;
     }
     Player.prototype.onInitialize = function (engine) {
         var _this = this;
+        var playerSheet = new ex.SpriteSheet(Resources.playerSheet, 4, 1, 45, 45);
+        this.addDrawing('down', playerSheet.getSprite(0));
+        this.addDrawing('up', playerSheet.getSprite(1));
+        this.addDrawing('left', playerSheet.getSprite(2));
+        this.addDrawing('right', playerSheet.getSprite(3));
+        this.setDrawing('down');
         this.collisionType = ex.CollisionType.Active;
         game.input.keyboard.on('hold', function (keyHeld) {
             if (!State.gameOver) {
@@ -35,18 +39,22 @@ var Player = (function (_super) {
                     case ex.Input.Keys.Up:
                     case ex.Input.Keys.W:
                         _this.vel.setTo(_this.vel.x, -Config.playerVel);
+                        player.setDrawing('up');
                         break;
                     case ex.Input.Keys.Down:
                     case ex.Input.Keys.S:
                         _this.vel.setTo(_this.vel.x, Config.playerVel);
+                        player.setDrawing('down');
                         break;
                     case ex.Input.Keys.Left:
                     case ex.Input.Keys.A:
                         _this.vel.setTo(-Config.playerVel, _this.vel.y);
+                        player.setDrawing('left');
                         break;
                     case ex.Input.Keys.Right:
                     case ex.Input.Keys.D:
                         _this.vel.setTo(Config.playerVel, _this.vel.y);
+                        player.setDrawing('right');
                         break;
                 }
             }
@@ -77,7 +85,7 @@ var Player = (function (_super) {
 }(ex.Actor));
 var Resources = {
     map: new Extensions.Tiled.TiledResource('assets/map.json'),
-    playerSheet: new ex.Texture('img/player.png'),
+    playerSheet: new ex.Texture('img/player-sprite.png'),
     foodSheet: new ex.Texture('img/food.png'),
     enemySheet: new ex.Texture('img/enemy.png'),
     music: new ex.Sound('assets/snd/bossa_nova.mp3'),
