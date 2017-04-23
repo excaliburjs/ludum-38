@@ -26,12 +26,22 @@ npm run build
 
 echo "Copying built files"
 cp -R $(ls | grep -v '^\(out\|lib\|\.vscode\|deploy\.sh\)$') out
+mkdir -p out/lib/classnames
 mkdir -p out/lib/excalibur-dist
 mkdir -p out/lib/excalibur-tiled/dist
+mkdir -p out/lib/font-awesome/css
+mkdir -p out/lib/font-awesome/fonts
+mkdir -p out/lib/storejs
+mkdir -p out/lib/zepto
 
 cd lib
+cp -R classnames ../out/lib
 cp -R excalibur-dist/ ../out/lib
 cp -R excalibur-tiled/dist/ ../out/lib/excalibur-tiled
+cp -R font-awesome/css ../out/lib/font-awesome
+cp -R font-awesome/fonts ../out/lib/font-awesome
+cp -R storejs ../out/lib/
+cp -R zepto ../out/lib
 cd ..
 cd out
 
