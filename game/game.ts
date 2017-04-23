@@ -63,7 +63,7 @@ game.input.keyboard.on('down', (keyDown?: ex.Input.KeyEvent) => {
         case ex.Input.Keys.Semicolon :
             game.isDebug = !game.isDebug;
             break;
-        case ex.Input.Keys.Num0 : 
+        case ex.Input.Keys.O : 
             gameDebug = !gameDebug
             break;
     }
