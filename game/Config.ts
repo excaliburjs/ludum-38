@@ -4,7 +4,7 @@ var Config = {
    gameHeight: 720,
 
    playerStart: new ex.Vector(24 * 24, 13 * 24),
-   playerWidth: 45,
+   playerWidth: 35,
    playerHeight: 45,
 
    playerVel: 100,
