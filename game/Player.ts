@@ -4,12 +4,13 @@ class Player extends ex.Actor {
     */
    constructor(x, y) {
       super(x, y, Config.playerWidth, Config.playerHeight);
-      this.addDrawing(Resources.playerSheet);
    }
 
    public shoppingList : ShoppingList;
 
    public onInitialize(engine: ex.Engine) {
+      this._setupDrawing();
+
       this.collisionType = ex.CollisionType.Active;
       
       game.input.keyboard.on('hold', (keyHeld?: ex.Input.KeyEvent) => {
@@ -18,18 +19,46 @@ class Player extends ex.Actor {
                case ex.Input.Keys.Up :
                case ex.Input.Keys.W :
                   this.vel.setTo(this.vel.x, -Config.playerVel);
+                  player.setDrawing('walkUp');
                   break;
                case ex.Input.Keys.Down :
                case ex.Input.Keys.S :
                   this.vel.setTo(this.vel.x, Config.playerVel);
+                  player.setDrawing('walkDown');
                   break;
                case ex.Input.Keys.Left :
                case ex.Input.Keys.A :
                   this.vel.setTo(-Config.playerVel, this.vel.y);
+                  player.setDrawing('walkLeft');
                   break;
                case ex.Input.Keys.Right :
                case ex.Input.Keys.D :
                   this.vel.setTo(Config.playerVel, this.vel.y);
+                  player.setDrawing('walkRight');
+                  break;
+            }
+         }
+      });
+
+      game.input.keyboard.on('up', (keyUp?: ex.Input.KeyEvent) => {
+         if (!State.gameOver) {
+            switch(keyUp.key) {
+               case ex.Input.Keys.Up :
+               case ex.Input.Keys.W :
+                  player.setDrawing('up');
+                  break;
+               case ex.Input.Keys.Down :
+               case ex.Input.Keys.S :
+                  this.vel.setTo(this.vel.x, Config.playerVel);
+                  player.setDrawing('down');
+                  break;
+               case ex.Input.Keys.Left :
+               case ex.Input.Keys.A :
+                  player.setDrawing('left');
+                  break;
+               case ex.Input.Keys.Right :
+               case ex.Input.Keys.D :
+                  player.setDrawing('right');
                   break;
             }
          }
@@ -44,7 +73,7 @@ class Player extends ex.Actor {
                player.shoppingList.removeItem(e.other.ShoppingListId);
                e.other.kill();
                e.other.collisionType = ex.CollisionType.PreventCollision;
-               console.log('spwan enemy for', e.other.id);
+               console.log('spawn enemy for', e.other.id);
                scnMain.spawnEnemy();
             }
          }
@@ -58,6 +87,32 @@ class Player extends ex.Actor {
 
    public raycast(ray: ex.Ray, clip: number): boolean {
       return this.getBounds().rayCast(ray, clip);
+   }
+
+   private _setupDrawing() {
+      var playerSheet = new ex.SpriteSheet(Resources.playerSheet, 12, 1, 45, 45);
+      this.addDrawing('down', playerSheet.getSprite(0));
+      this.addDrawing('up', playerSheet.getSprite(4));
+      this.addDrawing('left', playerSheet.getSprite(8));
+      this.addDrawing('right', playerSheet.getSprite(10));
+
+      var walkDownAnim = playerSheet.getAnimationBetween(game, 0, 4, 180);
+      walkDownAnim.loop = true;
+      this.addDrawing('walkDown', walkDownAnim);
+
+      var walkUpAnim = playerSheet.getAnimationBetween(game, 4,8, 180);
+      walkUpAnim.loop = true;
+      this.addDrawing('walkUp', walkUpAnim);
+
+      var walkLeftAnim = playerSheet.getAnimationByIndices(game, [8,9], 200);
+      walkLeftAnim.loop = true;
+      this.addDrawing('walkLeft', walkLeftAnim);
+
+      var walkRightAnim = playerSheet.getAnimationByIndices(game, [10,11], 200);
+      walkRightAnim.loop = true;
+      this.addDrawing('walkRight', walkRightAnim);
+      
+      this.setDrawing('down');
    }
   
 }
