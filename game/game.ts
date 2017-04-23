@@ -30,7 +30,8 @@ SoundManager.init();
 
 var gameDebug = false;
 
-var gameRandom = new ex.Random();
+var gameRandom = new ex.Random(Date.now());
+console.log(`Game seed ${gameRandom.seed}`);
 
 // create an asset loader
 var loader = new ex.Loader();
