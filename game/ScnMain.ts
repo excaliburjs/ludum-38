@@ -65,7 +65,7 @@ class ScnMain extends ex.Scene {
    //TODO if we don't create a new WaypointGrid, the enemies spawn in at the current location of the existing enemies
    // the WaypointGrid is being modified in an unexpected fashion
    spawnEnemy() {
-      var enemy = new Enemy(new WaypointGrid(this._floorTiles));
+      var enemy = new Enemy(this._grid);// new WaypointGrid(this._floorTiles));
       this.enemies.push(enemy);
       this.add(enemy);
       SoundManager.playSpawnEnemy();

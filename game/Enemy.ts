@@ -17,7 +17,7 @@ class Enemy extends ex.Actor {
       super(0, 0, Config.enemyWidth, Config.enemyHeight);
       this.addDrawing(Resources.enemySheet);
 
-      this._random = new ex.Random(12);
+      this._random = new ex.Random();//12);
       this._grid = grid;
 
       this.rays = new Array<ex.Ray>(Config.enemyRayCount);
