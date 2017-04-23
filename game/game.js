@@ -843,6 +843,7 @@ var Director = (function (_super) {
             return;
         ex.Logger.getInstance().info('game over');
         State.gameOver = true;
+        $('#game-over-dialog').show();
     };
     return Director;
 }(ex.Actor));
