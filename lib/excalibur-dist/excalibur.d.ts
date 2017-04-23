@@ -1,4 +1,4 @@
-/*! excalibur - vlocal - 2017-04-19
+/*! excalibur - vlocal - 2017-04-23
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */

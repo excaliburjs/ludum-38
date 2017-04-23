@@ -153,6 +153,24 @@ class WaypointGrid {
       return result;
    }
 
+   public rayCastTime(ray: ex.Ray, distance: number): number {
+      
+      var minTime: number = Infinity;
+      for(var i = 0; i < this._wallBounds.length; i++){
+          var time = this._wallBounds[i].rayCastTime(ray, distance)
+          if(time !== -1){
+             if(time < minTime){
+                minTime = time;
+             }
+          }
+      }
+
+      if(minTime === Infinity){
+         minTime = -1;
+      }
+      return minTime;
+   }
+
    public findPath(start: WaypointNode, end: WaypointNode) {
       
       // reset each node

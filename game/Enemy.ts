@@ -60,6 +60,7 @@ class Enemy extends ex.Actor {
 
                var start = this._grid.findClosestNode(this.pos.x, this.pos.y);
                this._wander(start);
+               this.isAttacking = false;
             }
          }
       });
@@ -100,10 +101,21 @@ class Enemy extends ex.Actor {
    public checkForPlayer(): boolean {
       var result = false;
       for(var ray of this.rays){
-         result = result || player.raycast(ray, Config.enemyRayLength);
-         if(!this.isAttacking && result){
-            this.isAttacking = true;
-            SoundManager.playPlayerSpotted();
+         var playerTime = player.raycastTime(ray, Config.enemyRayLength);
+         if(playerTime !== -1) {
+            var wallTime = this._grid.rayCastTime(ray, Config.enemyRayLength);
+            if(wallTime === -1){
+               wallTime = 99999999;
+            }
+            if(playerTime !== -1 && playerTime < wallTime){
+               result = true;
+
+               if(!this.isAttacking && result){
+                  this.isAttacking = true;
+                  SoundManager.playPlayerSpotted();
+               }
+               break;
+            }
          }
       }
       return result;
