@@ -51,7 +51,16 @@ class WaypointGrid {
       return nodes;      
    }
 
-   
+   private _sameSign(num1: number, num2: number){
+      if(num1 < 0 && num2 < 0){
+         return true;
+      }
+
+      if(num1 > 0 && num2 > 0){
+         return true;
+      }
+      return false;
+   }
 
    public findOrthogonalNeighbors(node: WaypointNode): WaypointNode[] {
       var x = node.pos.x;
@@ -76,6 +85,9 @@ class WaypointGrid {
             minXNode = sameX[i];
          }
       }
+      if(oldMinXNode && this._sameSign(oldMinXNode.pos.y - node.pos.y, minXNode.pos.y - node.pos.y)){
+         oldMinXNode = null;
+      }
 
       var minY: number = Infinity;
       var minYNode: WaypointNode;
@@ -89,12 +101,24 @@ class WaypointGrid {
          }
       }
 
+      if(oldMinYNode && this._sameSign(oldMinYNode.pos.x - node.pos.x, minYNode.pos.x - node.pos.x)){
+         oldMinYNode = null;
+      }
+
       var potentialNeighbors = [minXNode, oldMinXNode, minYNode, oldMinYNode].filter(n => { return n != null});
 
       var result = [];
       for(var n of potentialNeighbors){
          var tempRay = new ex.Ray(node.pos.clone(), n.pos.sub(node.pos));
-         if(!this.rayCast(tempRay, n.pos.sub(node.pos).magnitude())){
+         if(tempRay.dir.x === 0){
+            tempRay.dir.x = .0001
+         }
+         if(tempRay.dir.y === 0){
+            tempRay.dir.y = .0001
+         }
+         if(this.rayCast(tempRay, node.pos.distance(n.pos))) {
+            console.log("invalid neighbor");            
+         } else {
             result.push(n);
          }
       }
@@ -121,9 +145,12 @@ class WaypointGrid {
    }
 
    public rayCast(ray: ex.Ray, distance: number): boolean {
+      var result = false;
       for(var i = 0; i < this._wallBounds.length; i++){
-         return this._wallBounds[i].rayCast(ray, distance)
+          result = result || this._wallBounds[i].rayCast(ray, distance)
       }
+
+      return result;
    }
 
    public findPath(start: WaypointNode, end: WaypointNode) {
@@ -156,7 +183,7 @@ class WaypointGrid {
          closedNodes.push(current);
 
          // Find neighbors we haven't explored
-         var neighbors = this.findNeighbors(current).filter(n => { return !ex.Util.contains(closedNodes, n) });
+         var neighbors = current.neighbors.filter(n => { return !ex.Util.contains(closedNodes, n) }); // this.findNeighbors(current).filter(n => { return !ex.Util.contains(closedNodes, n) });
 
          // Calculate neighbor heuristics
          neighbors.forEach(n => {
