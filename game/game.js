@@ -332,12 +332,11 @@ var ScnMain = (function (_super) {
     ScnMain.prototype.spawnFood = function () {
         // player is added to scene global context
         var foodArr = new Array();
-        var rand = new ex.Random();
-        var chosenFoodZones = rand.pickSet(FoodTypes, Config.foodSpawnCount);
+        var chosenFoodZones = gameRandom.pickSet(FoodTypes, Config.foodSpawnCount);
         for (var i = 0; i < chosenFoodZones.length; i++) {
             var chosenFoodZone = chosenFoodZones[i];
             var validTiles = this.getCellsInFoodZone(chosenFoodZone);
-            var chosenCell = validTiles[rand.integer(0, validTiles.length - 1)];
+            var chosenCell = validTiles[gameRandom.integer(0, validTiles.length - 1)];
             //make a dummy cell so we can easily get the center
             var cell = new ex.Cell(chosenCell.x, chosenCell.y, 24, 24, 0);
             var food = new Food(cell.getCenter().x, cell.getCenter().y, i);
@@ -372,7 +371,6 @@ var Enemy = (function (_super) {
         _this.attack = false;
         _this.isAttacking = false;
         _this.addDrawing(Resources.enemySheet);
-        _this._random = new ex.Random();
         _this._grid = grid;
         var start = _this._grid.findClosestNode(Config.enemyStart.x, Config.enemyStart.y);
         _this._wander(start);
@@ -430,7 +428,7 @@ var Enemy = (function (_super) {
     Enemy.prototype._wander = function (startNode) {
         var start = startNode;
         this.pos = start.pos.clone();
-        var end = this._random.pickOne(this._grid.nodes);
+        var end = gameRandom.pickOne(this._grid.nodes);
         var path = this._grid.findPath(start, end);
         for (var _i = 0, path_1 = path; _i < path_1.length; _i++) {
             var node = path_1[_i];
@@ -873,6 +871,7 @@ var game = new ex.Engine({
 loadPreferences();
 SoundManager.init();
 var gameDebug = false;
+var gameRandom = new ex.Random();
 // create an asset loader
 var loader = new ex.Loader();
 for (var r in Resources) {
