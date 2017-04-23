@@ -38,10 +38,10 @@ cd lib
 cp classnames/ ../out/lib
 cp -R excalibur-dist/ ../out/lib
 cp -R excalibur-tiled/dist/ ../out/lib/excalibur-tiled
-cp font-awesome/css ../out/lib/font-awesome
-cp font-awesome/fonts ../out/lib/font-awesome
-cp storejs ../out/lib/
-cp zepto ../out/lib
+cp -R font-awesome/css ../out/lib/font-awesome
+cp -R font-awesome/fonts ../out/lib/font-awesome
+cp -R storejs ../out/lib/
+cp -R zepto ../out/lib
 cd ..
 cd out
 
