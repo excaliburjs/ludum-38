@@ -1,4 +1,5 @@
 const LAYER_IMPASSABLE = 'Impassable';
+const LAYER_WAYPOINTS = 'Waypoints';
 const LAYER_FLOOR = 'Floor';
 const LAYER_ZONES = 'Zones';
 const ZONE_MEAT = 'Meat';
@@ -31,6 +32,8 @@ interface FoodZone {
 class ScnMain extends ex.Scene {
 
    private _grid: WaypointGrid;
+   private _nodes: WaypointNode[];
+   private _wallTiles: ex.Cell[] = [];
    private _floorTiles: ex.Cell[] = [];
    private _zones: FoodZone[] = [];
 
@@ -46,13 +49,14 @@ class ScnMain extends ex.Scene {
       this.add(this.map);
       
       Resources.map.data.layers.forEach(layer => {
+         this.collectWayPoints(layer);
          this.collectSolidTiles(layer);
          this.collectFloorTiles(layer); 
          this.collectZones(layer);     
       });
 
       // Build waypoint grid for pathfinding based on 
-      this._grid = new WaypointGrid(this._floorTiles);
+      this._grid = new WaypointGrid(this._nodes, this._wallTiles);
       
       // player is added to scene global context
       var foodArr = new Array<Food>();
@@ -68,6 +72,21 @@ class ScnMain extends ex.Scene {
       player.shoppingList = shoppingList;
 
       this.spawnEnemy();
+
+      this.on('postdraw', (evt: ex.PostDrawEvent) => {
+         this._grid.draw(evt.ctx);
+      });
+   }
+
+   collectWayPoints(layer: Extensions.Tiled.ITiledMapLayer) {
+      if (layer.name !== LAYER_WAYPOINTS ||
+          !layer.objects) return;
+
+      var nodes: WaypointNode[] = [];
+      for(var o of layer.objects){
+         nodes.push(new WaypointNode(o.x, o.y));
+      }
+      this._nodes = nodes;
    }
 
    collectSolidTiles(layer: Extensions.Tiled.ITiledMapLayer) {
@@ -78,6 +97,7 @@ class ScnMain extends ex.Scene {
       for (let i = 0; i < layer.data.length; i++) {
          if (layer.data[i] !== 0) {
             this.map.data[i].solid = true;
+            this._wallTiles.push(this.map.data[i]);
          }
       }
    }

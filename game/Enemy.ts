@@ -53,17 +53,8 @@ class Enemy extends ex.Actor {
 
             // Chase only in orthogonal directions
             var max = Math.max(Math.abs(vectorToPlayer.x), Math.abs(vectorToPlayer.y));
-
-            if(max === Math.abs(vectorToPlayer.x)){
-               max = vectorToPlayer.x;
-            }
-
-            if(max === Math.abs(vectorToPlayer.y)){
-               max = vectorToPlayer.y;
-            }
-
-            var newVel = new ex.Vector(max === vectorToPlayer.x ? vectorToPlayer.x : 0, max === vectorToPlayer.y ? vectorToPlayer.y : 0);
-            this.vel = newVel;
+            
+            this.vel = vectorToPlayer.normalize().scale(Config.enemyChaseSpeed);
          } else {
             if((<any>this.actions)._queues[0]._actions.length === 0){
 
@@ -90,9 +81,9 @@ class Enemy extends ex.Actor {
    }
 
    private _wander(startNode: WaypointNode) {
-      var start = startNode;// || this._random.pickOne<WaypointNode>(this._grid.nodes);
-
-      this.pos = start.pos;
+      var start = startNode;
+      
+      this.pos = start.pos.clone();
 
       var end = this._random.pickOne<WaypointNode>(this._grid.nodes);
       
