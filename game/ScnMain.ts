@@ -23,11 +23,23 @@ type FoodZone =
    | typeof ZONE_FRUIT
    | typeof ZONE_VEGETABLES;
 
-interface IFoodZone {
+interface IFoodSpawnPoint {
    x: number,
    y: number,
    type: FoodZone
 }
+
+const FoodTypes: Array<FoodZone> = [
+    ZONE_MEAT, 
+    ZONE_FREEZER,
+    ZONE_SNACKS,
+    ZONE_PANTRY,
+    ZONE_CEREAL,
+    ZONE_TOILETRIES,
+    ZONE_BAKERY,
+    ZONE_FRUIT,
+    ZONE_VEGETABLES
+];
 
 class ScnMain extends ex.Scene {
 
@@ -35,7 +47,7 @@ class ScnMain extends ex.Scene {
    private _nodes: WaypointNode[];
    private _wallTiles: ex.Cell[] = [];
    private _floorTiles: ex.Cell[] = [];
-   private _zones: IFoodZone[] = [];
+   private _foodSpawnPoints: IFoodSpawnPoint[] = [];
 
    constructor(engine: ex.Engine) {
       super(engine);            
@@ -62,11 +74,11 @@ class ScnMain extends ex.Scene {
       var foodArr = new Array<Food>();
       var rand = new ex.Random();
 
-         var chosenFoodZones = rand.pickSet(this._zones, Config.foodSpawnCount);
+         var chosenFoodZones = rand.pickSet(FoodTypes, Config.foodSpawnCount);
 
          for (var i = 0; i < chosenFoodZones.length; i++){
             var chosenFoodZone = chosenFoodZones[i];
-            var validTiles = this.getCellsInFoodZone(chosenFoodZone.type);
+            var validTiles = this.getCellsInFoodZone(chosenFoodZone);
             var chosenCell = validTiles[rand.integer(0, validTiles.length - 1)];
             //make a dummy cell so we can easily get the center
             var cell = new ex.Cell(chosenCell.x, chosenCell.y, 24, 24, 0);
@@ -128,7 +140,7 @@ class ScnMain extends ex.Scene {
           !layer.objects) return;
 
       for (var o of layer.objects) {
-         this._zones.push({
+         this._foodSpawnPoints.push({
             x: o.x,
             y: o.y,
             type: <FoodZone>o.type
@@ -136,8 +148,8 @@ class ScnMain extends ex.Scene {
       }
    }
 
-   getCellsInFoodZone(foodZone: FoodZone): IFoodZone[] {
-      var validCells = this._zones.filter((itm, idx) => {
+   getCellsInFoodZone(foodZone: string): IFoodSpawnPoint[] {
+      var validCells = this._foodSpawnPoints.filter((itm, idx) => {
          return itm.type === foodZone;
       });
 
