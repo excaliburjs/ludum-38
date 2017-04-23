@@ -5,5 +5,5 @@ var Resources = {
    enemySheet: new ex.Texture('img/enemy.png'),
    music: new ex.Sound('assets/snd/bossa_nova.mp3'),
    playerSpottedSound: new ex.Sound('assets/snd/playerSpotted.mp3', 'assets/snd/playerSpotted.wav'),
-   spawnEnemySound: new ex.Sound('assets/snd/spawnEnemySound.mp3', 'assets/snd/spawnEnemySound.wav')
+   spawnEnemySound: new ex.Sound('assets/snd/spawnEnemy.mp3', 'assets/snd/spawnEnemy.wav')
 };

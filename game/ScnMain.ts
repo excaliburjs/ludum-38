@@ -68,5 +68,6 @@ class ScnMain extends ex.Scene {
       var enemy = new Enemy(new WaypointGrid(this._floorTiles));
       this.enemies.push(enemy);
       this.add(enemy);
+      SoundManager.playSpawnEnemy();
    }
 }

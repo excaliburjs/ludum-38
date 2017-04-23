@@ -88,6 +88,11 @@ class SoundManager {
       Resources.playerSpottedSound.play();
    }
 
+   static playSpawnEnemy(){
+      Resources.spawnEnemySound.setVolume(Config.soundVolume);
+      Resources.spawnEnemySound.play();
+   }
+
    private static _updateMusicButton() {
       $('#mute-music i').get(0).className = classNames('fa', { 
          'fa-music': !Preferences.muteBackgroundMusic, 
