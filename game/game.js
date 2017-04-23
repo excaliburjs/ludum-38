@@ -80,8 +80,7 @@ var Player = (function (_super) {
         this.on('collision', function (e) {
             if (!State.gameOver) {
                 if (e.other instanceof Enemy) {
-                    ex.Logger.getInstance().info('game over');
-                    State.gameOver = true;
+                    director.gameOver();
                 }
                 else if (e.other instanceof Food) {
                     player.shoppingList.removeItem(e.other.ShoppingListId);
@@ -193,6 +192,7 @@ var Stats = (function () {
     return Stats;
 }());
 var LAYER_IMPASSABLE = 'Impassable';
+var LAYER_GAMEOVER = 'GameOver';
 var LAYER_WAYPOINTS = 'Waypoints';
 var LAYER_FLOOR = 'Floor';
 var LAYER_ZONES = 'Zones';
@@ -223,7 +223,11 @@ var ScnMain = (function (_super) {
         _this._wallTiles = [];
         _this._floorTiles = [];
         _this._foodSpawnPoints = [];
+        _this._gameOverZone = [];
         _this.enemies = [];
+        _this.handleGameOverTrigger = function () {
+            director.gameOver();
+        };
         return _this;
     }
     ScnMain.prototype.onInitialize = function (engine) {
@@ -235,7 +239,14 @@ var ScnMain = (function (_super) {
             _this.collectSolidTiles(layer);
             _this.collectFloorTiles(layer);
             _this.collectFoodZones(layer);
+            _this.collectGameOverZones(layer);
         });
+        // Build game over triggers
+        for (var _i = 0, _a = this._gameOverZone; _i < _a.length; _i++) {
+            var go = _a[_i];
+            var goc = go.getCenter();
+            this.add(new ex.Trigger(goc.x, goc.y, this.map.cellWidth, this.map.cellHeight, this.handleGameOverTrigger));
+        }
         // Build waypoint grid for pathfinding based on 
         this._grid = new WaypointGrid(this._nodes, this._wallTiles);
         director.setup();
@@ -292,6 +303,15 @@ var ScnMain = (function (_super) {
                 y: o.y,
                 type: o.type
             });
+        }
+    };
+    ScnMain.prototype.collectGameOverZones = function (layer) {
+        if (layer.name !== LAYER_GAMEOVER)
+            return;
+        for (var i = 0; i < layer.data.length; i++) {
+            if (layer.data[i] > 0) {
+                this._gameOverZone.push(this.map.data[i]);
+            }
         }
     };
     ScnMain.prototype.getCellsInFoodZone = function (foodZone) {
@@ -808,6 +828,15 @@ var Director = (function (_super) {
     //4. the first antagonist arrives
     Director.prototype._spawnFirstEnemy = function () {
         scnMain.spawnEnemy();
+    };
+    //4b. add more antagonists
+    //5. checkout - game ends
+    Director.prototype.gameOver = function () {
+        // already called (could be triggered multiple times)
+        if (State.gameOver)
+            return;
+        ex.Logger.getInstance().info('game over');
+        State.gameOver = true;
     };
     return Director;
 }(ex.Actor));
