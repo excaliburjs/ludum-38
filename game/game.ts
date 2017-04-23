@@ -15,6 +15,7 @@
 /// <reference path="WaypointGrid.ts" />
 /// <reference path="WaypointNode.ts" />
 /// <reference path="SoundManager.ts" />
+/// <reference path="Director.ts" />
 
 
 var game = new ex.Engine({
@@ -32,6 +33,9 @@ var loader = new ex.Loader();
 for (var r in Resources) {
     loader.addResource(Resources[r]);
 }
+
+var director = new Director();
+game.add(director);
 
 var scnMain = new ScnMain(game);
 game.addScene('main', scnMain);
