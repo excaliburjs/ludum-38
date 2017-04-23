@@ -9,6 +9,7 @@ var Config = {
 
    playerVel: 100,
 
+   enemyStart: new ex.Vector(40, this.gameHeight + 100),
    enemyWidth: 50,
    enemyHeight: 50,
    enemyRayCastAngle: Math.PI / 4,

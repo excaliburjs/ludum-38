@@ -14,10 +14,10 @@ class Enemy extends ex.Actor {
    // todo need reference to the waypoint grid
 
    constructor(grid: WaypointGrid) {      
-      super(0, 0, Config.enemyWidth, Config.enemyHeight);
+      super(Config.enemyStart.x, Config.enemyStart.y, Config.enemyWidth, Config.enemyHeight);
       this.addDrawing(Resources.enemySheet);
 
-      this._random = new ex.Random();//12);
+      this._random = new ex.Random();
       this._grid = grid;
 
       this.rays = new Array<ex.Ray>(Config.enemyRayCount);
@@ -64,7 +64,7 @@ class Enemy extends ex.Actor {
          } else {
             if((<any>this.actions)._queues[0]._actions.length === 0){
 
-               var start = this._grid.findNode(this.pos.x, this.pos.y);
+               var start = this._grid.findClosestNode(Config.enemyStart.x, Config.enemyStart.y);
                this._wander(start);
             }
          }
