@@ -60,6 +60,7 @@ class Enemy extends ex.Actor {
 
                var start = this._grid.findClosestNode(this.pos.x, this.pos.y);
                this._wander(start);
+               this.isAttacking = false;
             }
          }
       });
