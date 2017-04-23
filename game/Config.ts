@@ -22,5 +22,9 @@ var Config = {
    foodHeight: 48,
    foodSpawnCount: 4,
    soundVolume: 0.15,
-   backgroundVolume: 0.1
+   backgroundVolume: 0.1,
+
+   groceryListTime: 1000,
+   spawnFoodTime: 2000,
+   spawnFirstEnemyTime: 7000
 }
