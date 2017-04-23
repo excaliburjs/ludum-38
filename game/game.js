@@ -60,6 +60,8 @@ var Player = (function (_super) {
                 else if (e.other instanceof Food) {
                     player.shoppingList.removeItem(e.other.ShoppingListId);
                     e.other.kill();
+                    e.other.collisionType = ex.CollisionType.PreventCollision;
+                    console.log('spwan enemy for', e.other.id);
                     scnMain.spawnEnemy();
                 }
             }
@@ -189,7 +191,7 @@ var ScnMain = (function (_super) {
     //TODO if we don't create a new WaypointGrid, the enemies spawn in at the current location of the existing enemies
     // the WaypointGrid is being modified in an unexpected fashion
     ScnMain.prototype.spawnEnemy = function () {
-        var enemy = new Enemy(new WaypointGrid(this._floorTiles));
+        var enemy = new Enemy(this._grid); // new WaypointGrid(this._floorTiles));
         this.enemies.push(enemy);
         this.add(enemy);
     };
@@ -217,7 +219,7 @@ var Enemy = (function (_super) {
         _this.attack = false;
         _this.isAttacking = false;
         _this.addDrawing(Resources.enemySheet);
-        _this._random = new ex.Random(12);
+        _this._random = new ex.Random(); //12);
         _this._grid = grid;
         _this.rays = new Array(Config.enemyRayCount);
         return _this;
