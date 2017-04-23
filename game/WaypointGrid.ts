@@ -26,6 +26,19 @@ class WaypointGrid {
       })[0] || null;
    }
 
+   public findClosestNode(x: number, y: number): WaypointNode {
+      var minNode: WaypointNode;
+      var minDistance: number = Infinity;
+      var point = new ex.Vector(x, y);
+      for(var n of this.nodes){
+         if(n.pos.distance(point) < minDistance){
+            minNode = n;
+            minDistance = n.pos.distance(point);
+         }
+      }
+      return minNode;
+   }
+
    public findNeighbors(node: WaypointNode): WaypointNode[] {
       var nodes = [this.findNode(node.pos.x, node.pos.y - this._cellHeight),
                    this.findNode(node.pos.x - this._cellWidth, node.pos.y),
