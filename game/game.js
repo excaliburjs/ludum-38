@@ -103,7 +103,10 @@ var Config = {
     foodHeight: 48,
     foodSpawnCount: 4,
     soundVolume: 0.15,
-    backgroundVolume: 0.1
+    backgroundVolume: 0.1,
+    groceryListTime: 1000,
+    spawnFoodTime: 2000,
+    spawnFirstEnemyTime: 7000
 };
 var State = {
     gameOver: false
@@ -637,6 +640,47 @@ var SoundManager = (function () {
     };
     return SoundManager;
 }());
+var Director = (function (_super) {
+    __extends(Director, _super);
+    function Director() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Director.prototype.setup = function () {
+        var _this = this;
+        ex.Logger.getInstance().info('director setup');
+        this._showGroceryListTimer = new ex.Timer(function () {
+            _this._showGroceryList();
+        }, Config.groceryListTime);
+        scnMain.add(this._showGroceryListTimer);
+        this._spawnFoodTimer = new ex.Timer(function () {
+            _this._spawnFood();
+        }, Config.spawnFoodTime);
+        scnMain.add(this._spawnFoodTimer);
+        this._spawnFirstEnemyTimer = new ex.Timer(function () {
+            _this._spawnFirstEnemy();
+        }, Config.spawnFirstEnemyTime);
+        scnMain.add(this._spawnFirstEnemyTimer);
+    };
+    //1. start zoomed in on player, zoom out
+    // public zoomOut() {
+    // zooming is broken
+    // }
+    //2. display grocery list
+    Director.prototype._showGroceryList = function () {
+        console.log('show grocery list');
+        //TODO
+    };
+    //3. spawn in food
+    Director.prototype._spawnFood = function () {
+        console.log('spawn food');
+        //TODO
+    };
+    //4. the first antagonist arrives
+    Director.prototype._spawnFirstEnemy = function () {
+        scnMain.spawnEnemy();
+    };
+    return Director;
+}(ex.Actor));
 /// <reference path="../lib/excalibur-tiled/dist/excalibur-tiled.d.ts" />
 /// <reference path="../node_modules/@types/zepto/index.d.ts" />
 /// <reference path="../node_modules/@types/classnames/index.d.ts" />
@@ -653,6 +697,7 @@ var SoundManager = (function () {
 /// <reference path="WaypointGrid.ts" />
 /// <reference path="WaypointNode.ts" />
 /// <reference path="SoundManager.ts" />
+/// <reference path="Director.ts" />
 var game = new ex.Engine({
     width: Config.gameWidth,
     height: Config.gameHeight,
@@ -666,6 +711,8 @@ var loader = new ex.Loader();
 for (var r in Resources) {
     loader.addResource(Resources[r]);
 }
+var director = new Director();
+game.add(director);
 var scnMain = new ScnMain(game);
 game.addScene('main', scnMain);
 // create the player in global context
