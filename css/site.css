@@ -20,8 +20,18 @@ a {
 }
 
 #game-over-dialog {
-   height: 150px;
-   width: 200px;
+   background: black;
+   color: orangered;
+   height: 300px;
+   width: 500px;
    top: 0;
    margin-top: 90px;
+}
+
+.restart-game-button {
+   background: orangered;
+    border: orangered;
+    border-radius: 5px;
+    height: 30px;
+    width: 100px;
 }
