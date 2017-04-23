@@ -11,7 +11,7 @@ const ZONE_BAKERY = 'Bakery';
 const ZONE_FRUIT = 'Fruit';
 const ZONE_VEGETABLES = 'Vegetables';
 
-type FoodZoneType = 
+type FoodZone = 
    | typeof ZONE_MEAT 
    | typeof ZONE_FREEZER
    | typeof ZONE_SNACKS
@@ -22,17 +22,17 @@ type FoodZoneType =
    | typeof ZONE_FRUIT
    | typeof ZONE_VEGETABLES;
 
-interface FoodZone {
-   x: number;
-   y: number;
-   type: FoodZoneType;
+interface IFoodZone {
+   x: number,
+   y: number,
+   type: FoodZone
 }
 
 class ScnMain extends ex.Scene {
 
    private _grid: WaypointGrid;
    private _floorTiles: ex.Cell[] = [];
-   private _zones: FoodZone[] = [];
+   private _zones: IFoodZone[] = [];
 
    constructor(engine: ex.Engine) {
       super(engine);            
@@ -48,7 +48,7 @@ class ScnMain extends ex.Scene {
       Resources.map.data.layers.forEach(layer => {
          this.collectSolidTiles(layer);
          this.collectFloorTiles(layer); 
-         this.collectZones(layer);     
+         this.collectFoodZones(layer);     
       });
 
       // Build waypoint grid for pathfinding based on 
@@ -58,12 +58,19 @@ class ScnMain extends ex.Scene {
       var foodArr = new Array<Food>();
       var rand = new ex.Random();
 
-      for(var i = 0; i < Config.foodSpawnCount; i++){
-         var randomCell = this._floorTiles[rand.integer(0, this._floorTiles.length - 1)];
-         var food = new Food(randomCell.getCenter().x, randomCell.getCenter().y, i);
-         this.add(food);
-         foodArr.push(food);
-      }
+         var chosenFoodZones = rand.pickSet(this._zones, Config.foodSpawnCount);
+
+         for (var i = 0; i < chosenFoodZones.length; i++){
+            var chosenFoodZone = chosenFoodZones[i];
+            var validTiles = this.getCellsInFoodZone(chosenFoodZone.type);
+            var chosenCell = validTiles[rand.integer(0, validTiles.length - 1)];
+            //make a dummy cell so we can easily get the center
+            var cell = new ex.Cell(chosenCell.x, chosenCell.y, 24, 24, 0);
+            var food = new Food(cell.getCenter().x, cell.getCenter().y, i);
+            this.add(food);
+            foodArr.push(food);
+         }
+
       var shoppingList = new ShoppingList(foodArr);
       player.shoppingList = shoppingList;
 
@@ -96,7 +103,7 @@ class ScnMain extends ex.Scene {
       }
    }
 
-   collectZones(layer: Extensions.Tiled.ITiledMapLayer) {
+   collectFoodZones(layer: Extensions.Tiled.ITiledMapLayer) {
       if (layer.name !== LAYER_ZONES ||
           !layer.objects) return;
 
@@ -104,9 +111,17 @@ class ScnMain extends ex.Scene {
          this._zones.push({
             x: o.x,
             y: o.y,
-            type: <FoodZoneType>o.type
+            type: <FoodZone>o.type
          });
       }
+   }
+
+   getCellsInFoodZone(foodZone: FoodZone): IFoodZone[] {
+      var validCells = this._zones.filter((itm, idx) => {
+         return itm.type === foodZone;
+      });
+
+      return validCells;
    }
 
    //TODO if we don't create a new WaypointGrid, the enemies spawn in at the current location of the existing enemies
