@@ -101,7 +101,7 @@ var Config = {
     enemyChaseSpeed: 100,
     foodWidth: 48,
     foodHeight: 48,
-    foodSpawnCount: 4,
+    foodSpawnCount: 5,
     soundVolume: 0.15,
     backgroundVolume: 0.1,
     groceryListTime: 1000,
@@ -172,16 +172,21 @@ var ScnMain = (function (_super) {
             _this.collectWayPoints(layer);
             _this.collectSolidTiles(layer);
             _this.collectFloorTiles(layer);
-            _this.collectZones(layer);
+            _this.collectFoodZones(layer);
         });
         // Build waypoint grid for pathfinding based on 
         this._grid = new WaypointGrid(this._nodes, this._wallTiles);
         // player is added to scene global context
         var foodArr = new Array();
         var rand = new ex.Random();
-        for (var i = 0; i < Config.foodSpawnCount; i++) {
-            var randomCell = this._floorTiles[rand.integer(0, this._floorTiles.length - 1)];
-            var food = new Food(randomCell.getCenter().x, randomCell.getCenter().y, i);
+        var chosenFoodZones = rand.pickSet(this._zones, Config.foodSpawnCount);
+        for (var i = 0; i < chosenFoodZones.length; i++) {
+            var chosenFoodZone = chosenFoodZones[i];
+            var validTiles = this.getCellsInFoodZone(chosenFoodZone.type);
+            var chosenCell = validTiles[rand.integer(0, validTiles.length - 1)];
+            //make a dummy cell so we can easily get the center
+            var cell = new ex.Cell(chosenCell.x, chosenCell.y, 24, 24, 0);
+            var food = new Food(cell.getCenter().x, cell.getCenter().y, i);
             this.add(food);
             foodArr.push(food);
         }
@@ -228,7 +233,7 @@ var ScnMain = (function (_super) {
             }
         }
     };
-    ScnMain.prototype.collectZones = function (layer) {
+    ScnMain.prototype.collectFoodZones = function (layer) {
         if (layer.name !== LAYER_ZONES ||
             !layer.objects)
             return;
@@ -240,6 +245,12 @@ var ScnMain = (function (_super) {
                 type: o.type
             });
         }
+    };
+    ScnMain.prototype.getCellsInFoodZone = function (foodZone) {
+        var validCells = this._zones.filter(function (itm, idx) {
+            return itm.type === foodZone;
+        });
+        return validCells;
     };
     //TODO if we don't create a new WaypointGrid, the enemies spawn in at the current location of the existing enemies
     // the WaypointGrid is being modified in an unexpected fashion
