@@ -50,11 +50,12 @@ class ScnMain extends ex.Scene {
    private _floorTiles: ex.Cell[] = [];
    private _foodSpawnPoints: IFoodSpawnPoint[] = [];
    private _gameOverZone: ex.Cell[] = [];
-
+   
    constructor(engine: ex.Engine) {
       super(engine);            
    }
 
+   public door: ex.Actor;
    public map: ex.TileMap;
    public enemies: Enemy[] = [];
 
@@ -84,7 +85,20 @@ class ScnMain extends ex.Scene {
 
       // Build waypoint grid for pathfinding based on 
       this._grid = new WaypointGrid(this._nodes, this._wallTiles);
+
+      // Entrance door
+      this.door = new ex.Actor(Config.enterDoorX, Config.enterDoorY, Config.enterDoorWidth, Config.enterDoorHeight);
+      this.door.anchor.setTo(0, 0);
       
+      var doorSheet = new ex.SpriteSheet(Resources.doorSheet, 13, 1, Config.enterDoorWidth, Config.enterDoorHeight);
+      var spriteIndices = doorSheet.sprites.map((s, idx) => idx);
+      this.door.addDrawing('idle', doorSheet.getSprite(0));
+      this.door.addDrawing('open', doorSheet.getAnimationForAll(game, 50));
+      this.door.addDrawing('close', doorSheet.getAnimationByIndices(game, spriteIndices.reverse(), 50));
+      this.door.setDrawing('idle');
+      this.add(this.door);
+      this.door.setZIndex(2);
+
       director.setup();
 
       this.on('postdraw', (evt: ex.PostDrawEvent) => {
@@ -170,10 +184,20 @@ class ScnMain extends ex.Scene {
    //TODO if we don't create a new WaypointGrid, the enemies spawn in at the current location of the existing enemies
    // the WaypointGrid is being modified in an unexpected fashion
    spawnEnemy(mode: EnemyMode = ENEMY_RANDOM_MODE) {
-      var enemy = new Enemy(this._grid, mode);
-      this.enemies.push(enemy);
-      this.add(enemy);
-      SoundManager.playSpawnEnemy();
+
+      // open door
+      this.door.setDrawing('open');
+      this.door.actions
+         .delay(50 * 13)
+         .callMethod(() => {
+            var enemy = new Enemy(this._grid, mode);            
+            this.enemies.push(enemy);
+            this.add(enemy);
+            enemy.setZIndex(1);
+            SoundManager.playSpawnEnemy();
+         })
+         .delay(600)
+         .callMethod(() => this.door.setDrawing('close'));
    }
 
    spawnFood(){

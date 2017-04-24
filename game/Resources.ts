@@ -20,5 +20,6 @@ var Resources = {
    playerSpottedSound: new ex.Sound('assets/snd/playerSpotted.mp3', 'assets/snd/playerSpotted.wav'),
    spawnEnemySound: new ex.Sound('assets/snd/spawnEnemy.mp3', 'assets/snd/spawnEnemy.wav'),
    spawnFoodSound: new ex.Sound('assets/snd/placeFood.mp3', 'assets/snd/placeFood.wav'),
-   diagIntro: new ex.Texture('img/diag-intro.png')
+   diagIntro: new ex.Texture('img/diag-intro.png'),
+   doorSheet: new ex.Texture('img/door.png')
 };
