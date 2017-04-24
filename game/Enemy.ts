@@ -9,12 +9,15 @@ class Enemy extends ex.Actor {
    public lastKnownPlayerPos: ex.Vector;
 
    private _grid: WaypointGrid;
+   private _surpriseSprite: ex.Sprite;
 
    // todo need reference to the waypoint grid
 
    constructor(grid: WaypointGrid) {      
       super(Config.enemyStart.x, Config.enemyStart.y, Config.enemyWidth, Config.enemyHeight);
       this.addDrawing(Resources.enemySheet);
+
+      this._surpriseSprite = Resources.surpriseSheet.asSprite();
 
       this._grid = grid;
 
@@ -65,6 +68,11 @@ class Enemy extends ex.Actor {
 
       // set this to postdebugdraw on production
       this.on('postdraw', (evt: ex.PostDrawEvent) => {
+         if (this.attack) {
+            
+            this._surpriseSprite.draw(evt.ctx, -this._surpriseSprite.naturalWidth / 2, -this._surpriseSprite.naturalHeight / 2 - 20);
+         }
+
          if(gameDebug) {
             for (var ray of this.rays) {
                // Re-calc distance for debug only
