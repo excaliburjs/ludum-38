@@ -284,15 +284,8 @@ var Stats = (function () {
         this._playerSample = 0;
         this._enemySample = 0;
     }
-    Stats.prototype.startStats = function () {
-        this.started = Date.now();
-    };
-    Stats.prototype.endStats = function () {
-        this.timePlayed = Date.now() - this.started;
-    };
     Stats.prototype.captureEndGameAndPublish = function () {
         this.seed = gameRandom.seed;
-        this.endStats();
         this.foodCollected = State.collectedFood.map(function (f) {
             return f.foodZone;
         });
@@ -1412,6 +1405,8 @@ var Director = (function (_super) {
         var elapsedSeconds = Math.round((endTime - Director.startTime) / 1000);
         var minutes = Math.floor(elapsedSeconds / 60);
         var seconds = elapsedSeconds - (minutes * 60);
+        stats.started = Director.startTime;
+        stats.timePlayed = elapsedSeconds;
         var timeMessage = "I shopped for " + minutes + " minutes, " + seconds + " seconds";
         game.stop();
         // reset bg music, in case player was being chased
@@ -1586,7 +1581,6 @@ game.start(loader).then(function () {
     // turn off anti-aliasing
     game.setAntialiasing(false);
     game.goToScene('main');
-    stats.startStats();
     SoundManager.startBackgroundMusic();
 });
 //# sourceMappingURL=game.js.map
