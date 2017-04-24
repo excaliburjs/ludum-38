@@ -17,6 +17,10 @@ class ShoppingList {
        return State.collectedFood.filter(f => f !== undefined);
     }
 
+    public get hasCollectedAllFood() {
+       return player.shoppingList.collectedFood.length === Config.foodSpawnCount;
+    }
+
     public removeItem(id: string) {
        if(State.uncollectedFood && State.uncollectedFood.length){
          var idxsToRemove = State.uncollectedFood.map(function(obj, index) {

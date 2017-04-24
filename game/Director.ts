@@ -62,19 +62,10 @@ class Director extends ex.Actor {
          var closest = this._findMinimum(scnMain.enemies, (enemy) => {
             return player.pos.distance(enemy.pos);
          });
-
-         // var distanceToPlayer = player.pos.distance(closest.pos);
-         // if(distanceToPlayer < Config.enemyVignetteRadius) {
-         //    vignette.visible = true;
-         //    var segment = Config.enemyVignetteRadius / 4;
-         //    var index = (3 -Math.floor(distanceToPlayer / segment)).toFixed(0);
-            
-         //    vignette.setDrawing('vignette' + index);
-
-         // } else {
-         //    vignette.visible = false;
-         // }
       }
+      
+      stats.samplePlayer(evt.delta);
+      stats.sampleEnemy(evt.delta);
    }
    
    //1. start zoomed in on player, zoom out
@@ -158,7 +149,8 @@ class Director extends ex.Actor {
       var elapsedSeconds = Math.round((endTime - Director.startTime) / 1000);
       var minutes = Math.floor(elapsedSeconds / 60);
       var seconds = elapsedSeconds - (minutes * 60);
-      console.log("Play time: " + minutes + "min, " + seconds + "sec"); 
+      var timeMessage = "I shopped for " + minutes + " minutes, " + seconds + " seconds";
+      console.log(timeMessage); 
       game.stop();
       // reset bg music, in case player was being chased
       if (!Preferences.muteBackgroundMusic) {
@@ -166,6 +158,9 @@ class Director extends ex.Actor {
       }
 
       player.shoppingList.handleGameOver();
+
+      // publish analytics
+      stats.captureEndGameAndPublish();
 
       $('body').addClass('game-over');
       $('#game-over-dialog').show();
@@ -192,7 +187,7 @@ class Director extends ex.Actor {
 
       if (State.gameOverCheckout) {
          var enemyName = 'The cashier';
-         enemyText = enemyText + ' Paper or plastic?';
+         enemyText = `"${gameRandom.pickOne(GameOverEnemyPrompts)} Paper or plastic?"`;
       }
       
       window.setTimeout(() => {

@@ -18,6 +18,7 @@
 /// <reference path="Director.ts" />
 /// <reference path="Cashier.ts" />
 /// <reference path="Analytics.ts" />
+/// <reference path="Stats.ts" />
 
 
 
@@ -63,10 +64,7 @@ scnMain.add(player);
 var director = new Director();
 scnMain.add(director);
 
-// add the vignette
-// var vignette = new ex.UIActor(0, 0, game.getDrawWidth(), game.getDrawHeight());
-// vignette.visible = false;
-// scnMain.add(vignette);
+var stats = new Stats();
 
 //TODO Remove debug mode
 var gamePaused = false;
@@ -96,6 +94,7 @@ game.start(loader).then(() => {
    // turn off anti-aliasing
    game.setAntialiasing(false);
    game.goToScene('main');
+   stats.startStats();
 
    SoundManager.startBackgroundMusic();
 });
