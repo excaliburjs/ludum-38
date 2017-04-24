@@ -23,7 +23,7 @@ var Config = {
    enemySpeed: 80,
    enemyChaseSpeed: 90,
 
-   enemyVignetteRadius: 300,
+   enemyVignetteRadius: 150,
 
    enemySpawnMinTime: 5000,
    enemySpawnMaxTime: 12000,
