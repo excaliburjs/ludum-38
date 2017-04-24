@@ -15,7 +15,6 @@ class Enemy extends ex.Actor {
 
    constructor(grid: WaypointGrid) {      
       super(Config.enemyStart.x, Config.enemyStart.y, Config.enemyWidth, Config.enemyHeight);
-      this.addDrawing(Resources.enemySheet);
 
       this._surpriseSprite = Resources.surpriseSheet.asSprite();
 
