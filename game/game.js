@@ -408,7 +408,6 @@ var Enemy = (function (_super) {
         _this.rays = [];
         _this.attack = false;
         _this.isAttacking = false;
-        _this.addDrawing(Resources.enemySheet);
         _this._surpriseSprite = Resources.surpriseSheet.asSprite();
         _this._grid = grid;
         var start = _this._grid.findClosestNode(Config.enemyStart.x, Config.enemyStart.y);
