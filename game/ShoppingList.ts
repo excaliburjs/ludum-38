@@ -90,5 +90,35 @@ class ShoppingList {
 
        // move shopping list to game over dialog (hacky!)
        $('#game-over-shopping-list').append($('#shopping-list'))
+
+       for (let i = 0; i < State.collectedFood.length; i++) {
+         let foodArr = State.collectedFood[i] ? State.collectedFood : State.uncollectedFood;          
+         var bwSprite = <any>Food.bwFoodSheet.getSprite(foodArr[i].spriteIndex);
+         var bwSpriteCanvas = bwSprite._spriteCanvas.toDataURL();
+
+         $('#item' + (i + 1)).css("background-image", "url('" + bwSpriteCanvas + "'");
+       }
+
+       var collectedFood = this.collectedFood;
+       var currIdx = 0;
+
+       var timer = setInterval(function () {
+          if (currIdx === collectedFood.length) {
+             clearInterval(timer);
+             return;
+          }
+
+          var food = collectedFood[currIdx];
+          var colSprite = <any>Food.foodSheet.getSprite(food.spriteIndex);
+          var colSpriteCanvas = colSprite._spriteCanvas.toDataURL();
+
+          $('#item' + (State.collectedFood.indexOf(food) + 1)).css("background-image", "url('" + colSpriteCanvas + "'");
+          
+          Resources.checkoutSound.play();
+          
+          currIdx++;
+       }, 700);
+         
+       
     }
 }

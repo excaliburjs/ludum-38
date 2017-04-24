@@ -124,7 +124,8 @@ class Director extends ex.Actor {
       if (State.gameOver) return; 
 
       State.gameOverCheckout = true;
-
+      Resources.registerSound.play();
+      
       this._handleGameOver();
    }
 
