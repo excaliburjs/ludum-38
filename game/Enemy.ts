@@ -79,7 +79,7 @@ class Enemy extends ex.Actor {
             this.vel = vectorToPlayer.normalize().scale(Config.enemyChaseSpeed);            
          } else {
             if((<any>this.actions)._queues[0]._actions.length === 0){
-
+               this.isAttacking = false;
                var start = this._grid.findClosestNode(this.pos.x, this.pos.y);
                this.lastKnownPlayerPos = null;
                this._wander(start);
