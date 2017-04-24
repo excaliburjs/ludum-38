@@ -34,11 +34,21 @@ var gameDebug = false;
 var gameRandom = new ex.Random(Date.now());
 console.log(`Game seed ${gameRandom.seed}`);
 
+var charSheets = [];
+
 // create an asset loader
 var loader = new ex.Loader();
 for (var r in Resources) {
     loader.addResource(Resources[r]);
+
+    if (r.search('charSheet') != -1) {
+       charSheets.push(r);
+    }
 }
+
+// randomize order of character sprites used
+var randCharSheets = gameRandom.pickSet(charSheets, charSheets.length, false);
+var randCharSheetIndex = 0;
 
 var scnMain = new ScnMain(game);
 game.addScene('main', scnMain);
@@ -51,9 +61,7 @@ var director = new Director();
 scnMain.add(director);
 
 // add the vignette
-
 var vignette = new ex.UIActor(0, 0, game.getDrawWidth(), game.getDrawHeight());
-
 vignette.visible = false;
 scnMain.add(vignette);
 

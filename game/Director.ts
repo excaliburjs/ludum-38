@@ -138,6 +138,16 @@ class Director extends ex.Actor {
       // TODO handle enemy (show on dialog? orchestrate cut scene?)
       this._handleGameOver();
    }
+
+   public getCharSprite() {
+      var result = Resources[randCharSheets[randCharSheetIndex]];
+      if (randCharSheetIndex == randCharSheets.length - 1) {
+         randCharSheetIndex = 0;
+      } else {
+         randCharSheetIndex++;
+      }
+      return result;
+   }
    
    private _handleGameOver() {
       ex.Logger.getInstance().info('game over');

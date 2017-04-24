@@ -200,10 +200,7 @@ class Enemy extends ex.Actor {
    }
 
    private _setupDrawing() {
-      var number = gameRandom.integer(1, 8).toString();
-      var sprite = 'charSheet' + number;
-      
-      var enemySheet = new ex.SpriteSheet(Resources[sprite], 10, 1, 45, 45);
+      var enemySheet = new ex.SpriteSheet(director.getCharSprite(), 10, 1, 45, 45);
       this.addDrawing('down', enemySheet.getSprite(0));
       this.addDrawing('up', enemySheet.getSprite(3));
       this.addDrawing('left', enemySheet.getSprite(7));
