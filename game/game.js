@@ -139,8 +139,8 @@ var Config = {
     gameWidth: 1200,
     gameHeight: 720,
     playerStart: new ex.Vector(24 * 24, 13 * 24),
-    playerWidth: 35,
-    playerHeight: 45,
+    playerWidth: 25,
+    playerHeight: 40,
     playerVel: 100,
     enemyStart: new ex.Vector(384, 720),
     enemyWidth: 50,
@@ -446,9 +446,18 @@ var Enemy = (function (_super) {
     };
     Enemy.prototype._wander = function (startNode) {
         var start = startNode;
-        this.pos = start.pos.clone();
-        var end = gameRandom.pickOne(this._grid.nodes);
+        var end = null;
+        if (this.lastKnownPlayerPos) {
+            end = this._grid.findClosestNode(this.lastKnownPlayerPos.x, this.lastKnownPlayerPos.y);
+            this.lastKnownPlayerPos = null;
+        }
+        else {
+            end = gameRandom.pickOne(this._grid.nodes);
+        }
         var path = this._grid.findPath(start, end);
+        if (path.length > 2) {
+            path.splice(0, 1);
+        }
         for (var _i = 0, path_1 = path; _i < path_1.length; _i++) {
             var node = path_1[_i];
             this.actions.moveTo(node.pos.x, node.pos.y, Config.enemySpeed);
@@ -466,6 +475,7 @@ var Enemy = (function (_super) {
                 }
                 if (playerTime !== -1 && playerTime < wallTime) {
                     result = true;
+                    this.lastKnownPlayerPos = ray.getPoint(playerTime);
                     if (!this.isAttacking && result) {
                         this.isAttacking = true;
                         SoundManager.playPlayerSpotted();
