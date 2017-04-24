@@ -36,7 +36,7 @@ class Director extends ex.Actor {
          }, Config.spawnFirstEnemyTime);
          scnMain.add(this._spawnFirstEnemyTimer);
 
-         this.actions.delay(2000).callMethod(() => {
+         this.actions.delay(Config.spawnTimedEnemyTime).callMethod(() => {
             this._spawnTimedEnemy();
          })
 

@@ -41,5 +41,6 @@ var Config = {
 
    groceryListTime: 4000,
    spawnFoodTime: 4000,
-   spawnFirstEnemyTime: 7000
+   spawnFirstEnemyTime: 7000,
+   spawnTimedEnemyTime: 5000
 }
