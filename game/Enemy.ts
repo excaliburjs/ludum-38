@@ -83,8 +83,6 @@ class Enemy extends ex.Actor {
 
    private _wander(startNode: WaypointNode) {
       var start = startNode;
-      
-      this.pos = start.pos.clone();
 
       var end: WaypointNode = null;
       if(this.lastKnownPlayerPos) {
@@ -95,6 +93,9 @@ class Enemy extends ex.Actor {
       }
 
       var path = this._grid.findPath(start, end);
+      if(path.length > 2 ){
+         path.splice(0, 1);
+      }
       
       for(var node of path){
          this.actions.moveTo(node.pos.x, node.pos.y, Config.enemySpeed);
