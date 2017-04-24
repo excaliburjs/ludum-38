@@ -1,8 +1,12 @@
 class SoundManager {
 
    static init() {      
-      SoundManager._updateMusicButton();
-      SoundManager._updateMuteAllButton();
+      if (Preferences.muteBackgroundMusic) {
+         SoundManager.muteBackgroundMusic();
+      }
+      if (Preferences.muteAll) {
+         SoundManager.muteAll();
+      }
 
       $('#mute-music').on('click', () => {
          if (Preferences.muteBackgroundMusic) {
@@ -84,17 +88,14 @@ class SoundManager {
    }
 
    static playPlayerSpotted(){
-      Resources.playerSpottedSound.setVolume(Config.soundVolume);
       Resources.playerSpottedSound.play();
    }
 
    static playSpawnEnemy(){
-      Resources.spawnEnemySound.setVolume(Config.soundVolume);
       Resources.spawnEnemySound.play();
    }
 
    static playSpawnFood(){
-      Resources.spawnFoodSound.setVolume(0.3);
       Resources.spawnFoodSound.play();
    }
 
