@@ -62,6 +62,19 @@ class WaypointGrid {
       return false;
    }
 
+   private _findMinimum<T>(nodes: T[], valueFunc: (node: T) => number): T {
+      var minNode: T = null;
+      var minValue: number = Infinity;
+      for(var node of nodes){
+         var val = valueFunc(node);
+         if(val < minValue){
+            minValue = val;
+            minNode = node;
+         }
+      }
+      return minNode;
+   }
+
    public findOrthogonalNeighbors(node: WaypointNode): WaypointNode[] {
       var x = node.pos.x;
       var y = node.pos.y;
@@ -70,42 +83,39 @@ class WaypointGrid {
          return n.pos.x === x && n != node;
       });
 
+      var sameXPos = sameX.filter(n => {
+         return (n.pos.y - node.pos.y) > 0;
+      });
+
+      var sameXNeg = sameX.filter(n => {
+         return (n.pos.y - node.pos.y) < 0;
+      });
+
       var sameY = this.nodes.filter(n => {
          return n.pos.y === y && n != node;
       });
 
-      var minX: number = Infinity;
-      var minXNode: WaypointNode;
-      var oldMinXNode: WaypointNode;
-      for(var i = 0; i < sameX.length; i++){
-         var distanceX = sameX[i].pos.distance(node.pos);
-         if(distanceX < minX) {
-            minX = distanceX
-            oldMinXNode = minXNode;
-            minXNode = sameX[i];
-         }
-      }
-      if(oldMinXNode && this._sameSign(oldMinXNode.pos.y - node.pos.y, minXNode.pos.y - node.pos.y)){
-         oldMinXNode = null;
+      var sameYPos = sameY.filter(n => {
+         return (n.pos.x - node.pos.x) > 0;
+      });
+
+      var sameYNeg = sameY.filter(n => {
+         return (n.pos.x - node.pos.x) < 0;
+      })
+
+      var distanceFcn = (n) => {
+         return n.pos.distance(node.pos);
       }
 
-      var minY: number = Infinity;
-      var minYNode: WaypointNode;
-      var oldMinYNode: WaypointNode;
-      for(var j = 0; j < sameY.length; j++){
-         var distanceY = sameY[j].pos.distance(node.pos);
-         if(distanceY < minY) {
-            minY = distanceY
-            oldMinYNode = minYNode;
-            minYNode = sameY[j];
-         }
-      }
+      var posX = this._findMinimum(sameXPos, distanceFcn);
 
-      if(oldMinYNode && this._sameSign(oldMinYNode.pos.x - node.pos.x, minYNode.pos.x - node.pos.x)){
-         oldMinYNode = null;
-      }
+      var negX = this._findMinimum(sameXNeg, distanceFcn);
 
-      var potentialNeighbors = [minXNode, oldMinXNode, minYNode, oldMinYNode].filter(n => { return n != null});
+      var posY = this._findMinimum(sameYPos, distanceFcn);
+
+      var negY = this._findMinimum(sameYNeg, distanceFcn);
+
+      var potentialNeighbors = [posX, negX, posY, negY].filter(n => { return n != null});
 
       var result = [];
       for(var n of potentialNeighbors){
@@ -201,7 +211,7 @@ class WaypointGrid {
          closedNodes.push(current);
 
          // Find neighbors we haven't explored
-         var neighbors = current.neighbors.filter(n => { return !ex.Util.contains(closedNodes, n) }); // this.findNeighbors(current).filter(n => { return !ex.Util.contains(closedNodes, n) });
+         var neighbors = current.neighbors.filter(n => { return !ex.Util.contains(closedNodes, n) });
 
          // Calculate neighbor heuristics
          neighbors.forEach(n => {
@@ -224,6 +234,9 @@ class WaypointGrid {
          ex.Util.DrawUtil.point(ctx, ex.Color.Green, node.pos);
          for(var neighbor of node.neighbors){
             ex.Util.DrawUtil.line(ctx, ex.Color.Green, node.pos.x, node.pos.y, neighbor.pos.x, neighbor.pos.y)
+            var point = node.pos.sub(neighbor.pos).normalize().scale(10);
+            var finalPoint = neighbor.pos.add(point);
+            ex.Util.DrawUtil.point(ctx, ex.Color.Red, finalPoint);
          }
       }
    }
