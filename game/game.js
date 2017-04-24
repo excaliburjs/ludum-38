@@ -103,6 +103,7 @@ var Player = (function (_super) {
         return this.getBounds().rayCast(ray, clip);
     };
     Player.prototype._setupDrawing = function () {
+        //TODO randomly assign a character spritesheet
         var playerSheet = new ex.SpriteSheet(Resources.playerSheet, 10, 1, 45, 45);
         this.addDrawing('down', playerSheet.getSprite(0));
         this.addDrawing('up', playerSheet.getSprite(3));
@@ -405,6 +406,7 @@ var Enemy = (function (_super) {
     }
     Enemy.prototype.onInitialize = function (engine) {
         var _this = this;
+        this._setupDrawing();
         this.collisionType = ex.CollisionType.Passive;
         this.on('postupdate', function (evt) {
             _this.attack = false;
@@ -453,6 +455,26 @@ var Enemy = (function (_super) {
         if (State.gameOver) {
             this.actionQueue.clearActions();
         }
+        // determine direction of the sprite animations
+        var left = ex.Vector.Left.dot(this.vel);
+        var right = ex.Vector.Right.dot(this.vel);
+        var up = ex.Vector.Up.dot(this.vel);
+        var down = ex.Vector.Down.dot(this.vel);
+        var direction = Math.max(left, right, up, down);
+        switch (direction) {
+            case left:
+                this.setDrawing('walkLeft');
+                break;
+            case right:
+                this.setDrawing('walkRight');
+                break;
+            case up:
+                this.setDrawing('walkUp');
+                break;
+            case down:
+                this.setDrawing('walkDown');
+                break;
+        }
     };
     Enemy.prototype._wander = function (startNode) {
         var start = startNode;
@@ -492,6 +514,27 @@ var Enemy = (function (_super) {
             }
         }
         return result;
+    };
+    Enemy.prototype._setupDrawing = function () {
+        //TODO randomly assign one of the different character spritesheets to the enemy
+        var enemySheet = new ex.SpriteSheet(Resources.enemySheet, 10, 1, 45, 45);
+        this.addDrawing('down', enemySheet.getSprite(0));
+        this.addDrawing('up', enemySheet.getSprite(3));
+        this.addDrawing('left', enemySheet.getSprite(7));
+        this.addDrawing('right', enemySheet.getSprite(9));
+        var walkDownAnim = enemySheet.getAnimationByIndices(game, [0, 1, 0, 2], 180);
+        walkDownAnim.loop = true;
+        this.addDrawing('walkDown', walkDownAnim);
+        var walkUpAnim = enemySheet.getAnimationByIndices(game, [3, 4, 3, 5], 180);
+        walkUpAnim.loop = true;
+        this.addDrawing('walkUp', walkUpAnim);
+        var walkLeftAnim = enemySheet.getAnimationByIndices(game, [7, 6], 200);
+        walkLeftAnim.loop = true;
+        this.addDrawing('walkLeft', walkLeftAnim);
+        var walkRightAnim = enemySheet.getAnimationByIndices(game, [9, 8], 200);
+        walkRightAnim.loop = true;
+        this.addDrawing('walkRight', walkRightAnim);
+        this.setDrawing('up');
     };
     return Enemy;
 }(ex.Actor));
