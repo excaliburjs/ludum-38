@@ -39,15 +39,14 @@ class Director extends ex.Actor {
       scnMain.camera.zoom(3.5);
       
       return this.actions.delay(2000).asPromise().then(() => {
-         return scnMain.camera.zoom(1, 3000).then(() => {
-            $('.playerShoppingList').show();
-         });
+         return scnMain.camera.zoom(1, 3000);
       });
    }
 
    //2. display grocery list
    private _showGroceryList() {
       console.log('show grocery list');
+      $('.playerShoppingList').show();
       //TODO
    }
 

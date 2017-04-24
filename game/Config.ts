@@ -26,7 +26,7 @@ var Config = {
    soundVolume: 0.15,
    backgroundVolume: 0.1,
 
-   groceryListTime: 1000,
-   spawnFoodTime: 2000,
+   groceryListTime: 4000,
+   spawnFoodTime: 4000,
    spawnFirstEnemyTime: 7000
 }
