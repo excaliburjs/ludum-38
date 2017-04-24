@@ -30,6 +30,7 @@ var Player = (function (_super) {
         var _this = this;
         this._setupDrawing();
         this.collisionType = ex.CollisionType.Active;
+        this._selectSprite = Resources.playerSelect.asSprite();
         game.input.keyboard.on('hold', function (keyHeld) {
             if (!State.gameOver) {
                 if (player.disableMovement)
@@ -96,6 +97,9 @@ var Player = (function (_super) {
         this.on('postupdate', function (evt) {
             _this.vel.setTo(0, 0);
         });
+        this.on('postdraw', function (evt) {
+            _this._selectSprite.draw(evt.ctx, -_this._selectSprite.naturalWidth / 2, _this._selectSprite.naturalHeight / 2 + 10);
+        });
     };
     Player.prototype.raycast = function (ray, clip) {
         return this.getBounds().rayCast(ray, clip);
@@ -132,6 +136,7 @@ var Player = (function (_super) {
 var Resources = {
     map: new Extensions.Tiled.TiledResource('assets/map.json'),
     playerSheet: new ex.Texture('img/player.png'),
+    playerSelect: new ex.Texture('img/player-select.png'),
     foodSheet: new ex.Texture('img/food.png'),
     bwFoodSheet: new ex.Texture('img/foodbw.png'),
     charSheet1: new ex.Texture('img/char-sprites/player-1.png'),
