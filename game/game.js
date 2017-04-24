@@ -345,8 +345,9 @@ var ScnMain = (function (_super) {
     };
     //TODO if we don't create a new WaypointGrid, the enemies spawn in at the current location of the existing enemies
     // the WaypointGrid is being modified in an unexpected fashion
-    ScnMain.prototype.spawnEnemy = function () {
-        var enemy = new Enemy(this._grid); // new WaypointGrid(this._floorTiles));
+    ScnMain.prototype.spawnEnemy = function (mode) {
+        if (mode === void 0) { mode = ENEMY_RANDOM_MODE; }
+        var enemy = new Enemy(this._grid, mode);
         this.enemies.push(enemy);
         this.add(enemy);
         SoundManager.playSpawnEnemy();
@@ -408,11 +409,16 @@ var Food = (function (_super) {
 }(ex.Actor));
 Food.foodSheet = null;
 Food.bwFoodSheet = null;
+var ENEMY_FOOD_MODE = 'Food';
+var ENEMY_PLAYER_MODE = 'Player';
+var ENEMY_RANDOM_MODE = 'Random';
 var Enemy = (function (_super) {
     __extends(Enemy, _super);
     // todo need reference to the waypoint grid
-    function Enemy(grid) {
+    function Enemy(grid, mode) {
+        if (mode === void 0) { mode = ENEMY_RANDOM_MODE; }
         var _this = _super.call(this, Config.enemyStart.x, Config.enemyStart.y, Config.enemyWidth, Config.enemyHeight) || this;
+        _this.mode = mode;
         _this.rays = [];
         _this.attack = false;
         _this.isAttacking = false;
@@ -503,7 +509,19 @@ var Enemy = (function (_super) {
             this.lastKnownPlayerPos = null;
         }
         else {
-            end = gameRandom.pickOne(this._grid.nodes);
+            switch (this.mode) {
+                case ENEMY_FOOD_MODE:
+                    var foodList = player.shoppingList.getFoodLeft();
+                    var food = gameRandom.pickOne(foodList);
+                    end = this._grid.findClosestNode(food.pos.x, food.pos.y);
+                    break;
+                case ENEMY_PLAYER_MODE:
+                    end = this._grid.findClosestNode(player.pos.x, player.pos.y);
+                    break;
+                case ENEMY_RANDOM_MODE:
+                    end = gameRandom.pickOne(this._grid.nodes);
+                    break;
+            }
         }
         var path = this._grid.findPath(start, end);
         for (var _i = 0, path_1 = path; _i < path_1.length; _i++) {
@@ -590,6 +608,11 @@ var ShoppingList = (function () {
                 this.updateUI();
             }
         }
+    };
+    ShoppingList.prototype.getFoodLeft = function () {
+        return this.items.filter(function (f) {
+            return f !== null;
+        });
     };
     ShoppingList.typewriter = function (text, target, speed) {
         var progress = '';
@@ -1010,7 +1033,7 @@ var Director = (function (_super) {
     //4. the first antagonist arrives
     Director.prototype._spawnFirstEnemy = function () {
         this._enemiesSpawned++;
-        scnMain.spawnEnemy();
+        scnMain.spawnEnemy(ENEMY_PLAYER_MODE);
     };
     //4b. add more antagonists
     Director.prototype._spawnTimedEnemy = function () {
@@ -1020,7 +1043,7 @@ var Director = (function (_super) {
             if (State.gameOver || (_this._enemiesSpawned > Config.enemySpawnMaximum))
                 return;
             _this._enemiesSpawned++;
-            scnMain.spawnEnemy();
+            scnMain.spawnEnemy(ENEMY_FOOD_MODE);
             _this._spawnTimedEnemy();
         });
     };
