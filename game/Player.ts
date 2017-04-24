@@ -92,6 +92,7 @@ class Player extends ex.Actor {
    }
 
    private _setupDrawing() {
+      //TODO randomly assign a character spritesheet
       var playerSheet = new ex.SpriteSheet(Resources.playerSheet, 10, 1, 45, 45);
       this.addDrawing('down', playerSheet.getSprite(0));
       this.addDrawing('up', playerSheet.getSprite(3));

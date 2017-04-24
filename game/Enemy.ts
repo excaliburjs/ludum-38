@@ -29,6 +29,7 @@ class Enemy extends ex.Actor {
    }
 
    onInitialize(engine: ex.Engine) {
+      this._setupDrawing();
       this.collisionType = ex.CollisionType.Passive;
       this.on('postupdate', (evt: ex.PostUpdateEvent) => {
          this.attack = false;
@@ -87,6 +88,28 @@ class Enemy extends ex.Actor {
       if (State.gameOver) {
          this.actionQueue.clearActions();
       }
+
+      // determine direction of the sprite animations
+      var left = ex.Vector.Left.dot(this.vel);
+      var right = ex.Vector.Right.dot(this.vel);
+      var up = ex.Vector.Up.dot(this.vel);
+      var down = ex.Vector.Down.dot(this.vel);
+
+      var direction = Math.max(left, right, up, down);
+      switch (direction) {
+         case left :
+            this.setDrawing('walkLeft');
+            break;
+         case right : 
+            this.setDrawing('walkRight');
+            break;
+         case up :
+            this.setDrawing('walkUp');
+            break;
+         case down : 
+            this.setDrawing('walkDown');
+            break;
+      }
    }
 
    private _wander(startNode: WaypointNode) {
@@ -130,5 +153,32 @@ class Enemy extends ex.Actor {
          }
       }
       return result;
+   }
+
+   private _setupDrawing() {
+      //TODO randomly assign one of the different character spritesheets to the enemy
+      var enemySheet = new ex.SpriteSheet(Resources.enemySheet, 10, 1, 45, 45);
+      this.addDrawing('down', enemySheet.getSprite(0));
+      this.addDrawing('up', enemySheet.getSprite(3));
+      this.addDrawing('left', enemySheet.getSprite(7));
+      this.addDrawing('right', enemySheet.getSprite(9));
+
+      var walkDownAnim = enemySheet.getAnimationByIndices(game, [0, 1, 0, 2], 180)
+      walkDownAnim.loop = true;
+      this.addDrawing('walkDown', walkDownAnim);
+
+      var walkUpAnim = enemySheet.getAnimationByIndices(game, [3, 4, 3, 5], 180);
+      walkUpAnim.loop = true;
+      this.addDrawing('walkUp', walkUpAnim);
+
+      var walkLeftAnim = enemySheet.getAnimationByIndices(game, [7,6], 200);
+      walkLeftAnim.loop = true;
+      this.addDrawing('walkLeft', walkLeftAnim);
+
+      var walkRightAnim = enemySheet.getAnimationByIndices(game, [9,8], 200);
+      walkRightAnim.loop = true;
+      this.addDrawing('walkRight', walkRightAnim);
+      
+      this.setDrawing('up');
    }
 }
