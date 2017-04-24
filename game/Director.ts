@@ -146,6 +146,10 @@ class Director extends ex.Actor {
       var elapsedSeconds = Math.round((endTime - Director.startTime) / 1000);
       var minutes = Math.floor(elapsedSeconds / 60);
       var seconds = elapsedSeconds - (minutes * 60);
+
+      stats.started = Director.startTime;
+      stats.timePlayed = elapsedSeconds;
+
       var timeMessage = "I shopped for " + minutes + " minutes, " + seconds + " seconds";
       
       game.stop();
