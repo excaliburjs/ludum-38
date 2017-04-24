@@ -90,7 +90,6 @@ class Director extends ex.Actor {
    private _showGroceryList() {
       console.log('show grocery list');
       $('.playerShoppingList').show();
-      player.disableMovement = false;
       //TODO
    }
 
@@ -102,6 +101,7 @@ class Director extends ex.Actor {
 
    //4. the first antagonist arrives
    private _spawnFirstEnemy() {
+      player.disableMovement = false;
       Director.enemiesSpawned++;
       scnMain.spawnEnemy(ENEMY_PLAYER_MODE);
    }
