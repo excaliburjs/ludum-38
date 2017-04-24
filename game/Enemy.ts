@@ -71,7 +71,7 @@ class Enemy extends ex.Actor {
       this.on('postdraw', (evt: ex.PostDrawEvent) => {
          if (this.attack) {
             
-            this._surpriseSprite.draw(evt.ctx, -this._surpriseSprite.naturalWidth / 2, -this._surpriseSprite.naturalHeight / 2 - 20);
+            this._surpriseSprite.draw(evt.ctx, -this._surpriseSprite.naturalWidth / 2, -this._surpriseSprite.naturalHeight / 2 - 50);
          }
 
          if(gameDebug) {
