@@ -9,10 +9,14 @@ class Player extends ex.Actor {
    public shoppingList : ShoppingList;
    public disableMovement: boolean = false;
 
+   private _selectSprite: ex.Sprite;
+
    public onInitialize(engine: ex.Engine) {
       this._setupDrawing();
 
       this.collisionType = ex.CollisionType.Active;
+
+      this._selectSprite = Resources.playerSelect.asSprite();
       
       game.input.keyboard.on('hold', (keyHeld?: ex.Input.KeyEvent) => {
          if (!State.gameOver) {
@@ -75,14 +79,17 @@ class Player extends ex.Actor {
                player.shoppingList.removeItem(e.other.shoppingListId);
                e.other.kill();
                e.other.collisionType = ex.CollisionType.PreventCollision;
-               console.log('spawn enemy for', e.other.id);
-               scnMain.spawnEnemy();
             }
          }
       });
+      
 
       this.on('postupdate', (evt: ex.PostUpdateEvent) => {
          this.vel.setTo(0, 0);
+      });
+
+      this.on('postdraw', (evt: ex.PostDrawEvent) => {
+         this._selectSprite.draw(evt.ctx, -this._selectSprite.naturalWidth / 2, this._selectSprite.naturalHeight / 2 + 10);
       });
    }
 
@@ -92,8 +99,10 @@ class Player extends ex.Actor {
    }
 
    private _setupDrawing() {
-      //TODO randomly assign a character spritesheet
-      var playerSheet = new ex.SpriteSheet(Resources.playerSheet, 10, 1, 45, 45);
+      var number = gameRandom.integer(1, 8).toString();
+      var sprite = 'charSheet' + number;
+      
+      var playerSheet = new ex.SpriteSheet(Resources[sprite], 10, 1, 45, 45);
       this.addDrawing('down', playerSheet.getSprite(0));
       this.addDrawing('up', playerSheet.getSprite(3));
       this.addDrawing('left', playerSheet.getSprite(7));

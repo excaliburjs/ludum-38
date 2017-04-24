@@ -176,8 +176,6 @@ class Enemy extends ex.Actor {
    }
 
    private _setupDrawing() {
-      //TODO randomly assign one of the different character spritesheets to the enemy
-
       var number = gameRandom.integer(1, 8).toString();
       var sprite = 'charSheet' + number;
       
