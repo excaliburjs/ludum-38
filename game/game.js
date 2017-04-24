@@ -540,6 +540,7 @@ var Enemy = (function (_super) {
             }
             else {
                 if (_this.actions._queues[0]._actions.length === 0) {
+                    _this.isAttacking = false;
                     var start = _this._grid.findClosestNode(_this.pos.x, _this.pos.y);
                     _this.lastKnownPlayerPos = null;
                     _this._wander(start);
