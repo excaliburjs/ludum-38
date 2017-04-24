@@ -269,9 +269,6 @@ var ScnMain = (function (_super) {
         _this._foodSpawnPoints = [];
         _this._gameOverZone = [];
         _this.enemies = [];
-        _this.handleGameOverTrigger = function () {
-            director.checkout();
-        };
         return _this;
     }
     ScnMain.prototype.onInitialize = function (engine) {
@@ -293,9 +290,8 @@ var ScnMain = (function (_super) {
         for (var _i = 0, _a = this._gameOverZone; _i < _a.length; _i++) {
             var go = _a[_i];
             var goc = go.getCenter();
-            var gameOverTrigger = new ex.Trigger(goc.x, goc.y, this.map.cellWidth, this.map.cellHeight, this.handleGameOverTrigger);
-            gameOverTrigger.target = player;
-            this.add(gameOverTrigger);
+            var checkoutTrigger = new ex.Trigger(goc.x, goc.y, this.map.cellWidth, this.map.cellHeight, this.handleCheckoutTrigger, -1);
+            this.add(checkoutTrigger);
         }
         // Build waypoint grid for pathfinding based on 
         this._grid = new WaypointGrid(this._nodes, this._wallTiles);
@@ -376,6 +372,17 @@ var ScnMain = (function (_super) {
             if (layer.data[i] > 0) {
                 this._gameOverZone.push(this.map.data[i]);
             }
+        }
+    };
+    ScnMain.prototype.handleCheckoutTrigger = function () {
+        var _this = this;
+        if (player.collides(this)) {
+            SoundManager.playPlayerCheckout();
+            director.checkout();
+        }
+        else if (scnMain.enemies.filter(function (en) { return en.collides(_this); }).length > 0) {
+            // play enemy checkout sounds
+            SoundManager.playEnemyCheckout();
         }
     };
     ScnMain.prototype.getCellsInFoodZone = function (foodZone) {
@@ -760,7 +767,7 @@ var ShoppingList = (function () {
             if (currIdx === collectedFood.length) {
                 clearInterval(timer);
                 // play register sound if player collected all food
-                if (collectedFood.length === Config.foodSpawnCount) {
+                if (collectedFood.length > 0) {
                     setTimeout(function () { return Resources.registerSound.play(); }, 350);
                 }
                 return;
@@ -1093,6 +1100,46 @@ var SoundManager = (function () {
     SoundManager.playSpawnFood = function () {
         Resources.spawnFoodSound.play();
     };
+    SoundManager.playEnemyCheckout = function () {
+        if (SoundManager._playingEnemyCheckoutSequence)
+            return;
+        SoundManager._playingEnemyCheckoutSequence = true;
+        var times = gameRandom.integer(1, Config.foodSpawnCount);
+        var wait = 200;
+        // temporarily dampen sounds
+        // TODO player checkout should restore values
+        SoundManager.dampenCheckoutSounds();
+        for (var i = 0; i < times; i++) {
+            setTimeout(function () { return !State.gameOver && Resources.checkoutSound.play(); }, i * wait);
+        }
+        setTimeout(function () {
+            if (State.gameOver) {
+                SoundManager._afterEnemyCheckout();
+                return;
+            }
+            Resources.registerSound.play().then(SoundManager._afterEnemyCheckout);
+        }, wait * times + 300);
+    };
+    SoundManager._afterEnemyCheckout = function () {
+        SoundManager._playingEnemyCheckoutSequence = false;
+        SoundManager.restoreCheckoutSounds();
+    };
+    SoundManager.playPlayerCheckout = function () {
+        // restore checkout sounds in case enemy just checked out
+        SoundManager.restoreCheckoutSounds();
+    };
+    SoundManager.dampenCheckoutSounds = function () {
+        if (!Preferences.muteAll) {
+            Resources.checkoutSound.setVolume(Config.soundVolume * 0.6);
+            Resources.registerSound.setVolume(Config.soundVolume * 0.6);
+        }
+    };
+    SoundManager.restoreCheckoutSounds = function () {
+        if (!Preferences.muteAll) {
+            Resources.checkoutSound.setVolume(Config.soundVolume);
+            Resources.registerSound.setVolume(Config.soundVolume);
+        }
+    };
     SoundManager._updateMusicButton = function () {
         $('#mute-music i').get(0).className = classNames('fa', {
             'fa-music': !Preferences.muteBackgroundMusic,
@@ -1107,6 +1154,7 @@ var SoundManager = (function () {
     };
     return SoundManager;
 }());
+SoundManager._playingEnemyCheckoutSequence = false;
 var Director = (function (_super) {
     __extends(Director, _super);
     function Director() {
