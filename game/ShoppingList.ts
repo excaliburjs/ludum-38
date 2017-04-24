@@ -2,9 +2,10 @@ const SHOPPING_TEXT_GET_FOOD = 'Need to get:'
 const SHOPPING_TEXT_CHECKOUT = 'Time to checkout!'
 
 class ShoppingList {
-    constructor(items: Food[]) {
-      State.uncollectedFood = items;
-      State.collectedFood = new Array<Food>(items.length);
+    constructor(private _items: Food[]) {
+      State.uncollectedFood = _items.concat([]);
+      State.collectedFood = new Array<Food>(_items.length);
+      State.recipeName = this.getRandomRecipeName();
     }
 
     public get isEmpty() {
@@ -61,10 +62,18 @@ class ShoppingList {
       typer = setInterval(type, speed);
     }
 
+    public getRandomRecipeName() {
+      var availFoods = this._items.map(f => FoodNameMatrix[f.spriteIndex]);
+      var twoFoods = gameRandom.pickSet(availFoods, 2, false);
+      var recipe = gameRandom.pickOne(RecipeNames);
+
+      return twoFoods[0] + ' and ' + twoFoods[1] + ' ' + recipe;
+    }
+
     public updateUI() {
 
       if (this.collectedFood.length !== Config.foodSpawnCount) {
-         ShoppingList.typewriter(SHOPPING_TEXT_GET_FOOD, '#shop-message', 90);
+         ShoppingList.typewriter(State.recipeName, '#shop-message', 90);
       } else {
          ShoppingList.typewriter(SHOPPING_TEXT_CHECKOUT, '#shop-message', 90);         
       }
@@ -90,6 +99,7 @@ class ShoppingList {
 
        // move shopping list to game over dialog (hacky!)
        $('#game-over-shopping-list').append($('#shopping-list'))
+       $('#game-over-recipe').text('Recipe: ' + State.recipeName);
 
        for (let i = 0; i < State.collectedFood.length; i++) {
          let foodArr = State.collectedFood[i] ? State.collectedFood : State.uncollectedFood;          
@@ -106,8 +116,8 @@ class ShoppingList {
           if (currIdx === collectedFood.length) {
              clearInterval(timer);
 
-             // play register sound if player collected all food
-             if (collectedFood.length > 0) {
+             // play register sound if player collected any food and got to the checkout
+             if (collectedFood.length > 0 && State.gameOverCheckout) {
                 setTimeout(() => Resources.registerSound.play(), 350);
              }
              return;

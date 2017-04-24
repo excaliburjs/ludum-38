@@ -186,12 +186,16 @@ class Director extends ex.Actor {
       var enemyCanvas = enemySprite._spriteCanvas.toDataURL();   
       $('#enemy').css("background-image", "url('" + enemyCanvas + "'");
       
+      var enemyText = `${gameRandom.pickOne(NpcNames)}: "${gameRandom.pickOne(GameOverEnemyPrompts)}"`;
+      
       window.setTimeout(() => {
-         ShoppingList.typewriter("\"Hey! Small world, huh?\"", '#enemyConvo', 80);
-      }, 1000);
+         $('#enemyConvo').css({ visibility: 'visible' });
+         ShoppingList.typewriter(enemyText, '#enemyConvo', Config.convoEnemySpeed);
+      }, Config.convoEnemyDelay);
       window.setTimeout(() => {
-         ShoppingList.typewriter("\"...\"", '#playerConvo', 100);
-      }, 3000);
+         $('#playerConvo').css({ visibility: 'visible' });
+         ShoppingList.typewriter('"..."', '#playerConvo', Config.convoPlayerSpeed);
+      }, Config.convoEnemyDelay + (Config.convoEnemySpeed * enemyText.length));
       
    }
 }

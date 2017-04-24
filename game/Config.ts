@@ -47,5 +47,37 @@ var Config = {
    spawnFoodTime: 4000,
    spawnFoodTimeInterval: 400,
    spawnFirstEnemyTime: 7000,
-   spawnTimedEnemyTime: 5000
+   spawnTimedEnemyTime: 5000,
+
+   convoEnemyDelay: 1000,
+   convoEnemySpeed: 50,
+   convoPlayerSpeed: 100   
 }
+
+var GameOverEnemyPrompts = [
+   'Hey! Small world, huh?',
+   'Fancy seeing you here! What a small world!',
+   'Oh, you shop here? Small world!',
+   'I can\'t believe I ran into you, what a small world!'
+];
+
+var NpcNames = [
+   'Your ex',
+   'Gym teacher',
+   'Crazy neighbor',
+   'The Mayor',
+   'That person you owe money to',
+   'Gas station attendant',
+   'Chief of police'
+]
+
+// Index matches row major index of food.png
+const FoodNameMatrix = [
+   'Tomato', 'Chips', 'Cereal', 'Pizza', 'Steak', 'Toilet Paper', 'Bread', 'Banana', 'Carrot' // Row 0
+]
+
+// Types of recipe suffixes
+const RecipeNames = [
+   'Soup', 'Cake', 'Hot Dish', 'Casserole', 'Mash',
+   'Pasta', 'Salad', 'Pudding'
+]

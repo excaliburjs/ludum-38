@@ -3,7 +3,8 @@ var State = {
    gameOverCheckout: false,
    gameOverEnemy: false,
    uncollectedFood: <Food[]>[],
-   collectedFood: <Food[]>[]
+   collectedFood: <Food[]>[],
+   recipeName: ''
 };
 
 var _origState = { ...State };
