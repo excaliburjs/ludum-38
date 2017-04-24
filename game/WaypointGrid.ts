@@ -127,7 +127,7 @@ class WaypointGrid {
             tempRay.dir.y = .0001
          }
          if(this.rayCast(tempRay, node.pos.distance(n.pos))) {
-            console.log("invalid neighbor");            
+            ex.Logger.getInstance().debug("Waypoint Grid: invalid neighbor");            
          } else {
             result.push(n);
          }

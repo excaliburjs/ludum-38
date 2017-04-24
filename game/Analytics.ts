@@ -6,7 +6,7 @@ interface IPosition {
 interface IPayload {
    date: string, // date
    seed: number, // seeded value
-   started: string, // time
+   started: number, // time
    timePlayed: number, // amount of time played
    won: boolean, // won or lost
    enemiesOnScreen: number, 
@@ -25,8 +25,6 @@ class Analytics {
             'Content-Type': 'application/json'
          },
          body: JSON.stringify(payload)
-      }).then((value) => {
-         console.log(value.body);
       });
    }   
    

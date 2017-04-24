@@ -17,6 +17,10 @@ class ShoppingList {
        return State.collectedFood.filter(f => f !== undefined);
     }
 
+    public get hasCollectedAllFood() {
+       return player.shoppingList.collectedFood.length === Config.foodSpawnCount;
+    }
+
     public removeItem(id: string) {
        if(State.uncollectedFood && State.uncollectedFood.length){
          var idxsToRemove = State.uncollectedFood.map(function(obj, index) {
@@ -129,10 +133,10 @@ class ShoppingList {
 
           $('#item' + (State.collectedFood.indexOf(food) + 1)).css("background-image", "url('" + colSpriteCanvas + "'");
           
-          Resources.checkoutSound.play();          
+          Resources.checkoutSound.play();
           
           currIdx++;
-       }, 700);
+       }, Config.gameOverFoodAnimInterval);
          
        
     }

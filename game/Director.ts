@@ -62,19 +62,10 @@ class Director extends ex.Actor {
          var closest = this._findMinimum(scnMain.enemies, (enemy) => {
             return player.pos.distance(enemy.pos);
          });
-
-         // var distanceToPlayer = player.pos.distance(closest.pos);
-         // if(distanceToPlayer < Config.enemyVignetteRadius) {
-         //    vignette.visible = true;
-         //    var segment = Config.enemyVignetteRadius / 4;
-         //    var index = (3 -Math.floor(distanceToPlayer / segment)).toFixed(0);
-            
-         //    vignette.setDrawing('vignette' + index);
-
-         // } else {
-         //    vignette.visible = false;
-         // }
       }
+      
+      stats.samplePlayer(evt.delta);
+      stats.sampleEnemy(evt.delta);
    }
    
    //1. start zoomed in on player, zoom out
@@ -89,11 +80,8 @@ class Director extends ex.Actor {
 
    //2. display grocery list
    private _showGroceryList() {
-      console.log('show grocery list');
       $('.playerShoppingList').show();
-      //TODO
    }
-
 
    //3. spawn in food
    private _spawnFood() {
@@ -160,6 +148,10 @@ class Director extends ex.Actor {
       var seconds = elapsedSeconds - (minutes * 60);
       var minuteText = (minutes === 1 ? "minute" : "minutes");
       var secondText = (seconds === 1 ? "second" : "seconds");
+
+      stats.started = Director.startTime;
+      stats.timePlayed = elapsedSeconds;
+
       var timeMessage = "I shopped for " + minutes + " minutes, " + seconds + " seconds";
       $('#game-over-playtime')[0].innerHTML = timeMessage; 
       game.stop();
@@ -169,6 +161,9 @@ class Director extends ex.Actor {
       }
 
       player.shoppingList.handleGameOver();
+
+      // publish analytics
+      stats.captureEndGameAndPublish();
 
       $('body').addClass('game-over');
       $('#game-over-dialog').show();
