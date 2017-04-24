@@ -6,6 +6,7 @@ class Enemy extends ex.Actor {
 
    public attack = false;
    public isAttacking = false;
+   public lastKnownPlayerPos: ex.Vector;
 
    private _grid: WaypointGrid;
 
@@ -85,8 +86,14 @@ class Enemy extends ex.Actor {
       
       this.pos = start.pos.clone();
 
-      var end = gameRandom.pickOne<WaypointNode>(this._grid.nodes);
-      
+      var end: WaypointNode = null;
+      if(this.lastKnownPlayerPos) {
+         end = this._grid.findClosestNode(this.lastKnownPlayerPos.x, this.lastKnownPlayerPos.y);
+         this.lastKnownPlayerPos = null;
+      } else {
+         end = gameRandom.pickOne<WaypointNode>(this._grid.nodes);
+      }
+
       var path = this._grid.findPath(start, end);
       
       for(var node of path){
@@ -106,6 +113,7 @@ class Enemy extends ex.Actor {
             }
             if(playerTime !== -1 && playerTime < wallTime){
                result = true;
+               this.lastKnownPlayerPos = ray.getPoint(playerTime);
 
                if(!this.isAttacking && result){
                   this.isAttacking = true;
