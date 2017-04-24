@@ -152,7 +152,13 @@ class Director extends ex.Actor {
    
    private _handleGameOver() {
       ex.Logger.getInstance().info('game over');
+      
       State.gameOver = true;
+
+      // reset bg music, in case player was being chased
+      if (!Preferences.muteBackgroundMusic) {
+         SoundManager.unmuteBackgroundMusic();
+      }
 
       player.shoppingList.handleGameOver();
 

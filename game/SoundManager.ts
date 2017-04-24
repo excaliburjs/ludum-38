@@ -63,12 +63,18 @@ class SoundManager {
       Resources.music.setVolume(Preferences.muteBackgroundMusic ? 0 : Config.backgroundVolume);
       Resources.music.setLoop(true);
       Resources.music.play();
+
+      Resources.ominousMusic.setVolume(0);
+      Resources.ominousMusic.setLoop(true);
+      Resources.ominousMusic.play();
    }
 
    static stopBackgroundMusic() {   
       // stop bg music
       Resources.music.setLoop(false);
-      Resources.music.stop();      
+      Resources.music.stop();   
+      Resources.ominousMusic.setLoop(false);
+      Resources.ominousMusic.stop();       
    }
 
    static muteBackgroundMusic() {
@@ -76,6 +82,7 @@ class SoundManager {
 
       // mute bg music
       Resources.music.setVolume(0);
+      Resources.ominousMusic.setVolume(0);
       SoundManager._updateMusicButton();      
    }
 
@@ -84,6 +91,7 @@ class SoundManager {
 
       // unmute bg music
       Resources.music.setVolume(Config.backgroundVolume);
+      Resources.ominousMusic.setVolume(0);
       SoundManager._updateMusicButton();
    }
 
@@ -131,7 +139,36 @@ class SoundManager {
    static playPlayerCheckout() {
 
       // restore checkout sounds in case enemy just checked out
-      SoundManager.restoreCheckoutSounds();
+      SoundManager.restoreCheckoutSounds();      
+   }
+
+   static updateDynamicEnemyPlayerMusic() {
+      if (Preferences.muteBackgroundMusic || State.gameOver) return;
+
+      // Find all enemies currently chasing player
+      const chasingEnemies = scnMain.enemies.filter(e => e.isAttacking);
+      const thresholdDistance = Config.enemyChaseMusicRadius;
+      var closestDistance: number = thresholdDistance;
+
+      for (var e of chasingEnemies) {
+         var playerVector = player.pos.sub(e.pos);
+         if (closestDistance && playerVector.magnitude() < closestDistance) {
+            closestDistance = playerVector.magnitude();
+         } else if (!closestDistance) {
+            closestDistance = playerVector.magnitude();
+         }
+      }
+
+      // Clamp to threshold
+      closestDistance = Math.min(closestDistance, thresholdDistance);
+
+      // Use closest vector as scale variable for music volume
+      const closeFactor = (closestDistance / thresholdDistance) * Config.backgroundVolume;
+      
+      // set volume to scale
+      Resources.music.setVolume(closeFactor);
+      Resources.ominousMusic.setVolume(Config.backgroundVolume - closeFactor);
+      
    }
 
    private static dampenCheckoutSounds() {

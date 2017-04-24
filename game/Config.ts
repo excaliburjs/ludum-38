@@ -24,6 +24,7 @@ var Config = {
    enemyChaseSpeed: 90,
 
    enemyVignetteRadius: 150,
+   enemyChaseMusicRadius: 400,
 
    enemySpawnMinTime: 5000,
    enemySpawnMaxTime: 12000,
