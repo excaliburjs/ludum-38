@@ -1,4 +1,11 @@
+const ENEMY_FOOD_MODE = 'Food';
+const ENEMY_PLAYER_MODE = 'Player';
+const ENEMY_RANDOM_MODE = 'Random';
 
+type EnemyMode = 
+   | typeof ENEMY_FOOD_MODE
+   | typeof ENEMY_RANDOM_MODE
+   | typeof ENEMY_PLAYER_MODE;
 class Enemy extends ex.Actor {
 
    public rays: ex.Ray[] = [];
@@ -13,7 +20,7 @@ class Enemy extends ex.Actor {
 
    // todo need reference to the waypoint grid
 
-   constructor(grid: WaypointGrid) {      
+   constructor(grid: WaypointGrid, public mode: EnemyMode = ENEMY_RANDOM_MODE) {      
       super(Config.enemyStart.x, Config.enemyStart.y, Config.enemyWidth, Config.enemyHeight);
 
       this._surpriseSprite = Resources.surpriseSheet.asSprite();
@@ -119,7 +126,20 @@ class Enemy extends ex.Actor {
          end = this._grid.findClosestNode(this.lastKnownPlayerPos.x, this.lastKnownPlayerPos.y);
          this.lastKnownPlayerPos = null;
       } else {
-         end = gameRandom.pickOne<WaypointNode>(this._grid.nodes);
+         switch(this.mode){
+            case ENEMY_FOOD_MODE:
+               var foodList = player.shoppingList.getFoodLeft();
+               var food = gameRandom.pickOne<Food>(foodList);
+               end = this._grid.findClosestNode(food.pos.x, food.pos.y);
+               break;
+            case ENEMY_PLAYER_MODE:
+               end = this._grid.findClosestNode(player.pos.x, player.pos.y);
+               break;
+            case ENEMY_RANDOM_MODE:
+               end = gameRandom.pickOne<WaypointNode>(this._grid.nodes);
+               break;
+         }
+         
       }
 
       var path = this._grid.findPath(start, end);

@@ -66,7 +66,7 @@ class Director extends ex.Actor {
    //4. the first antagonist arrives
    private _spawnFirstEnemy() {
       this._enemiesSpawned++;
-      scnMain.spawnEnemy();
+      scnMain.spawnEnemy(ENEMY_PLAYER_MODE);
    }
 
    //4b. add more antagonists
@@ -76,7 +76,7 @@ class Director extends ex.Actor {
       this.actions.delay(spawnTime).callMethod(() =>{
          if(State.gameOver || (this._enemiesSpawned > Config.enemySpawnMaximum)) return;
          this._enemiesSpawned++;
-         scnMain.spawnEnemy();
+         scnMain.spawnEnemy(ENEMY_FOOD_MODE);
          this._spawnTimedEnemy();
       });
    }
