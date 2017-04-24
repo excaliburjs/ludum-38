@@ -11,18 +11,9 @@ class Stats implements IPayload {
 
    private _playerSample: number = 0;
    private _enemySample: number = 0;
-
-   public startStats() {
-      this.started = Date.now();
-   }
-
-   public endStats() {
-      this.timePlayed = Date.now() - this.started;
-   }
-
+   
    public captureEndGameAndPublish(){
       this.seed = gameRandom.seed;
-      this.endStats();
       this.foodCollected = State.collectedFood.map(f => {
          return f.foodZone
       });

@@ -95,7 +95,6 @@ game.start(loader).then(() => {
    // turn off anti-aliasing
    game.setAntialiasing(false);
    game.goToScene('main');
-   stats.startStats();
 
    SoundManager.startBackgroundMusic();
 });

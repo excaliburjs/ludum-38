@@ -146,8 +146,14 @@ class Director extends ex.Actor {
       var elapsedSeconds = Math.round((endTime - Director.startTime) / 1000);
       var minutes = Math.floor(elapsedSeconds / 60);
       var seconds = elapsedSeconds - (minutes * 60);
+      var minuteText = (minutes === 1 ? "minute" : "minutes");
+      var secondText = (seconds === 1 ? "second" : "seconds");
+
+      stats.started = Director.startTime;
+      stats.timePlayed = elapsedSeconds;
+
       var timeMessage = "I shopped for " + minutes + " minutes, " + seconds + " seconds";
-      
+      $('#game-over-playtime')[0].innerHTML = timeMessage; 
       game.stop();
       // reset bg music, in case player was being chased
       if (!Preferences.muteBackgroundMusic) {
