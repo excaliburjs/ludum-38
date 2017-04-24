@@ -3,13 +3,9 @@ class SoundManager {
    static init() {      
       if (Preferences.muteBackgroundMusic) {
          SoundManager.muteBackgroundMusic();
-      } else {
-         SoundManager.unmuteBackgroundMusic();
       }
       if (Preferences.muteAll) {
          SoundManager.muteAll();
-      } else {
-         SoundManager.unmuteAll();
       }
 
       $('#mute-music').on('click', () => {
@@ -117,7 +113,7 @@ class SoundManager {
       for (let i = 0; i < times; i++) {
          setTimeout(() => !State.gameOver && Resources.checkoutSound.play(), i * wait);
       }
-      
+
       setTimeout(() => {
          if (State.gameOver) {
             SoundManager._afterEnemyCheckout();
