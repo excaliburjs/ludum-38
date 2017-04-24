@@ -130,6 +130,7 @@ var Resources = {
     playerSheet: new ex.Texture('img/player.png'),
     foodSheet: new ex.Texture('img/food.png'),
     enemySheet: new ex.Texture('img/enemy.png'),
+    surpriseSheet: new ex.Texture('img/surprise.png'),
     music: new ex.Sound('assets/snd/bossa_nova.mp3'),
     playerSpottedSound: new ex.Sound('assets/snd/playerSpotted.mp3', 'assets/snd/playerSpotted.wav'),
     spawnEnemySound: new ex.Sound('assets/snd/spawnEnemy.mp3', 'assets/snd/spawnEnemy.wav'),
@@ -149,8 +150,8 @@ var Config = {
     enemyRayCastAngle: Math.PI / 4,
     enemyRayLength: 200,
     enemyRayCount: 5,
-    enemySpeed: 20,
-    enemyChaseSpeed: 50,
+    enemySpeed: 80,
+    enemyChaseSpeed: 90,
     foodWidth: 48,
     foodHeight: 48,
     foodSheetCols: 9,
@@ -391,6 +392,7 @@ var Enemy = (function (_super) {
         _this.attack = false;
         _this.isAttacking = false;
         _this.addDrawing(Resources.enemySheet);
+        _this._surpriseSprite = Resources.surpriseSheet.asSprite();
         _this._grid = grid;
         var start = _this._grid.findClosestNode(Config.enemyStart.x, Config.enemyStart.y);
         _this._wander(start);
@@ -430,6 +432,9 @@ var Enemy = (function (_super) {
         });
         // set this to postdebugdraw on production
         this.on('postdraw', function (evt) {
+            if (_this.attack) {
+                _this._surpriseSprite.draw(evt.ctx, -_this._surpriseSprite.naturalWidth / 2, -_this._surpriseSprite.naturalHeight / 2 - 20);
+            }
             if (gameDebug) {
                 for (var _i = 0, _a = _this.rays; _i < _a.length; _i++) {
                     var ray = _a[_i];
@@ -859,9 +864,11 @@ var Director = (function (_super) {
     };
     //1. start zoomed in on player, zoom out
     Director.prototype._zoomOut = function () {
-        scnMain.camera.zoom(4);
-        return scnMain.camera.zoom(1, 3000).then(function () {
-            $('.playerShoppingList').show();
+        scnMain.camera.zoom(3.5);
+        return this.actions.delay(2000).asPromise().then(function () {
+            return scnMain.camera.zoom(1, 3000).then(function () {
+                $('.playerShoppingList').show();
+            });
         });
     };
     //2. display grocery list
@@ -922,13 +929,13 @@ var loader = new ex.Loader();
 for (var r in Resources) {
     loader.addResource(Resources[r]);
 }
-var director = new Director();
-game.add(director);
 var scnMain = new ScnMain(game);
 game.addScene('main', scnMain);
 // create the player in global context
 var player = new Player(Config.playerStart.x, Config.playerStart.y);
 scnMain.add(player);
+var director = new Director();
+scnMain.add(director);
 //TODO Remove debug mode
 var gamePaused = false;
 game.input.keyboard.on('down', function (keyDown) {
