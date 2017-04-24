@@ -163,6 +163,9 @@ var Config = {
     enemySpeed: 80,
     enemyChaseSpeed: 90,
     enemyVignetteRadius: 300,
+    enemySpawnMinTime: 5000,
+    enemySpawnMaxTime: 12000,
+    enemySpawnMaximum: 10,
     foodWidth: 48,
     foodHeight: 48,
     foodSheetCols: 9,
@@ -955,7 +958,9 @@ var SoundManager = (function () {
 var Director = (function (_super) {
     __extends(Director, _super);
     function Director() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this._enemiesSpawned = 0;
+        return _this;
     }
     Director.prototype.setup = function () {
         var _this = this;
@@ -978,6 +983,9 @@ var Director = (function (_super) {
                 _this._spawnFirstEnemy();
             }, Config.spawnFirstEnemyTime);
             scnMain.add(_this._spawnFirstEnemyTimer);
+            _this.actions.delay(2000).callMethod(function () {
+                _this._spawnTimedEnemy();
+            });
         });
     };
     //1. start zoomed in on player, zoom out
@@ -1001,9 +1009,21 @@ var Director = (function (_super) {
     };
     //4. the first antagonist arrives
     Director.prototype._spawnFirstEnemy = function () {
+        this._enemiesSpawned++;
         scnMain.spawnEnemy();
     };
     //4b. add more antagonists
+    Director.prototype._spawnTimedEnemy = function () {
+        var _this = this;
+        var spawnTime = gameRandom.integer(Config.enemySpawnMinTime, Config.enemySpawnMaxTime);
+        this.actions.delay(spawnTime).callMethod(function () {
+            if (State.gameOver || (_this._enemiesSpawned > Config.enemySpawnMaximum))
+                return;
+            _this._enemiesSpawned++;
+            scnMain.spawnEnemy();
+            _this._spawnTimedEnemy();
+        });
+    };
     //5. checkout - game ends
     Director.prototype.gameOver = function () {
         // already called (could be triggered multiple times)
