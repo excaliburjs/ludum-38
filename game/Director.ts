@@ -4,6 +4,7 @@ class Director extends ex.Actor {
    private _spawnFoodTimer: ex.Timer;
    private _spawnFirstEnemyTimer: ex.Timer;
    private _diagIntro: ex.Actor;
+   private _enemiesSpawned: number = 0;
 
    public setup() {
       ex.Logger.getInstance().info('director setup');
@@ -30,6 +31,10 @@ class Director extends ex.Actor {
             this._spawnFirstEnemy();
          }, Config.spawnFirstEnemyTime);
          scnMain.add(this._spawnFirstEnemyTimer);
+
+         this.actions.delay(2000).callMethod(() => {
+            this._spawnTimedEnemy();
+         })
 
       })
    }
@@ -60,10 +65,21 @@ class Director extends ex.Actor {
 
    //4. the first antagonist arrives
    private _spawnFirstEnemy() {
+      this._enemiesSpawned++;
       scnMain.spawnEnemy();
    }
 
    //4b. add more antagonists
+   private _spawnTimedEnemy() {
+      
+      var spawnTime = gameRandom.integer(Config.enemySpawnMinTime, Config.enemySpawnMaxTime);
+      this.actions.delay(spawnTime).callMethod(() =>{
+         if(State.gameOver || (this._enemiesSpawned > Config.enemySpawnMaximum)) return;
+         this._enemiesSpawned++;
+         scnMain.spawnEnemy();
+         this._spawnTimedEnemy();
+      });
+   }
 
    //5. checkout - game ends
    public gameOver() {
