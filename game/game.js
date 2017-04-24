@@ -1319,6 +1319,7 @@ var Director = (function (_super) {
     Director.prototype._handleGameOver = function (enemy) {
         ex.Logger.getInstance().info('game over');
         State.gameOver = true;
+        game.stop();
         // reset bg music, in case player was being chased
         if (!Preferences.muteBackgroundMusic) {
             SoundManager.unmuteBackgroundMusic();
