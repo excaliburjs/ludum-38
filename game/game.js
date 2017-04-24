@@ -357,16 +357,13 @@ var ScnMain = (function (_super) {
             var validTiles = this.getCellsInFoodZone(chosenFoodZone);
             var chosenCell = validTiles[gameRandom.integer(0, validTiles.length - 1)];
             var food = new Food(chosenCell.x, chosenCell.y, i, chosenFoodZone);
-            var bwSprite = Food.bwFoodSheet.getSprite(food.spriteIndex);
-            var bwSpriteCanvas = bwSprite._spriteCanvas.toDataURL();
-            $('#item' + (i + 1)).css("background-image", "url('" + bwSpriteCanvas + "'");
-            console.log(bwSpriteCanvas);
             this.add(food);
             foodArr.push(food);
         }
         SoundManager.playSpawnFood();
         var shoppingList = new ShoppingList(foodArr);
         player.shoppingList = shoppingList;
+        shoppingList.updateUI();
     };
     return ScnMain;
 }(ex.Scene));
@@ -567,19 +564,64 @@ var Enemy = (function (_super) {
     };
     return Enemy;
 }(ex.Actor));
+var SHOPPING_TEXT_GET_FOOD = 'Need to get:';
+var SHOPPING_TEXT_CHECKOUT = 'Time to checkout!';
 var ShoppingList = (function () {
     function ShoppingList(items) {
         this.items = items;
+        this._collectedFood = [];
+        this._collectedFood = new Array(items.length);
     }
     ShoppingList.prototype.removeItem = function (id) {
         if (this.items && this.items.length) {
             var idxsToRemove = this.items.map(function (obj, index) {
-                if (obj.ShoppingListId == id) {
+                if (obj && obj.shoppingListId == id) {
                     return index;
                 }
-            });
+            }).filter(function (i) { return i !== undefined; });
             if (idxsToRemove && idxsToRemove.length) {
-                this.items.splice(idxsToRemove[0], 1);
+                var idx = idxsToRemove[0];
+                var removedFood = this.items[idx];
+                this.items[idx] = undefined;
+                this._collectedFood[idx] = removedFood;
+                this.updateUI();
+            }
+        }
+    };
+    ShoppingList.typewriter = function (text, target, speed) {
+        var progress = '';
+        var len = text.length;
+        var pos = 0;
+        var typer;
+        var type = function () {
+            if (progress === text) {
+                return clearInterval(typer);
+            }
+            ;
+            progress = progress + text[pos];
+            $(target).text(progress);
+            pos++;
+        };
+        typer = setInterval(type, speed);
+    };
+    ShoppingList.prototype.updateUI = function () {
+        var collectedFood = this._collectedFood.filter(function (f) { return f !== undefined; });
+        if (collectedFood.length !== Config.foodSpawnCount) {
+            ShoppingList.typewriter(SHOPPING_TEXT_GET_FOOD, '#shop-message', 90);
+        }
+        else {
+            ShoppingList.typewriter(SHOPPING_TEXT_CHECKOUT, '#shop-message', 90);
+        }
+        for (var i = 0; i < this._collectedFood.length; i++) {
+            if (!this._collectedFood[i]) {
+                var bwSprite = Food.bwFoodSheet.getSprite(this.items[i].spriteIndex);
+                var bwSpriteCanvas = bwSprite._spriteCanvas.toDataURL();
+                $('#item' + (i + 1)).css("background-image", "url('" + bwSpriteCanvas + "'");
+            }
+            else {
+                var colSprite = Food.foodSheet.getSprite(this._collectedFood[i].spriteIndex);
+                var colSpriteCanvas = colSprite._spriteCanvas.toDataURL();
+                $('#item' + (i + 1)).css("background-image", "url('" + colSpriteCanvas + "'");
             }
         }
     };
