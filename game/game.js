@@ -551,44 +551,48 @@ var WaypointGrid = (function () {
         }
         return false;
     };
+    WaypointGrid.prototype._findMinimum = function (nodes, valueFunc) {
+        var minNode = null;
+        var minValue = Infinity;
+        for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
+            var node = nodes_1[_i];
+            var val = valueFunc(node);
+            if (val < minValue) {
+                minValue = val;
+                minNode = node;
+            }
+        }
+        return minNode;
+    };
     WaypointGrid.prototype.findOrthogonalNeighbors = function (node) {
         var x = node.pos.x;
         var y = node.pos.y;
         var sameX = this.nodes.filter(function (n) {
             return n.pos.x === x && n != node;
         });
+        var sameXPos = sameX.filter(function (n) {
+            return (n.pos.y - node.pos.y) > 0;
+        });
+        var sameXNeg = sameX.filter(function (n) {
+            return (n.pos.y - node.pos.y) < 0;
+        });
         var sameY = this.nodes.filter(function (n) {
             return n.pos.y === y && n != node;
         });
-        var minX = Infinity;
-        var minXNode;
-        var oldMinXNode;
-        for (var i = 0; i < sameX.length; i++) {
-            var distanceX = sameX[i].pos.distance(node.pos);
-            if (distanceX < minX) {
-                minX = distanceX;
-                oldMinXNode = minXNode;
-                minXNode = sameX[i];
-            }
-        }
-        if (oldMinXNode && this._sameSign(oldMinXNode.pos.y - node.pos.y, minXNode.pos.y - node.pos.y)) {
-            oldMinXNode = null;
-        }
-        var minY = Infinity;
-        var minYNode;
-        var oldMinYNode;
-        for (var j = 0; j < sameY.length; j++) {
-            var distanceY = sameY[j].pos.distance(node.pos);
-            if (distanceY < minY) {
-                minY = distanceY;
-                oldMinYNode = minYNode;
-                minYNode = sameY[j];
-            }
-        }
-        if (oldMinYNode && this._sameSign(oldMinYNode.pos.x - node.pos.x, minYNode.pos.x - node.pos.x)) {
-            oldMinYNode = null;
-        }
-        var potentialNeighbors = [minXNode, oldMinXNode, minYNode, oldMinYNode].filter(function (n) { return n != null; });
+        var sameYPos = sameY.filter(function (n) {
+            return (n.pos.x - node.pos.x) > 0;
+        });
+        var sameYNeg = sameY.filter(function (n) {
+            return (n.pos.x - node.pos.x) < 0;
+        });
+        var distanceFcn = function (n) {
+            return n.pos.distance(node.pos);
+        };
+        var posX = this._findMinimum(sameXPos, distanceFcn);
+        var negX = this._findMinimum(sameXNeg, distanceFcn);
+        var posY = this._findMinimum(sameYPos, distanceFcn);
+        var negY = this._findMinimum(sameYNeg, distanceFcn);
+        var potentialNeighbors = [posX, negX, posY, negY].filter(function (n) { return n != null; });
         var result = [];
         for (var _i = 0, potentialNeighbors_1 = potentialNeighbors; _i < potentialNeighbors_1.length; _i++) {
             var n = potentialNeighbors_1[_i];
@@ -667,7 +671,7 @@ var WaypointGrid = (function () {
             ex.Util.removeItemToArray(current, openNodes);
             closedNodes.push(current);
             // Find neighbors we haven't explored
-            var neighbors = current.neighbors.filter(function (n) { return !ex.Util.contains(closedNodes, n); }); // this.findNeighbors(current).filter(n => { return !ex.Util.contains(closedNodes, n) });
+            var neighbors = current.neighbors.filter(function (n) { return !ex.Util.contains(closedNodes, n); });
             // Calculate neighbor heuristics
             neighbors.forEach(function (n) {
                 if (!ex.Util.contains(openNodes, n)) {
@@ -688,6 +692,9 @@ var WaypointGrid = (function () {
             for (var _b = 0, _c = node.neighbors; _b < _c.length; _b++) {
                 var neighbor = _c[_b];
                 ex.Util.DrawUtil.line(ctx, ex.Color.Green, node.pos.x, node.pos.y, neighbor.pos.x, neighbor.pos.y);
+                var point = node.pos.sub(neighbor.pos).normalize().scale(10);
+                var finalPoint = neighbor.pos.add(point);
+                ex.Util.DrawUtil.point(ctx, ex.Color.Red, finalPoint);
             }
         }
     };
