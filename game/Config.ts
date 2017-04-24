@@ -36,8 +36,8 @@ var Config = {
    foodSheetCols: 9,
    foodSheetRows: 1,
    foodSpawnCount: 5,
-   soundVolume: 0.15,
-   backgroundVolume: 0.1,
+   soundVolume: 1,
+   backgroundVolume: 0.3,
 
    groceryListTime: 4000,
    spawnFoodTime: 4000,

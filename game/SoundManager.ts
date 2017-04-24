@@ -3,9 +3,13 @@ class SoundManager {
    static init() {      
       if (Preferences.muteBackgroundMusic) {
          SoundManager.muteBackgroundMusic();
+      } else {
+         SoundManager.unmuteBackgroundMusic();
       }
       if (Preferences.muteAll) {
          SoundManager.muteAll();
+      } else {
+         SoundManager.unmuteAll();
       }
 
       $('#mute-music').on('click', () => {
