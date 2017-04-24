@@ -41,7 +41,6 @@ class Director extends ex.Actor {
       
       return this.actions.delay(2000).asPromise().then(() => {
          return scnMain.camera.zoom(1, 3000);
-            player.disableMovement = false;
       });
    }
 
@@ -49,6 +48,7 @@ class Director extends ex.Actor {
    private _showGroceryList() {
       console.log('show grocery list');
       $('.playerShoppingList').show();
+      player.disableMovement = false;
       //TODO
    }
 
