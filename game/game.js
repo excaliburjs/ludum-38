@@ -204,14 +204,42 @@ var Config = {
     spawnFoodTime: 4000,
     spawnFoodTimeInterval: 400,
     spawnFirstEnemyTime: 7000,
-    spawnTimedEnemyTime: 5000
+    spawnTimedEnemyTime: 5000,
+    convoEnemyDelay: 1000,
+    convoEnemySpeed: 50,
+    convoPlayerSpeed: 100
 };
+var GameOverEnemyPrompts = [
+    'Hey! Small world, huh?',
+    'Fancy seeing you here! What a small world!',
+    'Oh, you shop here? Small world!',
+    'I can\'t believe I ran into you, what a small world!'
+];
+var NpcNames = [
+    'Your ex',
+    'Gym teacher',
+    'Crazy neighbor',
+    'The Mayor',
+    'That person you owe money to',
+    'Gas station attendant',
+    'Chief of police'
+];
+// Index matches row major index of food.png
+var FoodNameMatrix = [
+    'Tomato', 'Chips', 'Cereal', 'Pizza', 'Steak', 'Toilet Paper', 'Bread', 'Banana', 'Carrot' // Row 0
+];
+// Types of recipe suffixes
+var RecipeNames = [
+    'Soup', 'Cake', 'Hot Dish', 'Casserole', 'Mash',
+    'Pasta', 'Salad', 'Pudding'
+];
 var State = {
     gameOver: false,
     gameOverCheckout: false,
     gameOverEnemy: false,
     uncollectedFood: [],
-    collectedFood: []
+    collectedFood: [],
+    recipeName: ''
 };
 var _origState = __assign({}, State);
 function resetState() {
@@ -690,9 +718,11 @@ var Enemy = (function (_super) {
 var SHOPPING_TEXT_GET_FOOD = 'Need to get:';
 var SHOPPING_TEXT_CHECKOUT = 'Time to checkout!';
 var ShoppingList = (function () {
-    function ShoppingList(items) {
-        State.uncollectedFood = items;
-        State.collectedFood = new Array(items.length);
+    function ShoppingList(_items) {
+        this._items = _items;
+        State.uncollectedFood = _items.concat([]);
+        State.collectedFood = new Array(_items.length);
+        State.recipeName = this.getRandomRecipeName();
     }
     Object.defineProperty(ShoppingList.prototype, "isEmpty", {
         get: function () {
@@ -747,9 +777,15 @@ var ShoppingList = (function () {
         };
         typer = setInterval(type, speed);
     };
+    ShoppingList.prototype.getRandomRecipeName = function () {
+        var availFoods = this._items.map(function (f) { return FoodNameMatrix[f.spriteIndex]; });
+        var twoFoods = gameRandom.pickSet(availFoods, 2, false);
+        var recipe = gameRandom.pickOne(RecipeNames);
+        return twoFoods[0] + ' and ' + twoFoods[1] + ' ' + recipe;
+    };
     ShoppingList.prototype.updateUI = function () {
         if (this.collectedFood.length !== Config.foodSpawnCount) {
-            ShoppingList.typewriter(SHOPPING_TEXT_GET_FOOD, '#shop-message', 90);
+            ShoppingList.typewriter(State.recipeName, '#shop-message', 90);
         }
         else {
             ShoppingList.typewriter(SHOPPING_TEXT_CHECKOUT, '#shop-message', 90);
@@ -770,6 +806,7 @@ var ShoppingList = (function () {
     ShoppingList.prototype.handleGameOver = function () {
         // move shopping list to game over dialog (hacky!)
         $('#game-over-shopping-list').append($('#shopping-list'));
+        $('#game-over-recipe').text('Recipe: ' + State.recipeName);
         for (var i = 0; i < State.collectedFood.length; i++) {
             var foodArr = State.collectedFood[i] ? State.collectedFood : State.uncollectedFood;
             var bwSprite = Food.bwFoodSheet.getSprite(foodArr[i].spriteIndex);
@@ -1346,12 +1383,15 @@ var Director = (function (_super) {
         }
         var enemyCanvas = enemySprite._spriteCanvas.toDataURL();
         $('#enemy').css("background-image", "url('" + enemyCanvas + "'");
+        var enemyText = gameRandom.pickOne(NpcNames) + ": \"" + gameRandom.pickOne(GameOverEnemyPrompts) + "\"";
         window.setTimeout(function () {
-            ShoppingList.typewriter("\"Hey! Small world, huh?\"", '#enemyConvo', 80);
-        }, 1000);
+            $('#enemyConvo').css({ visibility: 'visible' });
+            ShoppingList.typewriter(enemyText, '#enemyConvo', Config.convoEnemySpeed);
+        }, Config.convoEnemyDelay);
         window.setTimeout(function () {
-            ShoppingList.typewriter("\"...\"", '#playerConvo', 100);
-        }, 3000);
+            $('#playerConvo').css({ visibility: 'visible' });
+            ShoppingList.typewriter('"..."', '#playerConvo', Config.convoPlayerSpeed);
+        }, Config.convoEnemyDelay + (Config.convoEnemySpeed * enemyText.length));
     };
     return Director;
 }(ex.Actor));
