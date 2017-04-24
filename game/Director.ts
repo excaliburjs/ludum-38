@@ -3,11 +3,19 @@ class Director extends ex.Actor {
    private _showGroceryListTimer: ex.Timer;
    private _spawnFoodTimer: ex.Timer;
    private _spawnFirstEnemyTimer: ex.Timer;
+   private _diagIntro: ex.Actor;
 
    public setup() {
       ex.Logger.getInstance().info('director setup');
 
+      this._diagIntro = new ex.Actor(player.getRight() + 10, player.y + 5, 175, 48);
+      this._diagIntro.anchor.setTo(0, 1);
+      this._diagIntro.addDrawing(Resources.diagIntro);
+      scnMain.add(this._diagIntro);
+
       this._zoomOut().then(() => {
+         this._diagIntro.kill();
+
          this._showGroceryListTimer = new ex.Timer(() => {
             this._showGroceryList();
          }, Config.groceryListTime);
