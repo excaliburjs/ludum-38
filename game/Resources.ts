@@ -1,6 +1,7 @@
 var Resources = {
    map: new Extensions.Tiled.TiledResource('assets/map.json'),
    playerSheet: new ex.Texture('img/player.png'),
+   playerSelect: new ex.Texture('img/player-select.png'),
    foodSheet: new ex.Texture('img/food.png'),
    bwFoodSheet: new ex.Texture('img/foodbw.png'),
    charSheet1: new ex.Texture('img/char-sprites/player-1.png'),
