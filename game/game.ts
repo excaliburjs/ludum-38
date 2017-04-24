@@ -52,7 +52,8 @@ scnMain.add(director);
 // add the vignette
 
 var vignette = new ex.UIActor(0, 0, game.getDrawWidth(), game.getDrawHeight());
-vignette.addDrawing(Resources.vignette);
+
+vignette.visible = false;
 scnMain.add(vignette);
 
 //TODO Remove debug mode

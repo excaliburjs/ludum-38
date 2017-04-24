@@ -18,6 +18,8 @@ var Config = {
    enemySpeed: 80,
    enemyChaseSpeed: 90,
 
+   enemyVignetteRadius: 300,
+
    foodWidth: 48,
    foodHeight: 48,
    foodSheetCols: 9,
