@@ -134,6 +134,7 @@ var Resources = {
     map: new Extensions.Tiled.TiledResource('assets/map.json'),
     playerSheet: new ex.Texture('img/player.png'),
     foodSheet: new ex.Texture('img/food.png'),
+    bwFoodSheet: new ex.Texture('img/foodbw.png'),
     enemySheet: new ex.Texture('img/enemy.png'),
     surpriseSheet: new ex.Texture('img/surprise.png'),
     vignette: new ex.Texture('img/vignette-stretched.png'),
@@ -165,8 +166,8 @@ var Config = {
     foodSpawnCount: 5,
     soundVolume: 0.15,
     backgroundVolume: 0.1,
-    groceryListTime: 1000,
-    spawnFoodTime: 2000,
+    groceryListTime: 4000,
+    spawnFoodTime: 4000,
     spawnFirstEnemyTime: 7000
 };
 var State = {
@@ -363,20 +364,21 @@ var Food = (function (_super) {
         var _this = _super.call(this, x, y, Config.foodWidth, Config.foodHeight) || this;
         _this.shoppingListId = shoppingListId;
         _this.foodZone = foodZone;
-        return _this;
-    }
-    Food.prototype.onInitialize = function (engine) {
-        this.collisionType = ex.CollisionType.Passive;
+        // get zone index
+        var zoneIdx = FoodTypes.indexOf(_this.foodZone);
         // init sprite sheet
         if (Food.foodSheet === null) {
             Food.foodSheet = new ex.SpriteSheet(Resources.foodSheet, Config.foodSheetCols, Config.foodSheetRows, Config.foodWidth, Config.foodHeight);
         }
-        // get zone index
-        var zoneIdx = FoodTypes.indexOf(this.foodZone);
         // get rand food from zone (each column in sheet indexed by zone)
         // each row in sheet is another type of food in that zone
         var foodIdx = gameRandom.integer(0, Config.foodSheetRows - 1);
-        var foodSprite = Food.foodSheet.getSprite(zoneIdx + foodIdx * Food.foodSheet.columns);
+        _this.spriteIndex = zoneIdx + foodIdx * Food.foodSheet.columns;
+        return _this;
+    }
+    Food.prototype.onInitialize = function (engine) {
+        this.collisionType = ex.CollisionType.Passive;
+        var foodSprite = Food.foodSheet.getSprite(this.spriteIndex);
         this.addDrawing(foodSprite);
         var delay = gameRandom.integer(0, 700);
         this.actions
@@ -915,15 +917,14 @@ var Director = (function (_super) {
         player.disableMovement = true;
         scnMain.camera.zoom(3.5);
         return this.actions.delay(2000).asPromise().then(function () {
-            return scnMain.camera.zoom(1, 3000).then(function () {
-                player.disableMovement = false;
-                $('.playerShoppingList').show();
-            });
+            return scnMain.camera.zoom(1, 3000);
+            player.disableMovement = false;
         });
     };
     //2. display grocery list
     Director.prototype._showGroceryList = function () {
         console.log('show grocery list');
+        $('.playerShoppingList').show();
         //TODO
     };
     //3. spawn in food

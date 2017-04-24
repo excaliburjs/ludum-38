@@ -52,3 +52,10 @@ a {
     background-image: url(../img/legalpad.png);
     background-repeat: repeat-x;
 }
+
+.canvas-wrapper .playerShoppingList .shoppingListItem {
+   width: 48px;
+   height: 48px;
+   display: inline-block;
+   padding: 10px;
+}
