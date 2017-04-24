@@ -45,12 +45,26 @@ a {
 
 .canvas-wrapper .playerShoppingList {
     position: absolute;
-    width: 315px;
+    width: 432px;
     right: 0;
     top: 0;
     height: 48px;
     background-image: url(../img/legalpad.png);
-    background-repeat: repeat-x;
+    background-repeat: repeat-x;    
+    text-align: right;
+}
+
+.canvas-wrapper .playerShoppingList .shoppingListMessage {
+   position: absolute;
+   top: 0;
+   left: 0;
+   font-family: 'Indie Flower', Arial, Helvetica, sans-serif;
+   font-size: 20px;
+   color: #222;
+   padding: 5px 10px;
+   width: 170px;
+   font-weight: bold;
+   text-align: center;
 }
 
 .canvas-wrapper .playerShoppingList .shoppingListItem {

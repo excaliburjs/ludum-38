@@ -183,10 +183,7 @@ class ScnMain extends ex.Scene {
             var chosenCell = validTiles[gameRandom.integer(0, validTiles.length - 1)];
                         
             var food = new Food(chosenCell.x, chosenCell.y, i, chosenFoodZone);
-            var bwSprite = <any>Food.bwFoodSheet.getSprite(food.spriteIndex);
-            var bwSpriteCanvas = bwSprite._spriteCanvas.toDataURL();
-            $('#item' + (i + 1)).css("background-image", "url('" + bwSpriteCanvas + "'");
-            console.log(bwSpriteCanvas);
+                        
             this.add(food);
             foodArr.push(food);
          }
@@ -195,5 +192,6 @@ class ScnMain extends ex.Scene {
 
       var shoppingList = new ShoppingList(foodArr);
       player.shoppingList = shoppingList;
+      shoppingList.updateUI();
    }
 }
