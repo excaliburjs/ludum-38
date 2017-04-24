@@ -58,7 +58,7 @@ class ScnMain extends ex.Scene {
    public door: ex.Actor;
    public map: ex.TileMap;
    public enemies: Enemy[] = [];
-   public cashier: ex.Actor;
+   public cashier: Cashier;
 
    public onInitialize(engine: ex.Engine) {
       this.map = Resources.map.getTileMap();

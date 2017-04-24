@@ -17,6 +17,8 @@ class Enemy extends ex.Actor {
    public isAttacking = false;
    public lastKnownPlayerPos: ex.Vector;
 
+   public _rightDrawing: ex.Sprite;
+
    private _grid: WaypointGrid;
    private _surpriseSprite: ex.Sprite;
 
@@ -213,6 +215,8 @@ class Enemy extends ex.Actor {
       this.addDrawing('up', enemySheet.getSprite(3));
       this.addDrawing('left', enemySheet.getSprite(7));
       this.addDrawing('right', enemySheet.getSprite(9));
+
+      this._rightDrawing = enemySheet.getSprite(7);
 
       var walkDownAnim = enemySheet.getAnimationByIndices(game, [0, 1, 0, 2], 180)
       walkDownAnim.loop = true;

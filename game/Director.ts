@@ -123,7 +123,7 @@ class Director extends ex.Actor {
       // already called (could be triggered multiple times)
       if (State.gameOver) return; 
 
-      State.gameOverCheckout = true;            
+      State.gameOverCheckout = true;
       
       this._handleGameOver();
    }
@@ -135,7 +135,7 @@ class Director extends ex.Actor {
       State.gameOverEnemy = true;
 
       // TODO handle enemy (show on dialog? orchestrate cut scene?)
-      this._handleGameOver();
+      this._handleGameOver(enemy);
    }
 
    public getCharSprite() {
@@ -148,7 +148,7 @@ class Director extends ex.Actor {
       return result;
    }
    
-   private _handleGameOver() {
+   private _handleGameOver(enemy?: Enemy) {
       ex.Logger.getInstance().info('game over');
       State.gameOver = true;
 
@@ -159,5 +159,18 @@ class Director extends ex.Actor {
       $('#game-over-summary-collect').toggleClass('done', player.shoppingList.isEmpty);
       $('#game-over-summary-avoid').toggleClass('done', !State.gameOverEnemy);
       $('#game-over-summary-checkout').toggleClass('done', State.gameOverCheckout);
+
+      var playerSprite = <any>player._leftDrawing;
+      var playerCanvas = playerSprite._spriteCanvas.toDataURL();
+      $('#player').css("background-image", "url('" + playerCanvas + "'");
+
+      var enemySprite;
+      if (State.gameOverEnemy) {
+         enemySprite = <any>enemy._rightDrawing;
+      } else if (State.gameOverCheckout) {
+         enemySprite = <any>scnMain.cashier._rightDrawing;
+      }
+      var enemyCanvas = enemySprite._spriteCanvas.toDataURL();   
+      $('#enemy').css("background-image", "url('" + enemyCanvas + "'");
    }
 }

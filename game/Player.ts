@@ -9,6 +9,7 @@ class Player extends ex.Actor {
    public shoppingList : ShoppingList;
    public disableMovement: boolean = false;
 
+   public _leftDrawing: ex.Sprite;
    private _selectSprite: ex.Sprite;
 
    public onInitialize(engine: ex.Engine) {
@@ -105,6 +106,8 @@ class Player extends ex.Actor {
       this.addDrawing('up', playerSheet.getSprite(3));
       this.addDrawing('left', playerSheet.getSprite(7));
       this.addDrawing('right', playerSheet.getSprite(9));
+
+      this._leftDrawing = playerSheet.getSprite(9); //for game over screen
 
       // var walkDownAnim = playerSheet.getAnimationBetween(game, 0, 4, 180);
       var walkDownAnim = playerSheet.getAnimationByIndices(game, [0, 1, 0, 2], 180)
