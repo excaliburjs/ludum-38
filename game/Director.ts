@@ -178,5 +178,13 @@ class Director extends ex.Actor {
       }
       var enemyCanvas = enemySprite._spriteCanvas.toDataURL();   
       $('#enemy').css("background-image", "url('" + enemyCanvas + "'");
+      
+      window.setTimeout(() => {
+         ShoppingList.typewriter("\"Hey! Small world, huh?\"", '#enemyConvo', 80);
+      }, 1000);
+      window.setTimeout(() => {
+         ShoppingList.typewriter("\"...\"", '#playerConvo', 100);
+      }, 3000);
+      
    }
 }
