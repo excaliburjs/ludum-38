@@ -64,6 +64,8 @@ class Enemy extends ex.Actor {
 
          this.attack = this.checkForPlayer();
 
+         SoundManager.updateDynamicEnemyPlayerMusic();
+
          if (this.attack) {
             // find the vector to the player
             var vectorToPlayer  = player.pos.sub(this.pos);
@@ -74,14 +76,13 @@ class Enemy extends ex.Actor {
             // Chase only in orthogonal directions
             var max = Math.max(Math.abs(vectorToPlayer.x), Math.abs(vectorToPlayer.y));
             
-            this.vel = vectorToPlayer.normalize().scale(Config.enemyChaseSpeed);
+            this.vel = vectorToPlayer.normalize().scale(Config.enemyChaseSpeed);            
          } else {
             if((<any>this.actions)._queues[0]._actions.length === 0){
 
                var start = this._grid.findClosestNode(this.pos.x, this.pos.y);
                this.lastKnownPlayerPos = null;
                this._wander(start);
-               this.isAttacking = false;
             }
          }
       });
