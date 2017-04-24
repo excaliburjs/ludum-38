@@ -64,10 +64,10 @@ class ScnMain extends ex.Scene {
       this.map = Resources.map.getTileMap();
       this.add(this.map);
 
-      vignette.addDrawing('vignette0', Resources.vignette0.asSprite());
-      vignette.addDrawing('vignette1', Resources.vignette1.asSprite());
-      vignette.addDrawing('vignette2', Resources.vignette2.asSprite());
-      vignette.addDrawing('vignette3', Resources.vignette3.asSprite());
+      // vignette.addDrawing('vignette0', Resources.vignette0.asSprite());
+      // vignette.addDrawing('vignette1', Resources.vignette1.asSprite());
+      // vignette.addDrawing('vignette2', Resources.vignette2.asSprite());
+      // vignette.addDrawing('vignette3', Resources.vignette3.asSprite());
       
       Resources.map.data.layers.forEach(layer => {
          this.collectWayPoints(layer);
