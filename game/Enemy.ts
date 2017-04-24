@@ -189,7 +189,11 @@ class Enemy extends ex.Actor {
 
    private _setupDrawing() {
       //TODO randomly assign one of the different character spritesheets to the enemy
-      var enemySheet = new ex.SpriteSheet(Resources.enemySheet, 10, 1, 45, 45);
+
+      var number = gameRandom.integer(1, 8).toString();
+      var sprite = 'charSheet' + number;
+      
+      var enemySheet = new ex.SpriteSheet(Resources[sprite], 10, 1, 45, 45);
       this.addDrawing('down', enemySheet.getSprite(0));
       this.addDrawing('up', enemySheet.getSprite(3));
       this.addDrawing('left', enemySheet.getSprite(7));
