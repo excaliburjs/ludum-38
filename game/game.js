@@ -184,6 +184,7 @@ var Config = {
     enemySpawnMinTime: 5000,
     enemySpawnMaxTime: 12000,
     enemySpawnMaximum: 10,
+    enemyCheckoutTime: 30000,
     foodWidth: 48,
     foodHeight: 48,
     foodSheetCols: 9,
@@ -495,6 +496,11 @@ var Enemy = (function (_super) {
         var _this = this;
         this._setupDrawing();
         this.collisionType = ex.CollisionType.Passive;
+        //make enemies leave the store after a certain amount of time
+        var checkoutTimer = new ex.Timer(function () {
+            _this.mode = ENEMY_CHECKOUT_MODE;
+        }, Config.enemyCheckoutTime);
+        scnMain.add(checkoutTimer);
         this.on('postupdate', function (evt) {
             _this.attack = false;
             // calculate the forward vector of enemy
