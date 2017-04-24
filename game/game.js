@@ -84,7 +84,7 @@ var Player = (function (_super) {
         this.on('collision', function (e) {
             if (!State.gameOver) {
                 if (e.other instanceof Enemy) {
-                    director.gameOver();
+                    director.gameOver(e.other);
                 }
                 else if (e.other instanceof Food) {
                     player.shoppingList.removeItem(e.other.shoppingListId);
@@ -185,7 +185,11 @@ var Config = {
     spawnFirstEnemyTime: 7000
 };
 var State = {
-    gameOver: false
+    gameOver: false,
+    gameOverCheckout: false,
+    gameOverEnemy: false,
+    uncollectedFood: [],
+    collectedFood: []
 };
 var _origState = __assign({}, State);
 function resetState() {
@@ -252,7 +256,7 @@ var ScnMain = (function (_super) {
         _this._gameOverZone = [];
         _this.enemies = [];
         _this.handleGameOverTrigger = function () {
-            director.gameOver();
+            director.checkout();
         };
         return _this;
     }
@@ -598,22 +602,35 @@ var SHOPPING_TEXT_GET_FOOD = 'Need to get:';
 var SHOPPING_TEXT_CHECKOUT = 'Time to checkout!';
 var ShoppingList = (function () {
     function ShoppingList(items) {
-        this.items = items;
-        this._collectedFood = [];
-        this._collectedFood = new Array(items.length);
+        State.uncollectedFood = items;
+        State.collectedFood = new Array(items.length);
     }
+    Object.defineProperty(ShoppingList.prototype, "isEmpty", {
+        get: function () {
+            return State.uncollectedFood.filter(function (i) { return i === undefined; }).length === Config.foodSpawnCount;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ShoppingList.prototype, "collectedFood", {
+        get: function () {
+            return State.collectedFood.filter(function (f) { return f !== undefined; });
+        },
+        enumerable: true,
+        configurable: true
+    });
     ShoppingList.prototype.removeItem = function (id) {
-        if (this.items && this.items.length) {
-            var idxsToRemove = this.items.map(function (obj, index) {
+        if (State.uncollectedFood && State.uncollectedFood.length) {
+            var idxsToRemove = State.uncollectedFood.map(function (obj, index) {
                 if (obj && obj.shoppingListId == id) {
                     return index;
                 }
             }).filter(function (i) { return i !== undefined; });
             if (idxsToRemove && idxsToRemove.length) {
                 var idx = idxsToRemove[0];
-                var removedFood = this.items[idx];
-                this.items[idx] = undefined;
-                this._collectedFood[idx] = removedFood;
+                var removedFood = State.uncollectedFood[idx];
+                State.uncollectedFood[idx] = undefined;
+                State.collectedFood[idx] = removedFood;
                 this.updateUI();
             }
         }
@@ -628,6 +645,8 @@ var ShoppingList = (function () {
         var len = text.length;
         var pos = 0;
         var typer;
+        if ($(target).text() === text)
+            return;
         var type = function () {
             if (progress === text) {
                 return clearInterval(typer);
@@ -640,25 +659,28 @@ var ShoppingList = (function () {
         typer = setInterval(type, speed);
     };
     ShoppingList.prototype.updateUI = function () {
-        var collectedFood = this._collectedFood.filter(function (f) { return f !== undefined; });
-        if (collectedFood.length !== Config.foodSpawnCount) {
+        if (this.collectedFood.length !== Config.foodSpawnCount) {
             ShoppingList.typewriter(SHOPPING_TEXT_GET_FOOD, '#shop-message', 90);
         }
         else {
             ShoppingList.typewriter(SHOPPING_TEXT_CHECKOUT, '#shop-message', 90);
         }
-        for (var i = 0; i < this._collectedFood.length; i++) {
-            if (!this._collectedFood[i]) {
-                var bwSprite = Food.bwFoodSheet.getSprite(this.items[i].spriteIndex);
+        for (var i = 0; i < State.collectedFood.length; i++) {
+            if (!State.collectedFood[i]) {
+                var bwSprite = Food.bwFoodSheet.getSprite(State.uncollectedFood[i].spriteIndex);
                 var bwSpriteCanvas = bwSprite._spriteCanvas.toDataURL();
                 $('#item' + (i + 1)).css("background-image", "url('" + bwSpriteCanvas + "'");
             }
             else {
-                var colSprite = Food.foodSheet.getSprite(this._collectedFood[i].spriteIndex);
+                var colSprite = Food.foodSheet.getSprite(State.collectedFood[i].spriteIndex);
                 var colSpriteCanvas = colSprite._spriteCanvas.toDataURL();
                 $('#item' + (i + 1)).css("background-image", "url('" + colSpriteCanvas + "'");
             }
         }
+    };
+    ShoppingList.prototype.handleGameOver = function () {
+        // move shopping list to game over dialog (hacky!)
+        $('#game-over-shopping-list').append($('#shopping-list'));
     };
     return ShoppingList;
 }());
@@ -1057,13 +1079,29 @@ var Director = (function (_super) {
         });
     };
     //5. checkout - game ends
-    Director.prototype.gameOver = function () {
+    Director.prototype.checkout = function () {
         // already called (could be triggered multiple times)
         if (State.gameOver)
             return;
+        State.gameOverCheckout = true;
+        this._handleGameOver();
+    };
+    Director.prototype.gameOver = function (enemy) {
+        // already called (could be triggered multiple times)
+        if (State.gameOver)
+            return;
+        State.gameOverEnemy = true;
+        // TODO handle enemy (show on dialog? orchestrate cut scene?)
+        this._handleGameOver();
+    };
+    Director.prototype._handleGameOver = function () {
         ex.Logger.getInstance().info('game over');
         State.gameOver = true;
+        player.shoppingList.handleGameOver();
         $('#game-over-dialog').show();
+        $('#game-over-summary-collect').toggleClass('done', player.shoppingList.isEmpty);
+        $('#game-over-summary-avoid').toggleClass('done', !State.gameOverEnemy);
+        $('#game-over-summary-checkout').toggleClass('done', State.gameOverCheckout);
     };
     return Director;
 }(ex.Actor));
