@@ -17,6 +17,8 @@ class Enemy extends ex.Actor {
    public isAttacking = false;
    public lastKnownPlayerPos: ex.Vector;
 
+   public _rightDrawing: ex.Sprite;
+
    private _grid: WaypointGrid;
    private _surpriseSprite: ex.Sprite;
 
@@ -79,6 +81,7 @@ class Enemy extends ex.Actor {
             if((<any>this.actions)._queues[0]._actions.length === 0){
 
                var start = this._grid.findClosestNode(this.pos.x, this.pos.y);
+               this.lastKnownPlayerPos = null;
                this._wander(start);
             }
          }
@@ -135,7 +138,7 @@ class Enemy extends ex.Actor {
       var end: WaypointNode = null;
       if(this.lastKnownPlayerPos) {
          end = this._grid.findClosestNode(this.lastKnownPlayerPos.x, this.lastKnownPlayerPos.y);
-         this.lastKnownPlayerPos = null;
+         //this.lastKnownPlayerPos = null;
       } else {
          switch(this.mode){
             case ENEMY_FOOD_MODE:
@@ -163,22 +166,19 @@ class Enemy extends ex.Actor {
          
       }
 
-      var path = this._grid.findPath(start, end);
-      var checkoutX = 0;      
+      var path = this._grid.findPath(start, end);      
       for(var i = 0; i < path.length; i++){
          this.actions.moveTo(path[i].pos.x, path[i].pos.y, Config.enemySpeed);
-         checkoutX = path[i].pos.x;
       }
-
+   
       //if the enemy is checking out, after they get to the waypoint near the checkout,
       //manually have them exit the store
-      if(this.mode == ENEMY_CHECKOUT_MODE){
-         this.actions.moveTo(checkoutX, Config.gameHeight - 90, Config.enemySpeed);
+      if(this.mode === ENEMY_CHECKOUT_MODE){
+         this.actions.moveTo(end.pos.x, Config.gameHeight - 90, Config.enemySpeed);
          this.actions.moveTo(1250, Config.gameHeight - 90, Config.enemySpeed);
          this.actions.callMethod(()=>{
             ex.Util.removeItemToArray(this, scnMain.enemies);
             Director.enemiesSpawned -= 1;
-            console.log(Director.enemiesSpawned);
          });
          this.actions.die();
       }
@@ -216,6 +216,8 @@ class Enemy extends ex.Actor {
       this.addDrawing('up', enemySheet.getSprite(3));
       this.addDrawing('left', enemySheet.getSprite(7));
       this.addDrawing('right', enemySheet.getSprite(9));
+
+      this._rightDrawing = enemySheet.getSprite(7);
 
       var walkDownAnim = enemySheet.getAnimationByIndices(game, [0, 1, 0, 2], 180)
       walkDownAnim.loop = true;

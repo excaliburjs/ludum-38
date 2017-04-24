@@ -1,4 +1,6 @@
 class Cashier extends ex.Actor {
+
+   public _rightDrawing: ex.Sprite;
    
    public onInitialize(engine: ex.Engine) {
       this._setupDrawing();
@@ -13,6 +15,8 @@ class Cashier extends ex.Actor {
       this.addDrawing('up', playerSheet.getSprite(3));
       this.addDrawing('left', playerSheet.getSprite(7));
       this.addDrawing('right', playerSheet.getSprite(9));
+
+      this._rightDrawing = playerSheet.getSprite(7);
 
       // // var walkDownAnim = playerSheet.getAnimationBetween(game, 0, 4, 180);
       // var walkDownAnim = playerSheet.getAnimationByIndices(game, [0, 1, 0, 2], 180)

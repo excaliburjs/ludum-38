@@ -24,6 +24,12 @@
       <section class="game-over-dialog-header">
       </section>
       <section class="game-over-dialog-content">
+
+         <div id="game-over-conversation" style="text-align: center">
+            <div id="player" class= "characterArt"></div>
+            <div id="enemy" class="characterArt"></div>
+         </div>
+
          <h2>Shopping Checklist</h2>
 
          <div id="game-over-shopping-list"></div>         
@@ -81,7 +87,15 @@
       <script>
          $('.restart-game-button').click(function(){
                window.location.reload();
-         });   
+         });
+         
+         //prevent scrolling via arrow keys
+          window.addEventListener("keydown", function(e) {
+               // space and arrow keys
+               if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+                  e.preventDefault();
+               }
+            }, false);  
       </script>   
 </body>
 </html>
