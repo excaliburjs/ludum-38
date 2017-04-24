@@ -240,6 +240,7 @@ class ScnMain extends ex.Scene {
       this._foodSpawnAnimTimer = new ex.Timer(() => {
          if (currIdx === foodArr.length) {
             scnMain.cancelTimer(this._foodSpawnAnimTimer);
+            player.disableMovement = false;
             return;
          }
 
