@@ -7,6 +7,7 @@ class Player extends ex.Actor {
    }
 
    public shoppingList : ShoppingList;
+   public disableMovement: boolean = false;
 
    public onInitialize(engine: ex.Engine) {
       this._setupDrawing();
@@ -15,6 +16,8 @@ class Player extends ex.Actor {
       
       game.input.keyboard.on('hold', (keyHeld?: ex.Input.KeyEvent) => {
          if (!State.gameOver) {
+            if (player.disableMovement) return;
+
             switch(keyHeld.key) {
                case ex.Input.Keys.Up :
                case ex.Input.Keys.W :
