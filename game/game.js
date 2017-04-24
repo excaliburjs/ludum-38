@@ -781,8 +781,8 @@ var ShoppingList = (function () {
         var timer = setInterval(function () {
             if (currIdx === collectedFood.length) {
                 clearInterval(timer);
-                // play register sound if player collected all food
-                if (collectedFood.length > 0) {
+                // play register sound if player collected any food and got to the checkout
+                if (collectedFood.length > 0 && State.gameOverCheckout) {
                     setTimeout(function () { return Resources.registerSound.play(); }, 350);
                 }
                 return;
