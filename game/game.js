@@ -636,7 +636,7 @@ var ShoppingList = (function () {
         }
     };
     ShoppingList.prototype.getFoodLeft = function () {
-        return this.items.filter(function (f) {
+        return State.uncollectedFood.filter(function (f) {
             return !!f;
         });
     };
