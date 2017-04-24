@@ -137,7 +137,10 @@ var Resources = {
     bwFoodSheet: new ex.Texture('img/foodbw.png'),
     enemySheet: new ex.Texture('img/enemy.png'),
     surpriseSheet: new ex.Texture('img/surprise.png'),
-    vignette: new ex.Texture('img/vignette-stretched.png'),
+    vignette0: new ex.Texture('img/vignette-stretched-light.png'),
+    vignette1: new ex.Texture('img/vignette-stretched-dark.png'),
+    vignette2: new ex.Texture('img/vignette-stretched-darker.png'),
+    vignette3: new ex.Texture('img/vignette-stretched-darkest.png'),
     music: new ex.Sound('assets/snd/bossa_nova.mp3'),
     playerSpottedSound: new ex.Sound('assets/snd/playerSpotted.mp3', 'assets/snd/playerSpotted.wav'),
     spawnEnemySound: new ex.Sound('assets/snd/spawnEnemy.mp3', 'assets/snd/spawnEnemy.wav'),
@@ -159,6 +162,7 @@ var Config = {
     enemyRayCount: 5,
     enemySpeed: 80,
     enemyChaseSpeed: 90,
+    enemyVignetteRadius: 300,
     foodWidth: 48,
     foodHeight: 48,
     foodSheetCols: 9,
@@ -246,6 +250,10 @@ var ScnMain = (function (_super) {
         var _this = this;
         this.map = Resources.map.getTileMap();
         this.add(this.map);
+        vignette.addDrawing('vignette0', Resources.vignette0.asSprite());
+        vignette.addDrawing('vignette1', Resources.vignette1.asSprite());
+        vignette.addDrawing('vignette2', Resources.vignette2.asSprite());
+        vignette.addDrawing('vignette3', Resources.vignette3.asSprite());
         Resources.map.data.layers.forEach(function (layer) {
             _this.collectWayPoints(layer);
             _this.collectSolidTiles(layer);
@@ -504,6 +512,16 @@ var Enemy = (function (_super) {
         }
     };
     Enemy.prototype.checkForPlayer = function () {
+        var distanceToPlayer = player.pos.distance(this.pos);
+        if (distanceToPlayer < Config.enemyVignetteRadius) {
+            vignette.visible = true;
+            var segment = Config.enemyVignetteRadius / 4;
+            var index = (3 - Math.floor(distanceToPlayer / segment)).toFixed(0);
+            vignette.setDrawing('vignette' + index);
+        }
+        else {
+            vignette.visible = false;
+        }
         var result = false;
         for (var _i = 0, _a = this.rays; _i < _a.length; _i++) {
             var ray = _a[_i];
@@ -997,7 +1015,7 @@ var director = new Director();
 scnMain.add(director);
 // add the vignette
 var vignette = new ex.UIActor(0, 0, game.getDrawWidth(), game.getDrawHeight());
-vignette.addDrawing(Resources.vignette);
+vignette.visible = false;
 scnMain.add(vignette);
 //TODO Remove debug mode
 var gamePaused = false;
