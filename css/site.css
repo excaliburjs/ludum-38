@@ -36,10 +36,17 @@ a {
     width: 100px;
 }
 
-.playerShoppingList {
+.canvas-wrapper {
+    width: 1200px;
+    height: 720px;
     display: inline-block;
-    width: 150px;
-    height: 650px;
-    background-image: url("../img/legalpad.png");
-    background-repeat: repeat-y;
+}
+
+.canvas-wrapper .playerShoppingList {
+    position: absolute;
+    width: 315px;
+    right: 215px;
+    height: 48px;
+    background-image: url(../img/legalpad.png);
+    background-repeat: repeat-x;
 }
