@@ -78,8 +78,10 @@ class ScnMain extends ex.Scene {
       // Build game over triggers
       for (var go of this._gameOverZone) {
          let goc = go.getCenter();
-         this.add(new ex.Trigger(goc.x, goc.y, this.map.cellWidth, this.map.cellHeight, 
-            this.handleGameOverTrigger));
+         var gameOverTrigger = new ex.Trigger(goc.x, goc.y, this.map.cellWidth, this.map.cellHeight, 
+            this.handleGameOverTrigger);
+         gameOverTrigger.target = player;
+         this.add(gameOverTrigger);
       }
 
       // Build waypoint grid for pathfinding based on 
@@ -156,7 +158,7 @@ class ScnMain extends ex.Scene {
    }
 
    handleGameOverTrigger = () => {
-      director.checkout();
+         director.checkout();
    }
 
    getCellsInFoodZone(foodZone: string): IFoodSpawnPoint[] {

@@ -103,7 +103,7 @@ class Director extends ex.Actor {
    //4. the first antagonist arrives
    private _spawnFirstEnemy() {
       this._enemiesSpawned++;
-      scnMain.spawnEnemy(ENEMY_PLAYER_MODE);
+      scnMain.spawnEnemy(ENEMY_CHECKOUT_MODE);
    }
 
    //4b. add more antagonists
