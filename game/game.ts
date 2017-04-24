@@ -39,8 +39,6 @@ for (var r in Resources) {
     loader.addResource(Resources[r]);
 }
 
-
-
 var scnMain = new ScnMain(game);
 game.addScene('main', scnMain);
 
@@ -50,6 +48,12 @@ scnMain.add(player);
 
 var director = new Director();
 scnMain.add(director);
+
+// add the vignette
+
+var vignette = new ex.UIActor(0, 0, game.getDrawWidth(), game.getDrawHeight());
+vignette.addDrawing(Resources.vignette);
+scnMain.add(vignette);
 
 //TODO Remove debug mode
 var gamePaused = false;
