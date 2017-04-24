@@ -140,3 +140,7 @@ a {
    margin-bottom: 10px;
    font-size: 8px;
 }
+
+#enemyName {
+   color: darkviolet;
+}
