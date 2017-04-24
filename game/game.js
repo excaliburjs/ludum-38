@@ -213,7 +213,8 @@ var GameOverEnemyPrompts = [
     'Hey! Small world, huh?',
     'Fancy seeing you here! What a small world!',
     'Oh, you shop here? Small world!',
-    'I can\'t believe I ran into you, what a small world!'
+    'I can\'t believe I ran into you, what a small world!',
+    'Long time no see! Small world, huh?'
 ];
 var NpcNames = [
     'Your ex',
@@ -232,7 +233,7 @@ var FoodNameMatrix = [
 // Types of recipe suffixes
 var RecipeNames = [
     'Soup', 'Cake', 'Hot Dish', 'Casserole', 'Mash',
-    'Pasta', 'Salad', 'Pudding'
+    'Pasta', 'Salad', 'Pudding', 'Stew', 'Pie', 'Sandwich', 'Smoothie'
 ];
 var State = {
     gameOver: false,
@@ -1395,7 +1396,7 @@ var Director = (function (_super) {
         var enemyText = "\"" + gameRandom.pickOne(GameOverEnemyPrompts) + "\"";
         if (State.gameOverCheckout) {
             var enemyName = 'The cashier';
-            enemyText = enemyText + ' Paper or plastic?';
+            enemyText = "\"" + gameRandom.pickOne(GameOverEnemyPrompts) + " Paper or plastic?\"";
         }
         window.setTimeout(function () {
             $('#enemyConvo').css({ visibility: 'visible' });
