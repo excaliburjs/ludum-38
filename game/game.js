@@ -349,6 +349,10 @@ var ScnMain = (function (_super) {
             var validTiles = this.getCellsInFoodZone(chosenFoodZone);
             var chosenCell = validTiles[gameRandom.integer(0, validTiles.length - 1)];
             var food = new Food(chosenCell.x, chosenCell.y, i, chosenFoodZone);
+            var bwSprite = Food.bwFoodSheet.getSprite(food.spriteIndex);
+            var bwSpriteCanvas = bwSprite._spriteCanvas.toDataURL();
+            $('#item' + (i + 1)).css("background-image", "url('" + bwSpriteCanvas + "'");
+            console.log(bwSpriteCanvas);
             this.add(food);
             foodArr.push(food);
         }
@@ -369,6 +373,10 @@ var Food = (function (_super) {
         // init sprite sheet
         if (Food.foodSheet === null) {
             Food.foodSheet = new ex.SpriteSheet(Resources.foodSheet, Config.foodSheetCols, Config.foodSheetRows, Config.foodWidth, Config.foodHeight);
+        }
+        //bw init sprite sheet
+        if (Food.bwFoodSheet === null) {
+            Food.bwFoodSheet = new ex.SpriteSheet(Resources.bwFoodSheet, Config.foodSheetCols, Config.foodSheetRows, Config.foodWidth, Config.foodHeight);
         }
         // get rand food from zone (each column in sheet indexed by zone)
         // each row in sheet is another type of food in that zone
@@ -391,6 +399,7 @@ var Food = (function (_super) {
     return Food;
 }(ex.Actor));
 Food.foodSheet = null;
+Food.bwFoodSheet = null;
 var Enemy = (function (_super) {
     __extends(Enemy, _super);
     // todo need reference to the waypoint grid
