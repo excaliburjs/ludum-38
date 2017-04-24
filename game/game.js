@@ -180,7 +180,7 @@ var Config = {
     enemyRayCount: 5,
     enemySpeed: 80,
     enemyChaseSpeed: 90,
-    enemyVignetteRadius: 300,
+    enemyVignetteRadius: 150,
     enemySpawnMinTime: 5000,
     enemySpawnMaxTime: 12000,
     enemySpawnMaximum: 10,
