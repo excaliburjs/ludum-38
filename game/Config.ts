@@ -29,6 +29,7 @@ var Config = {
    enemySpawnMaxTime: 12000,
 
    enemySpawnMaximum: 10,
+   enemyCheckoutTime: 30000,
 
 
    foodWidth: 48,
