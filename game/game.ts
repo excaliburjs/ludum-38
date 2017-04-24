@@ -35,7 +35,8 @@ SoundManager.init();
 var gameDebug = false;
 
 var gameRandom = new ex.Random(Date.now());
-console.log(`Game seed ${gameRandom.seed}`);
+
+ex.Logger.getInstance().info(`Game seed ${gameRandom.seed}`);
 
 var charSheets = [];
 

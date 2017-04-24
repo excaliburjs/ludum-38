@@ -80,11 +80,8 @@ class Director extends ex.Actor {
 
    //2. display grocery list
    private _showGroceryList() {
-      console.log('show grocery list');
       $('.playerShoppingList').show();
-      //TODO
    }
-
 
    //3. spawn in food
    private _spawnFood() {
@@ -150,7 +147,7 @@ class Director extends ex.Actor {
       var minutes = Math.floor(elapsedSeconds / 60);
       var seconds = elapsedSeconds - (minutes * 60);
       var timeMessage = "I shopped for " + minutes + " minutes, " + seconds + " seconds";
-      console.log(timeMessage); 
+      
       game.stop();
       // reset bg music, in case player was being chased
       if (!Preferences.muteBackgroundMusic) {

@@ -25,8 +25,6 @@ class Analytics {
             'Content-Type': 'application/json'
          },
          body: JSON.stringify(payload)
-      }).then((value) => {
-         console.log(value.body);
       });
    }   
    

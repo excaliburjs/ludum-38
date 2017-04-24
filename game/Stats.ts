@@ -38,7 +38,6 @@ class Stats implements IPayload {
    public samplePlayer(delta: number){
       this._playerSample += delta;
       if(this._playerSample > Config.playerSample){
-         console.log("player sampled");
          this._playerSample = 0;
          this.playerPositions.push({x: player.pos.x, y: player.pos.y});
       }
@@ -47,7 +46,6 @@ class Stats implements IPayload {
    public sampleEnemy(delta: number) {
       this._enemySample += delta;
       if(this._enemySample > Config.enemySample){
-         console.log("Enemy sampled");
          this._enemySample = 0;  
          scnMain.enemies.forEach(e => {
             this.enemyPositions.push({x: e.pos.x, y: e.pos.y});
