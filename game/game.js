@@ -836,23 +836,26 @@ var Director = (function (_super) {
     Director.prototype.setup = function () {
         var _this = this;
         ex.Logger.getInstance().info('director setup');
-        this._showGroceryListTimer = new ex.Timer(function () {
-            _this._showGroceryList();
-        }, Config.groceryListTime);
-        scnMain.add(this._showGroceryListTimer);
-        this._spawnFoodTimer = new ex.Timer(function () {
-            _this._spawnFood();
-        }, Config.spawnFoodTime);
-        scnMain.add(this._spawnFoodTimer);
-        this._spawnFirstEnemyTimer = new ex.Timer(function () {
-            _this._spawnFirstEnemy();
-        }, Config.spawnFirstEnemyTime);
-        scnMain.add(this._spawnFirstEnemyTimer);
+        this._zoomOut().then(function () {
+            _this._showGroceryListTimer = new ex.Timer(function () {
+                _this._showGroceryList();
+            }, Config.groceryListTime);
+            scnMain.add(_this._showGroceryListTimer);
+            _this._spawnFoodTimer = new ex.Timer(function () {
+                _this._spawnFood();
+            }, Config.spawnFoodTime);
+            scnMain.add(_this._spawnFoodTimer);
+            _this._spawnFirstEnemyTimer = new ex.Timer(function () {
+                _this._spawnFirstEnemy();
+            }, Config.spawnFirstEnemyTime);
+            scnMain.add(_this._spawnFirstEnemyTimer);
+        });
     };
     //1. start zoomed in on player, zoom out
-    // public zoomOut() {
-    // zooming is broken
-    // }
+    Director.prototype._zoomOut = function () {
+        scnMain.camera.zoom(4);
+        return scnMain.camera.zoom(1, 3000);
+    };
     //2. display grocery list
     Director.prototype._showGroceryList = function () {
         console.log('show grocery list');
