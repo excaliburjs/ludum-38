@@ -51,7 +51,9 @@ var Config = {
 
    convoEnemyDelay: 1000,
    convoEnemySpeed: 50,
-   convoPlayerSpeed: 100   
+   convoPlayerSpeed: 100,
+
+   gameOverFoodAnimInterval: 400  
 }
 
 var GameOverEnemyPrompts = [

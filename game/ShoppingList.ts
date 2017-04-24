@@ -129,10 +129,10 @@ class ShoppingList {
 
           $('#item' + (State.collectedFood.indexOf(food) + 1)).css("background-image", "url('" + colSpriteCanvas + "'");
           
-          Resources.checkoutSound.play();          
+          Resources.checkoutSound.play();
           
           currIdx++;
-       }, 700);
+       }, Config.gameOverFoodAnimInterval);
          
        
     }
