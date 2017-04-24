@@ -98,9 +98,12 @@ a {
 }
 
 #game-over-dialog .game-over-dialog-content #game-over-conversation .characterArt {
-   
    display: inline-block;
-   /*margin: 0px auto;*/
    height: 45px;
    width: 45px;
+}
+
+#game-over-dialog .game-over-dialog-content #game-over-conversation .conversationText {
+   font-family: Arial, Helvetica, sans-serif;
+   font-size: 18px;
 }
