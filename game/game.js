@@ -1420,7 +1420,7 @@ var Director = (function (_super) {
         // publish analytics
         stats.captureEndGameAndPublish();
         $('body').addClass('game-over');
-        $('#game-over-dialog').show();
+        $('#game-over-dialog').get(0).showModal();
         $('#game-over-summary-collect').toggleClass('done', player.shoppingList.isEmpty);
         $('#game-over-summary-avoid').toggleClass('done', !State.gameOverEnemy);
         $('#game-over-summary-checkout').toggleClass('done', State.gameOverCheckout);
