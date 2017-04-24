@@ -304,6 +304,9 @@ var ScnMain = (function (_super) {
         this.door.setDrawing('idle');
         this.add(this.door);
         this.door.setZIndex(2);
+        // cashier
+        this.cashier = new Cashier(1126, 450, Config.playerWidth, Config.playerHeight, ex.Color.Red);
+        this.add(this.cashier);
         director.setup();
         this.on('postdraw', function (evt) {
             if (gameDebug) {
@@ -1159,6 +1162,40 @@ var Director = (function (_super) {
     };
     return Director;
 }(ex.Actor));
+var Cashier = (function (_super) {
+    __extends(Cashier, _super);
+    function Cashier() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Cashier.prototype.onInitialize = function (engine) {
+        this._setupDrawing();
+    };
+    Cashier.prototype._setupDrawing = function () {
+        var number = gameRandom.integer(1, 8).toString();
+        var sprite = 'charSheet' + number;
+        var playerSheet = new ex.SpriteSheet(Resources[sprite], 10, 1, 45, 45);
+        this.addDrawing('down', playerSheet.getSprite(0));
+        this.addDrawing('up', playerSheet.getSprite(3));
+        this.addDrawing('left', playerSheet.getSprite(7));
+        this.addDrawing('right', playerSheet.getSprite(9));
+        // // var walkDownAnim = playerSheet.getAnimationBetween(game, 0, 4, 180);
+        // var walkDownAnim = playerSheet.getAnimationByIndices(game, [0, 1, 0, 2], 180)
+        // walkDownAnim.loop = true;
+        // this.addDrawing('walkDown', walkDownAnim);
+        // // var walkUpAnim = playerSheet.getAnimationBetween(game, 4,8, 180);
+        // var walkUpAnim = playerSheet.getAnimationByIndices(game, [3, 4, 3, 5], 180);
+        // walkUpAnim.loop = true;
+        // this.addDrawing('walkUp', walkUpAnim);
+        // var walkLeftAnim = playerSheet.getAnimationByIndices(game, [7,6], 200);
+        // walkLeftAnim.loop = true;
+        // this.addDrawing('walkLeft', walkLeftAnim);
+        // var walkRightAnim = playerSheet.getAnimationByIndices(game, [9,8], 200);
+        // walkRightAnim.loop = true;
+        // this.addDrawing('walkRight', walkRightAnim);
+        this.setDrawing('left');
+    };
+    return Cashier;
+}(ex.Actor));
 /// <reference path="../lib/excalibur-dist/excalibur-tiled.d.ts" />
 /// <reference path="../node_modules/@types/zepto/index.d.ts" />
 /// <reference path="../node_modules/@types/classnames/index.d.ts" />
@@ -1176,6 +1213,7 @@ var Director = (function (_super) {
 /// <reference path="WaypointNode.ts" />
 /// <reference path="SoundManager.ts" />
 /// <reference path="Director.ts" />
+/// <reference path="Cashier.ts" />
 var game = new ex.Engine({
     width: Config.gameWidth,
     height: Config.gameHeight,
