@@ -5,6 +5,7 @@ class Director extends ex.Actor {
    private _spawnFirstEnemyTimer: ex.Timer;
    private _diagIntro: ex.Actor;
    static enemiesSpawned: number = 0;
+   static startTime: number;
 
    public onInitialize(){
       this.on('postupdate', this._update)
@@ -102,6 +103,7 @@ class Director extends ex.Actor {
    //4. the first antagonist arrives
    private _spawnFirstEnemy() {
       player.disableMovement = false;
+      Director.startTime = new Date().getTime();
       Director.enemiesSpawned++;
       scnMain.spawnEnemy(ENEMY_PLAYER_MODE);
    }
@@ -152,6 +154,11 @@ class Director extends ex.Actor {
       ex.Logger.getInstance().info('game over');
       
       State.gameOver = true;
+      var endTime = new Date().getTime();
+      var elapsedSeconds = Math.round((endTime - Director.startTime) / 1000);
+      var minutes = Math.floor(elapsedSeconds / 60);
+      var seconds = elapsedSeconds - (minutes * 60);
+      console.log("Play time: " + minutes + "min, " + seconds + "sec"); 
       game.stop();
       // reset bg music, in case player was being chased
       if (!Preferences.muteBackgroundMusic) {
