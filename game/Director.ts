@@ -125,7 +125,7 @@ class Director extends ex.Actor {
       // already called (could be triggered multiple times)
       if (State.gameOver) return; 
 
-      State.gameOverCheckout = true;      
+      State.gameOverCheckout = true;            
       
       this._handleGameOver();
    }

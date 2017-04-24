@@ -107,7 +107,7 @@ class ShoppingList {
              clearInterval(timer);
 
              // play register sound if player collected all food
-             if (collectedFood.length === Config.foodSpawnCount) {
+             if (collectedFood.length > 0) {
                 setTimeout(() => Resources.registerSound.play(), 350);
              }
              return;

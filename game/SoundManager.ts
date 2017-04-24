@@ -3,13 +3,9 @@ class SoundManager {
    static init() {      
       if (Preferences.muteBackgroundMusic) {
          SoundManager.muteBackgroundMusic();
-      } else {
-         SoundManager.unmuteBackgroundMusic();
       }
       if (Preferences.muteAll) {
          SoundManager.muteAll();
-      } else {
-         SoundManager.unmuteAll();
       }
 
       $('#mute-music').on('click', () => {
@@ -101,6 +97,55 @@ class SoundManager {
 
    static playSpawnFood(){
       Resources.spawnFoodSound.play();
+   }
+
+   static _playingEnemyCheckoutSequence = false;
+   static playEnemyCheckout() {
+      if (SoundManager._playingEnemyCheckoutSequence) return;
+      SoundManager._playingEnemyCheckoutSequence = true;
+      var times = gameRandom.integer(1, Config.foodSpawnCount);
+      var wait = 200;
+      
+      // temporarily dampen sounds
+      // TODO player checkout should restore values
+      SoundManager.dampenCheckoutSounds();
+   
+      for (let i = 0; i < times; i++) {
+         setTimeout(() => !State.gameOver && Resources.checkoutSound.play(), i * wait);
+      }
+
+      setTimeout(() => {
+         if (State.gameOver) {
+            SoundManager._afterEnemyCheckout();
+            return;
+         }
+         Resources.registerSound.play().then(SoundManager._afterEnemyCheckout);
+      }, wait * times + 300);
+   }
+
+   private static _afterEnemyCheckout() {
+      SoundManager._playingEnemyCheckoutSequence = false;
+      SoundManager.restoreCheckoutSounds();
+   }
+
+   static playPlayerCheckout() {
+
+      // restore checkout sounds in case enemy just checked out
+      SoundManager.restoreCheckoutSounds();
+   }
+
+   private static dampenCheckoutSounds() {
+      if (!Preferences.muteAll) {
+         Resources.checkoutSound.setVolume(Config.soundVolume * 0.6);
+         Resources.registerSound.setVolume(Config.soundVolume * 0.6);
+      }
+   }
+
+   private static restoreCheckoutSounds() {
+      if (!Preferences.muteAll) {
+         Resources.checkoutSound.setVolume(Config.soundVolume);
+         Resources.registerSound.setVolume(Config.soundVolume);
+      }
    }
 
    private static _updateMusicButton() {
