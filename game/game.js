@@ -807,7 +807,7 @@ var ShoppingList = (function () {
     ShoppingList.prototype.handleGameOver = function () {
         // move shopping list to game over dialog (hacky!)
         $('#game-over-shopping-list').append($('#shopping-list'));
-        $('#game-over-recipe').text('Recipe: ' + State.recipeName);
+        $('#game-over-recipe').text(State.recipeName);
         for (var i = 0; i < State.collectedFood.length; i++) {
             var foodArr = State.collectedFood[i] ? State.collectedFood : State.uncollectedFood;
             var bwSprite = Food.bwFoodSheet.getSprite(foodArr[i].spriteIndex);
