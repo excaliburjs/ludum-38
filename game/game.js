@@ -22,7 +22,9 @@ var Player = (function (_super) {
      * Build the player for the game
      */
     function Player(x, y) {
-        return _super.call(this, x, y, Config.playerWidth, Config.playerHeight) || this;
+        var _this = _super.call(this, x, y, Config.playerWidth, Config.playerHeight) || this;
+        _this.disableMovement = false;
+        return _this;
     }
     Player.prototype.onInitialize = function (engine) {
         var _this = this;
@@ -30,6 +32,8 @@ var Player = (function (_super) {
         this.collisionType = ex.CollisionType.Active;
         game.input.keyboard.on('hold', function (keyHeld) {
             if (!State.gameOver) {
+                if (player.disableMovement)
+                    return;
                 switch (keyHeld.key) {
                     case ex.Input.Keys.Up:
                     case ex.Input.Keys.W:
@@ -864,9 +868,11 @@ var Director = (function (_super) {
     };
     //1. start zoomed in on player, zoom out
     Director.prototype._zoomOut = function () {
+        player.disableMovement = true;
         scnMain.camera.zoom(3.5);
         return this.actions.delay(2000).asPromise().then(function () {
             return scnMain.camera.zoom(1, 3000).then(function () {
+                player.disableMovement = false;
                 $('.playerShoppingList').show();
             });
         });

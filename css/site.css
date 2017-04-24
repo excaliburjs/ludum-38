@@ -40,12 +40,14 @@ a {
     width: 1200px;
     height: 720px;
     display: inline-block;
+    position: relative;
 }
 
 .canvas-wrapper .playerShoppingList {
     position: absolute;
     width: 315px;
-    right: 215px;
+    right: 0;
+    top: 0;
     height: 48px;
     background-image: url(../img/legalpad.png);
     background-repeat: repeat-x;
