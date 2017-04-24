@@ -158,6 +158,8 @@ var Resources = {
     checkoutSound: new ex.Sound('assets/snd/checkout.mp3', 'assets/snd/checkout.wav'),
     registerSound: new ex.Sound('assets/snd/register.mp3', 'assets/snd/register.wav'),
     pickupSound: new ex.Sound('assets/snd/pickup.mp3', 'assets/snd/pickup.wav'),
+    doorSlideSound: new ex.Sound('assets/snd/doorslide.mp3', 'assets/snd/doorslide.wav'),
+    doorSlideCloseSound: new ex.Sound('assets/snd/doorslideclose.mp3', 'assets/snd/doorslideclose.wav'),
     diagIntro: new ex.Texture('img/diag-intro.png'),
     doorSheet: new ex.Texture('img/door.png')
 };
@@ -397,6 +399,7 @@ var ScnMain = (function (_super) {
         var _this = this;
         if (mode === void 0) { mode = ENEMY_RANDOM_MODE; }
         // open door
+        Resources.doorSlideSound.play();
         this.door.setDrawing('open');
         this.door.actions
             .delay(50 * 13)
@@ -408,7 +411,10 @@ var ScnMain = (function (_super) {
             SoundManager.playSpawnEnemy();
         })
             .delay(600)
-            .callMethod(function () { return _this.door.setDrawing('close'); });
+            .callMethod(function () {
+            _this.door.setDrawing('close');
+            Resources.doorSlideCloseSound.play();
+        });
     };
     ScnMain.prototype.spawnFood = function () {
         var _this = this;
