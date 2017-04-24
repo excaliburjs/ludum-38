@@ -854,7 +854,9 @@ var Director = (function (_super) {
     //1. start zoomed in on player, zoom out
     Director.prototype._zoomOut = function () {
         scnMain.camera.zoom(4);
-        return scnMain.camera.zoom(1, 3000);
+        return scnMain.camera.zoom(1, 3000).then(function () {
+            $('.playerShoppingList').show();
+        });
     };
     //2. display grocery list
     Director.prototype._showGroceryList = function () {
