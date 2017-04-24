@@ -151,7 +151,7 @@ class Director extends ex.Actor {
    private _handleGameOver(enemy?: Enemy) {
       ex.Logger.getInstance().info('game over');
       State.gameOver = true;
-
+      game.stop();
       player.shoppingList.handleGameOver();
 
       $('#game-over-dialog').show();
