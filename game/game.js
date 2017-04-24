@@ -153,6 +153,7 @@ var Resources = {
     vignette2: new ex.Texture('img/vignette-stretched-darker.png'),
     vignette3: new ex.Texture('img/vignette-stretched-darkest.png'),
     music: new ex.Sound('assets/snd/bossa_nova.mp3'),
+    ominousMusic: new ex.Sound('assets/snd/ominous.mp3', 'assets/snd/ominous.wav'),
     playerSpottedSound: new ex.Sound('assets/snd/playerSpotted.mp3', 'assets/snd/playerSpotted.wav'),
     spawnEnemySound: new ex.Sound('assets/snd/spawnEnemy.mp3', 'assets/snd/spawnEnemy.wav'),
     spawnFoodSound: new ex.Sound('assets/snd/placeFood.mp3', 'assets/snd/placeFood.wav'),
@@ -184,6 +185,7 @@ var Config = {
     enemySpeed: 80,
     enemyChaseSpeed: 90,
     enemyVignetteRadius: 150,
+    enemyChaseMusicRadius: 400,
     enemySpawnMinTime: 5000,
     enemySpawnMaxTime: 12000,
     enemySpawnMaximum: 10,
@@ -526,6 +528,7 @@ var Enemy = (function (_super) {
                 _this.rays[i] = new ex.Ray(_this.pos.clone(), ex.Vector.fromAngle(angleStart + angleStep * i).scale(Config.enemyRayLength));
             }
             _this.attack = _this.checkForPlayer();
+            SoundManager.updateDynamicEnemyPlayerMusic();
             if (_this.attack) {
                 // find the vector to the player
                 var vectorToPlayer = player.pos.sub(_this.pos);
@@ -540,7 +543,6 @@ var Enemy = (function (_super) {
                     var start = _this._grid.findClosestNode(_this.pos.x, _this.pos.y);
                     _this.lastKnownPlayerPos = null;
                     _this._wander(start);
-                    _this.isAttacking = false;
                 }
             }
         });
@@ -1075,22 +1077,29 @@ var SoundManager = (function () {
         Resources.music.setVolume(Preferences.muteBackgroundMusic ? 0 : Config.backgroundVolume);
         Resources.music.setLoop(true);
         Resources.music.play();
+        Resources.ominousMusic.setVolume(0);
+        Resources.ominousMusic.setLoop(true);
+        Resources.ominousMusic.play();
     };
     SoundManager.stopBackgroundMusic = function () {
         // stop bg music
         Resources.music.setLoop(false);
         Resources.music.stop();
+        Resources.ominousMusic.setLoop(false);
+        Resources.ominousMusic.stop();
     };
     SoundManager.muteBackgroundMusic = function () {
         Preferences.muteBackgroundMusic = true;
         // mute bg music
         Resources.music.setVolume(0);
+        Resources.ominousMusic.setVolume(0);
         SoundManager._updateMusicButton();
     };
     SoundManager.unmuteBackgroundMusic = function () {
         Preferences.muteBackgroundMusic = false;
         // unmute bg music
         Resources.music.setVolume(Config.backgroundVolume);
+        Resources.ominousMusic.setVolume(0);
         SoundManager._updateMusicButton();
     };
     SoundManager.playPlayerSpotted = function () {
@@ -1129,6 +1138,31 @@ var SoundManager = (function () {
     SoundManager.playPlayerCheckout = function () {
         // restore checkout sounds in case enemy just checked out
         SoundManager.restoreCheckoutSounds();
+    };
+    SoundManager.updateDynamicEnemyPlayerMusic = function () {
+        if (Preferences.muteBackgroundMusic || State.gameOver)
+            return;
+        // Find all enemies currently chasing player
+        var chasingEnemies = scnMain.enemies.filter(function (e) { return e.isAttacking; });
+        var thresholdDistance = Config.enemyChaseMusicRadius;
+        var closestDistance = thresholdDistance;
+        for (var _i = 0, chasingEnemies_1 = chasingEnemies; _i < chasingEnemies_1.length; _i++) {
+            var e = chasingEnemies_1[_i];
+            var playerVector = player.pos.sub(e.pos);
+            if (closestDistance && playerVector.magnitude() < closestDistance) {
+                closestDistance = playerVector.magnitude();
+            }
+            else if (!closestDistance) {
+                closestDistance = playerVector.magnitude();
+            }
+        }
+        // Clamp to threshold
+        closestDistance = Math.min(closestDistance, thresholdDistance);
+        // Use closest vector as scale variable for music volume
+        var closeFactor = (closestDistance / thresholdDistance) * Config.backgroundVolume;
+        // set volume to scale
+        Resources.music.setVolume(closeFactor);
+        Resources.ominousMusic.setVolume(Config.backgroundVolume - closeFactor);
     };
     SoundManager.dampenCheckoutSounds = function () {
         if (!Preferences.muteAll) {
@@ -1285,6 +1319,10 @@ var Director = (function (_super) {
     Director.prototype._handleGameOver = function (enemy) {
         ex.Logger.getInstance().info('game over');
         State.gameOver = true;
+        // reset bg music, in case player was being chased
+        if (!Preferences.muteBackgroundMusic) {
+            SoundManager.unmuteBackgroundMusic();
+        }
         player.shoppingList.handleGameOver();
         $('#game-over-dialog').show();
         $('#game-over-summary-collect').toggleClass('done', player.shoppingList.isEmpty);
