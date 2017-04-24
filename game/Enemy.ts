@@ -131,6 +131,19 @@ class Enemy extends ex.Actor {
    }
 
    public checkForPlayer(): boolean {
+      var distanceToPlayer = player.pos.distance(this.pos);
+      if(distanceToPlayer < Config.enemyVignetteRadius) {
+         vignette.visible = true;
+         var segment = Config.enemyVignetteRadius / 4;
+         var index = (3 -Math.floor(distanceToPlayer / segment)).toFixed(0);
+         
+         vignette.setDrawing('vignette' + index);
+
+      }else {
+         vignette.visible = false;
+      }
+
+
       var result = false;
       for(var ray of this.rays){
          var playerTime = player.raycastTime(ray, Config.enemyRayLength);
