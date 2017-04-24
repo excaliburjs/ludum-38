@@ -90,8 +90,6 @@ var Player = (function (_super) {
                     player.shoppingList.removeItem(e.other.shoppingListId);
                     e.other.kill();
                     e.other.collisionType = ex.CollisionType.PreventCollision;
-                    console.log('spawn enemy for', e.other.id);
-                    scnMain.spawnEnemy();
                 }
             }
         });
