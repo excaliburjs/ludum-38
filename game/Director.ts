@@ -4,7 +4,7 @@ class Director extends ex.Actor {
    private _spawnFoodTimer: ex.Timer;
    private _spawnFirstEnemyTimer: ex.Timer;
    private _diagIntro: ex.Actor;
-   private _enemiesSpawned: number = 0;
+   static enemiesSpawned: number = 0;
 
    public onInitialize(){
       this.on('postupdate', this._update)
@@ -102,7 +102,8 @@ class Director extends ex.Actor {
 
    //4. the first antagonist arrives
    private _spawnFirstEnemy() {
-      this._enemiesSpawned++;
+      Director.enemiesSpawned++;
+      console.log(Director.enemiesSpawned);
       scnMain.spawnEnemy(ENEMY_PLAYER_MODE);
    }
 
@@ -111,8 +112,9 @@ class Director extends ex.Actor {
       
       var spawnTime = gameRandom.integer(Config.enemySpawnMinTime, Config.enemySpawnMaxTime);
       this.actions.delay(spawnTime).callMethod(() =>{
-         if(State.gameOver || (this._enemiesSpawned > Config.enemySpawnMaximum)) return;
-         this._enemiesSpawned++;
+         if(State.gameOver || (Director.enemiesSpawned > Config.enemySpawnMaximum)) return;
+         Director.enemiesSpawned++;
+         console.log(Director.enemiesSpawned);
          scnMain.spawnEnemy(ENEMY_FOOD_MODE);
          this._spawnTimedEnemy();
       });

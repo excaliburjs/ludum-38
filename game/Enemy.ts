@@ -176,6 +176,8 @@ class Enemy extends ex.Actor {
          this.actions.moveTo(1250, Config.gameHeight - 90, Config.enemySpeed);
          this.actions.callMethod(()=>{
             ex.Util.removeItemToArray(this, scnMain.enemies);
+            Director.enemiesSpawned -= 1;
+            console.log(Director.enemiesSpawned);
          });
          this.actions.die();
       }
