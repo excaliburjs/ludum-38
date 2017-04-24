@@ -169,6 +169,8 @@ var Resources = {
 };
 var Config = {
     analyticsEndpoint: 'https://ludum38stats.azurewebsites.net/api/HttpTriggerJS1?code=Fj7bATyuqPp3qLCEFIDfJHNtGLm7UAQVBzBckN36ulpNs5Src/v4FQ==',
+    playerSample: 5000,
+    enemySample: 5000,
     gameWidth: 1200,
     gameHeight: 720,
     enterDoorX: 13 * 24,
@@ -270,7 +272,52 @@ function loadPreferences() {
 }
 var Stats = (function () {
     function Stats() {
+        this.date = "";
+        this.seed = 0; // seeded value
+        this.timePlayed = 0; // amount of time played
+        this.won = false; // won or lost
+        this.enemiesOnScreen = 0;
+        this.foodCollected = [];
+        this.playerPositions = [];
+        this.enemyPositions = [];
+        this._playerSample = 0;
+        this._enemySample = 0;
     }
+    Stats.prototype.startStats = function () {
+        this.started = Date.now();
+    };
+    Stats.prototype.endStats = function () {
+        this.timePlayed = Date.now() - this.started;
+    };
+    Stats.prototype.captureEndGameAndPublish = function () {
+        this.seed = gameRandom.seed;
+        this.endStats();
+        this.foodCollected = State.collectedFood.map(function (f) {
+            return f.foodZone;
+        });
+        this.enemiesOnScreen = scnMain.enemies.length;
+        this.won = State.gameOverCheckout && player.shoppingList.hasCollectedAllFood;
+        Analytics.publish(this);
+    };
+    Stats.prototype.samplePlayer = function (delta) {
+        this._playerSample += delta;
+        if (this._playerSample > Config.playerSample) {
+            console.log("player sampled");
+            this._playerSample = 0;
+            this.playerPositions.push({ x: player.pos.x, y: player.pos.y });
+        }
+    };
+    Stats.prototype.sampleEnemy = function (delta) {
+        var _this = this;
+        this._enemySample += delta;
+        if (this._enemySample > Config.enemySample) {
+            console.log("Enemy sampled");
+            this._enemySample = 0;
+            scnMain.enemies.forEach(function (e) {
+                _this.enemyPositions.push({ x: e.pos.x, y: e.pos.y });
+            });
+        }
+    };
     return Stats;
 }());
 var LAYER_IMPASSABLE = 'Impassable';
@@ -736,6 +783,13 @@ var ShoppingList = (function () {
     Object.defineProperty(ShoppingList.prototype, "collectedFood", {
         get: function () {
             return State.collectedFood.filter(function (f) { return f !== undefined; });
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ShoppingList.prototype, "hasCollectedAllFood", {
+        get: function () {
+            return player.shoppingList.collectedFood.length === Config.foodSpawnCount;
         },
         enumerable: true,
         configurable: true
@@ -1287,16 +1341,9 @@ var Director = (function (_super) {
             var closest = this._findMinimum(scnMain.enemies, function (enemy) {
                 return player.pos.distance(enemy.pos);
             });
-            // var distanceToPlayer = player.pos.distance(closest.pos);
-            // if(distanceToPlayer < Config.enemyVignetteRadius) {
-            //    vignette.visible = true;
-            //    var segment = Config.enemyVignetteRadius / 4;
-            //    var index = (3 -Math.floor(distanceToPlayer / segment)).toFixed(0);
-            //    vignette.setDrawing('vignette' + index);
-            // } else {
-            //    vignette.visible = false;
-            // }
         }
+        stats.samplePlayer(evt.delta);
+        stats.sampleEnemy(evt.delta);
     };
     //1. start zoomed in on player, zoom out
     Director.prototype._zoomOut = function () {
@@ -1376,6 +1423,8 @@ var Director = (function (_super) {
             SoundManager.unmuteBackgroundMusic();
         }
         player.shoppingList.handleGameOver();
+        // publish analytics
+        stats.captureEndGameAndPublish();
         $('body').addClass('game-over');
         $('#game-over-dialog').show();
         $('#game-over-summary-collect').toggleClass('done', player.shoppingList.isEmpty);
@@ -1482,6 +1531,7 @@ var Analytics = (function () {
 /// <reference path="Director.ts" />
 /// <reference path="Cashier.ts" />
 /// <reference path="Analytics.ts" />
+/// <reference path="Stats.ts" />
 var game = new ex.Engine({
     width: Config.gameWidth,
     height: Config.gameHeight,
@@ -1513,10 +1563,7 @@ var player = new Player(Config.playerStart.x, Config.playerStart.y);
 scnMain.add(player);
 var director = new Director();
 scnMain.add(director);
-// add the vignette
-// var vignette = new ex.UIActor(0, 0, game.getDrawWidth(), game.getDrawHeight());
-// vignette.visible = false;
-// scnMain.add(vignette);
+var stats = new Stats();
 //TODO Remove debug mode
 var gamePaused = false;
 game.input.keyboard.on('down', function (keyDown) {
@@ -1545,6 +1592,7 @@ game.start(loader).then(function () {
     // turn off anti-aliasing
     game.setAntialiasing(false);
     game.goToScene('main');
+    stats.startStats();
     SoundManager.startBackgroundMusic();
 });
 //# sourceMappingURL=game.js.map
