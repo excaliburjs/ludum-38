@@ -103,8 +103,9 @@ var Player = (function (_super) {
         return this.getBounds().rayCast(ray, clip);
     };
     Player.prototype._setupDrawing = function () {
-        //TODO randomly assign a character spritesheet
-        var playerSheet = new ex.SpriteSheet(Resources.playerSheet, 10, 1, 45, 45);
+        var number = gameRandom.integer(1, 8).toString();
+        var sprite = 'charSheet' + number;
+        var playerSheet = new ex.SpriteSheet(Resources[sprite], 10, 1, 45, 45);
         this.addDrawing('down', playerSheet.getSprite(0));
         this.addDrawing('up', playerSheet.getSprite(3));
         this.addDrawing('left', playerSheet.getSprite(7));
@@ -564,7 +565,6 @@ var Enemy = (function (_super) {
         return result;
     };
     Enemy.prototype._setupDrawing = function () {
-        //TODO randomly assign one of the different character spritesheets to the enemy
         var number = gameRandom.integer(1, 8).toString();
         var sprite = 'charSheet' + number;
         var enemySheet = new ex.SpriteSheet(Resources[sprite], 10, 1, 45, 45);
