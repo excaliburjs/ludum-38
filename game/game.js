@@ -156,6 +156,8 @@ var Resources = {
     playerSpottedSound: new ex.Sound('assets/snd/playerSpotted.mp3', 'assets/snd/playerSpotted.wav'),
     spawnEnemySound: new ex.Sound('assets/snd/spawnEnemy.mp3', 'assets/snd/spawnEnemy.wav'),
     spawnFoodSound: new ex.Sound('assets/snd/placeFood.mp3', 'assets/snd/placeFood.wav'),
+    checkoutSound: new ex.Sound('assets/snd/checkout.mp3', 'assets/snd/checkout.wav'),
+    registerSound: new ex.Sound('assets/snd/register.mp3', 'assets/snd/register.wav'),
     diagIntro: new ex.Texture('img/diag-intro.png'),
     doorSheet: new ex.Texture('img/door.png')
 };
@@ -187,10 +189,11 @@ var Config = {
     foodSheetCols: 9,
     foodSheetRows: 1,
     foodSpawnCount: 5,
-    soundVolume: 0.15,
-    backgroundVolume: 0.1,
+    soundVolume: 1,
+    backgroundVolume: 0.3,
     groceryListTime: 4000,
     spawnFoodTime: 4000,
+    spawnFoodTimeInterval: 400,
     spawnFirstEnemyTime: 7000,
     spawnTimedEnemyTime: 5000
 };
@@ -400,6 +403,7 @@ var ScnMain = (function (_super) {
             .callMethod(function () { return _this.door.setDrawing('close'); });
     };
     ScnMain.prototype.spawnFood = function () {
+        var _this = this;
         // player is added to scene global context
         var foodArr = new Array();
         var chosenFoodZones = gameRandom.pickSet(FoodTypes, Config.foodSpawnCount);
@@ -408,10 +412,20 @@ var ScnMain = (function (_super) {
             var validTiles = this.getCellsInFoodZone(chosenFoodZone);
             var chosenCell = validTiles[gameRandom.integer(0, validTiles.length - 1)];
             var food = new Food(chosenCell.x, chosenCell.y, i, chosenFoodZone);
-            this.add(food);
             foodArr.push(food);
         }
-        SoundManager.playSpawnFood();
+        var currIdx = 0;
+        this._foodSpawnAnimTimer = new ex.Timer(function () {
+            if (currIdx === foodArr.length) {
+                scnMain.cancelTimer(_this._foodSpawnAnimTimer);
+                return;
+            }
+            scnMain.add(foodArr[currIdx]);
+            SoundManager.playSpawnFood();
+            currIdx++;
+        }, Config.spawnFoodTimeInterval, true);
+        // WORKAROUND timers cannot be added within another timer's callback fn
+        setTimeout(function () { return scnMain.add(_this._foodSpawnAnimTimer); }, 1);
         var shoppingList = new ShoppingList(foodArr);
         player.shoppingList = shoppingList;
         shoppingList.updateUI();
@@ -729,6 +743,26 @@ var ShoppingList = (function () {
     ShoppingList.prototype.handleGameOver = function () {
         // move shopping list to game over dialog (hacky!)
         $('#game-over-shopping-list').append($('#shopping-list'));
+        for (var i = 0; i < State.collectedFood.length; i++) {
+            var foodArr = State.collectedFood[i] ? State.collectedFood : State.uncollectedFood;
+            var bwSprite = Food.bwFoodSheet.getSprite(foodArr[i].spriteIndex);
+            var bwSpriteCanvas = bwSprite._spriteCanvas.toDataURL();
+            $('#item' + (i + 1)).css("background-image", "url('" + bwSpriteCanvas + "'");
+        }
+        var collectedFood = this.collectedFood;
+        var currIdx = 0;
+        var timer = setInterval(function () {
+            if (currIdx === collectedFood.length) {
+                clearInterval(timer);
+                return;
+            }
+            var food = collectedFood[currIdx];
+            var colSprite = Food.foodSheet.getSprite(food.spriteIndex);
+            var colSpriteCanvas = colSprite._spriteCanvas.toDataURL();
+            $('#item' + (State.collectedFood.indexOf(food) + 1)).css("background-image", "url('" + colSpriteCanvas + "'");
+            Resources.checkoutSound.play();
+            currIdx++;
+        }, 700);
     };
     return ShoppingList;
 }());
@@ -964,8 +998,14 @@ var SoundManager = (function () {
         if (Preferences.muteBackgroundMusic) {
             SoundManager.muteBackgroundMusic();
         }
+        else {
+            SoundManager.unmuteBackgroundMusic();
+        }
         if (Preferences.muteAll) {
             SoundManager.muteAll();
+        }
+        else {
+            SoundManager.unmuteAll();
         }
         $('#mute-music').on('click', function () {
             if (Preferences.muteBackgroundMusic) {
@@ -1166,6 +1206,7 @@ var Director = (function (_super) {
         if (State.gameOver)
             return;
         State.gameOverCheckout = true;
+        Resources.registerSound.play();
         this._handleGameOver();
     };
     Director.prototype.gameOver = function (enemy) {
