@@ -17,6 +17,8 @@
 /// <reference path="SoundManager.ts" />
 /// <reference path="Director.ts" />
 /// <reference path="Cashier.ts" />
+/// <reference path="Analytics.ts" />
+
 
 
 var game = new ex.Engine({
