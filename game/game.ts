@@ -39,8 +39,7 @@ for (var r in Resources) {
     loader.addResource(Resources[r]);
 }
 
-var director = new Director();
-game.add(director);
+
 
 var scnMain = new ScnMain(game);
 game.addScene('main', scnMain);
@@ -48,6 +47,9 @@ game.addScene('main', scnMain);
 // create the player in global context
 var player = new Player(Config.playerStart.x, Config.playerStart.y);
 scnMain.add(player);
+
+var director = new Director();
+scnMain.add(director);
 
 //TODO Remove debug mode
 var gamePaused = false;
