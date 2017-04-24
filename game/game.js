@@ -611,7 +611,7 @@ var ShoppingList = (function () {
     };
     ShoppingList.prototype.getFoodLeft = function () {
         return this.items.filter(function (f) {
-            return f !== null;
+            return !!f;
         });
     };
     ShoppingList.typewriter = function (text, target, speed) {
