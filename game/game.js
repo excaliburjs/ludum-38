@@ -438,6 +438,7 @@ var ScnMain = (function (_super) {
         this._foodSpawnAnimTimer = new ex.Timer(function () {
             if (currIdx === foodArr.length) {
                 scnMain.cancelTimer(_this._foodSpawnAnimTimer);
+                player.disableMovement = false;
                 return;
             }
             scnMain.add(foodArr[currIdx]);
@@ -1270,7 +1271,6 @@ var Director = (function (_super) {
     Director.prototype._showGroceryList = function () {
         console.log('show grocery list');
         $('.playerShoppingList').show();
-        player.disableMovement = false;
         //TODO
     };
     //3. spawn in food
@@ -1279,6 +1279,7 @@ var Director = (function (_super) {
     };
     //4. the first antagonist arrives
     Director.prototype._spawnFirstEnemy = function () {
+        player.disableMovement = false;
         Director.enemiesSpawned++;
         scnMain.spawnEnemy(ENEMY_PLAYER_MODE);
     };
