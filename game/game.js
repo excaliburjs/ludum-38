@@ -623,6 +623,8 @@ var Enemy = (function (_super) {
             this.actions.moveTo(1250, Config.gameHeight - 90, Config.enemySpeed);
             this.actions.callMethod(function () {
                 ex.Util.removeItemToArray(_this, scnMain.enemies);
+                Director.enemiesSpawned -= 1;
+                console.log(Director.enemiesSpawned);
             });
             this.actions.die();
         }
@@ -1152,9 +1154,7 @@ SoundManager._playingEnemyCheckoutSequence = false;
 var Director = (function (_super) {
     __extends(Director, _super);
     function Director() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this._enemiesSpawned = 0;
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     Director.prototype.onInitialize = function () {
         this.on('postupdate', this._update);
@@ -1236,7 +1236,8 @@ var Director = (function (_super) {
     };
     //4. the first antagonist arrives
     Director.prototype._spawnFirstEnemy = function () {
-        this._enemiesSpawned++;
+        Director.enemiesSpawned++;
+        console.log(Director.enemiesSpawned);
         scnMain.spawnEnemy(ENEMY_PLAYER_MODE);
     };
     //4b. add more antagonists
@@ -1244,9 +1245,10 @@ var Director = (function (_super) {
         var _this = this;
         var spawnTime = gameRandom.integer(Config.enemySpawnMinTime, Config.enemySpawnMaxTime);
         this.actions.delay(spawnTime).callMethod(function () {
-            if (State.gameOver || (_this._enemiesSpawned > Config.enemySpawnMaximum))
+            if (State.gameOver || (Director.enemiesSpawned > Config.enemySpawnMaximum))
                 return;
-            _this._enemiesSpawned++;
+            Director.enemiesSpawned++;
+            console.log(Director.enemiesSpawned);
             scnMain.spawnEnemy(ENEMY_FOOD_MODE);
             _this._spawnTimedEnemy();
         });
@@ -1288,6 +1290,7 @@ var Director = (function (_super) {
     };
     return Director;
 }(ex.Actor));
+Director.enemiesSpawned = 0;
 var Cashier = (function (_super) {
     __extends(Cashier, _super);
     function Cashier() {
