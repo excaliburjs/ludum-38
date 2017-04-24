@@ -28,7 +28,7 @@ class ShoppingList {
 
     public getFoodLeft() : Food[] {
        return this.items.filter(f => {
-          return f !== null;
+          return !!f;
        });
     }
 
