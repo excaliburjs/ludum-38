@@ -7,26 +7,30 @@ class Director extends ex.Actor {
    public setup() {
       ex.Logger.getInstance().info('director setup');
 
-      this._showGroceryListTimer = new ex.Timer(() => {
-         this._showGroceryList();
-      }, Config.groceryListTime);
-      scnMain.add(this._showGroceryListTimer);
+      this._zoomOut().then(() => {
+         this._showGroceryListTimer = new ex.Timer(() => {
+            this._showGroceryList();
+         }, Config.groceryListTime);
+         scnMain.add(this._showGroceryListTimer);
 
-      this._spawnFoodTimer = new ex.Timer(() => {
-         this._spawnFood();
-      }, Config.spawnFoodTime);
-      scnMain.add(this._spawnFoodTimer);
+         this._spawnFoodTimer = new ex.Timer(() => {
+            this._spawnFood();
+         }, Config.spawnFoodTime);
+         scnMain.add(this._spawnFoodTimer);
 
-      this._spawnFirstEnemyTimer = new ex.Timer(() => {
-         this._spawnFirstEnemy();
-      }, Config.spawnFirstEnemyTime);
-      scnMain.add(this._spawnFirstEnemyTimer);
+         this._spawnFirstEnemyTimer = new ex.Timer(() => {
+            this._spawnFirstEnemy();
+         }, Config.spawnFirstEnemyTime);
+         scnMain.add(this._spawnFirstEnemyTimer);
+
+      })
    }
 
    //1. start zoomed in on player, zoom out
-   // public zoomOut() {
-      // zooming is broken
-   // }
+   public _zoomOut() {
+      scnMain.camera.zoom(4);
+      return scnMain.camera.zoom(1, 3000);
+   }
 
    //2. display grocery list
    private _showGroceryList() {
