@@ -35,7 +35,7 @@ class ShoppingList {
     }  
 
     public getFoodLeft() : Food[] {
-       return this.items.filter(f => {
+       return State.uncollectedFood.filter(f => {
           return !!f;
        });
     }
