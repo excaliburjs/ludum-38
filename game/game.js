@@ -526,11 +526,11 @@ var Enemy = (function (_super) {
                     var food = gameRandom.pickOne(foodList);
                     end = this._grid.findClosestNode(food.pos.x, food.pos.y);
                     break;
-                case ENEMY_PLAYER_MODE:
-                    end = this._grid.findClosestNode(player.pos.x, player.pos.y);
-                    break;
                 case ENEMY_RANDOM_MODE:
                     end = gameRandom.pickOne(this._grid.nodes);
+                    break;
+                case ENEMY_PLAYER_MODE:
+                    end = this._grid.findClosestNode(player.pos.x, player.pos.y);
                     break;
             }
         }
@@ -541,16 +541,6 @@ var Enemy = (function (_super) {
         }
     };
     Enemy.prototype.checkForPlayer = function () {
-        var distanceToPlayer = player.pos.distance(this.pos);
-        if (distanceToPlayer < Config.enemyVignetteRadius) {
-            vignette.visible = true;
-            var segment = Config.enemyVignetteRadius / 4;
-            var index = (3 - Math.floor(distanceToPlayer / segment)).toFixed(0);
-            vignette.setDrawing('vignette' + index);
-        }
-        else {
-            vignette.visible = false;
-        }
         var result = false;
         for (var _i = 0, _a = this.rays; _i < _a.length; _i++) {
             var ray = _a[_i];
@@ -1016,6 +1006,9 @@ var Director = (function (_super) {
         _this._enemiesSpawned = 0;
         return _this;
     }
+    Director.prototype.onInitialize = function () {
+        this.on('postupdate', this._update);
+    };
     Director.prototype.setup = function () {
         var _this = this;
         ex.Logger.getInstance().info('director setup');
@@ -1041,6 +1034,36 @@ var Director = (function (_super) {
                 _this._spawnTimedEnemy();
             });
         });
+    };
+    Director.prototype._findMinimum = function (nodes, valueFunc) {
+        var minNode = null;
+        var minValue = Infinity;
+        for (var _i = 0, nodes_2 = nodes; _i < nodes_2.length; _i++) {
+            var node = nodes_2[_i];
+            var val = valueFunc(node);
+            if (val < minValue) {
+                minValue = val;
+                minNode = node;
+            }
+        }
+        return minNode;
+    };
+    Director.prototype._update = function (evt) {
+        if (scnMain.enemies && scnMain.enemies.length) {
+            var closest = this._findMinimum(scnMain.enemies, function (enemy) {
+                return player.pos.distance(enemy.pos);
+            });
+            var distanceToPlayer = player.pos.distance(closest.pos);
+            if (distanceToPlayer < Config.enemyVignetteRadius) {
+                vignette.visible = true;
+                var segment = Config.enemyVignetteRadius / 4;
+                var index = (3 - Math.floor(distanceToPlayer / segment)).toFixed(0);
+                vignette.setDrawing('vignette' + index);
+            }
+            else {
+                vignette.visible = false;
+            }
+        }
     };
     //1. start zoomed in on player, zoom out
     Director.prototype._zoomOut = function () {
