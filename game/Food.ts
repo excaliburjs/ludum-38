@@ -1,13 +1,15 @@
 class Food extends ex.Actor {
 
    static foodSheet: ex.SpriteSheet = null;
+   static bwFoodSheet: ex.SpriteSheet = null;
+
    public spriteIndex: number;
 
    constructor(x, y, public shoppingListId, public foodZone: FoodZone) {
       super(x, y, Config.foodWidth, Config.foodHeight);
       // get zone index
       var zoneIdx = FoodTypes.indexOf(this.foodZone);
-      
+
       // init sprite sheet
       if (Food.foodSheet === null) {
          Food.foodSheet = new ex.SpriteSheet(
@@ -16,7 +18,17 @@ class Food extends ex.Actor {
             Config.foodSheetRows, 
             Config.foodWidth, 
             Config.foodHeight);
-      }  
+      }
+
+      //bw init sprite sheet
+      if (Food.bwFoodSheet === null) {
+         Food.bwFoodSheet = new ex.SpriteSheet(
+            Resources.bwFoodSheet, 
+            Config.foodSheetCols, 
+            Config.foodSheetRows, 
+            Config.foodWidth, 
+            Config.foodHeight);
+      }   
 
       // get rand food from zone (each column in sheet indexed by zone)
       // each row in sheet is another type of food in that zone

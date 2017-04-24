@@ -175,7 +175,6 @@ class ScnMain extends ex.Scene {
       // player is added to scene global context
       var foodArr = new Array<Food>();
       
-
          var chosenFoodZones = gameRandom.pickSet(FoodTypes, Config.foodSpawnCount);
 
          for (var i = 0; i < chosenFoodZones.length; i++){
@@ -184,6 +183,10 @@ class ScnMain extends ex.Scene {
             var chosenCell = validTiles[gameRandom.integer(0, validTiles.length - 1)];
                         
             var food = new Food(chosenCell.x, chosenCell.y, i, chosenFoodZone);
+            var bwSprite = <any>Food.bwFoodSheet.getSprite(food.spriteIndex);
+            var bwSpriteCanvas = bwSprite._spriteCanvas.toDataURL();
+            $('#item' + (i + 1)).css("background-image", "url('" + bwSpriteCanvas + "'");
+            console.log(bwSpriteCanvas);
             this.add(food);
             foodArr.push(food);
          }
