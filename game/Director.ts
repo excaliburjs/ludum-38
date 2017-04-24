@@ -192,7 +192,7 @@ class Director extends ex.Actor {
 
       if (State.gameOverCheckout) {
          var enemyName = 'The cashier';
-         enemyText = enemyText + ' Paper or plastic?';
+         enemyText = `"${gameRandom.pickOne(GameOverEnemyPrompts)} Paper or plastic?"`;
       }
       
       window.setTimeout(() => {
