@@ -123,8 +123,7 @@ class Director extends ex.Actor {
       // already called (could be triggered multiple times)
       if (State.gameOver) return; 
 
-      State.gameOverCheckout = true;
-      Resources.registerSound.play();
+      State.gameOverCheckout = true;      
       
       this._handleGameOver();
    }
@@ -137,6 +136,16 @@ class Director extends ex.Actor {
 
       // TODO handle enemy (show on dialog? orchestrate cut scene?)
       this._handleGameOver();
+   }
+
+   public getCharSprite() {
+      var result = Resources[randCharSheets[randCharSheetIndex]];
+      if (randCharSheetIndex == randCharSheets.length - 1) {
+         randCharSheetIndex = 0;
+      } else {
+         randCharSheetIndex++;
+      }
+      return result;
    }
    
    private _handleGameOver() {

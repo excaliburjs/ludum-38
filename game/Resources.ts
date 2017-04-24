@@ -23,6 +23,7 @@ var Resources = {
    spawnFoodSound: new ex.Sound('assets/snd/placeFood.mp3', 'assets/snd/placeFood.wav'),
    checkoutSound: new ex.Sound('assets/snd/checkout.mp3', 'assets/snd/checkout.wav'),
    registerSound: new ex.Sound('assets/snd/register.mp3', 'assets/snd/register.wav'),
+   pickupSound: new ex.Sound('assets/snd/pickup.mp3', 'assets/snd/pickup.wav'),
    diagIntro: new ex.Texture('img/diag-intro.png'),
    doorSheet: new ex.Texture('img/door.png')
 };

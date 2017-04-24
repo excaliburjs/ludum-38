@@ -105,6 +105,11 @@ class ShoppingList {
        var timer = setInterval(function () {
           if (currIdx === collectedFood.length) {
              clearInterval(timer);
+
+             // play register sound if player collected all food
+             if (collectedFood.length === Config.foodSpawnCount) {
+                setTimeout(() => Resources.registerSound.play(), 350);
+             }
              return;
           }
 
@@ -114,7 +119,7 @@ class ShoppingList {
 
           $('#item' + (State.collectedFood.indexOf(food) + 1)).css("background-image", "url('" + colSpriteCanvas + "'");
           
-          Resources.checkoutSound.play();
+          Resources.checkoutSound.play();          
           
           currIdx++;
        }, 700);

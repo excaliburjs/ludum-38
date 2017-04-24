@@ -79,6 +79,7 @@ class Player extends ex.Actor {
                player.shoppingList.removeItem(e.other.shoppingListId);
                e.other.kill();
                e.other.collisionType = ex.CollisionType.PreventCollision;
+               Resources.pickupSound.play();
             }
          }
       });
@@ -99,10 +100,7 @@ class Player extends ex.Actor {
    }
 
    private _setupDrawing() {
-      var number = gameRandom.integer(1, 8).toString();
-      var sprite = 'charSheet' + number;
-      
-      var playerSheet = new ex.SpriteSheet(Resources[sprite], 10, 1, 45, 45);
+      var playerSheet = new ex.SpriteSheet(director.getCharSprite(), 10, 1, 45, 45);
       this.addDrawing('down', playerSheet.getSprite(0));
       this.addDrawing('up', playerSheet.getSprite(3));
       this.addDrawing('left', playerSheet.getSprite(7));
