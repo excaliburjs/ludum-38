@@ -119,6 +119,11 @@ a {
    text-align: center;
 }
 
+.game-over-dialog-content ul{
+   padding: 15px 0;
+   margin: 0;
+}
+
 #game-over-dialog .game-over-dialog-content #game-over-conversation .characterArt {
    display: inline-block;
    height: 45px;
