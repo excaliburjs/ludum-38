@@ -62,19 +62,10 @@ class Director extends ex.Actor {
          var closest = this._findMinimum(scnMain.enemies, (enemy) => {
             return player.pos.distance(enemy.pos);
          });
-
-         // var distanceToPlayer = player.pos.distance(closest.pos);
-         // if(distanceToPlayer < Config.enemyVignetteRadius) {
-         //    vignette.visible = true;
-         //    var segment = Config.enemyVignetteRadius / 4;
-         //    var index = (3 -Math.floor(distanceToPlayer / segment)).toFixed(0);
-            
-         //    vignette.setDrawing('vignette' + index);
-
-         // } else {
-         //    vignette.visible = false;
-         // }
       }
+      
+      stats.samplePlayer(evt.delta);
+      stats.sampleEnemy(evt.delta);
    }
    
    //1. start zoomed in on player, zoom out
@@ -167,6 +158,9 @@ class Director extends ex.Actor {
       }
 
       player.shoppingList.handleGameOver();
+
+      // publish analytics
+      stats.captureEndGameAndPublish();
 
       $('body').addClass('game-over');
       $('#game-over-dialog').show();

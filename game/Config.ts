@@ -2,6 +2,9 @@ var Config = {
 
    analyticsEndpoint: 'https://ludum38stats.azurewebsites.net/api/HttpTriggerJS1?code=Fj7bATyuqPp3qLCEFIDfJHNtGLm7UAQVBzBckN36ulpNs5Src/v4FQ==',
 
+   playerSample: 5000,
+   enemySample: 5000,
+
    gameWidth: 1200,
    gameHeight: 720,
 
