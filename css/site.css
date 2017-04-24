@@ -26,8 +26,8 @@ a {
    font-family: 'Indie Flower', Arial, Helvetica, sans-serif;
    font-size: 24px;
    color: #222;
-   height: 500px;
-   width: 500px;
+   min-height: 500px;
+   width: 600px;
    top: 0;
    margin-top: 90px;
 }
@@ -71,7 +71,8 @@ a {
    top: 0;
    left: 0;
    font-family: 'Indie Flower', Arial, Helvetica, sans-serif;
-   font-size: 20px;
+   font-size: 18px;
+   line-height: 1;
    color: #222;
    padding: 5px 10px;
    width: 170px;
@@ -105,12 +106,16 @@ a {
 
 #game-over-dialog .game-over-dialog-content #game-over-conversation .conversationText {
    font-family: 'Press Start 2P', Arial, Helvetica, sans-serif;
-   font-size: 16px;
-   height: 30px;
+   font-size: 16px;   
    background: white;
    border: 3px solid black;
    padding: 5px;
    display: inline-block;
 }
 
-#enemyConvo { float: right; }
+#enemyConvo { 
+   float: right; 
+   text-align: right; 
+   margin-bottom: 10px;
+   font-size: 8px;
+}
