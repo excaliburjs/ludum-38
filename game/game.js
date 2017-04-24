@@ -753,6 +753,10 @@ var ShoppingList = (function () {
         var timer = setInterval(function () {
             if (currIdx === collectedFood.length) {
                 clearInterval(timer);
+                // play register sound if player collected all food
+                if (collectedFood.length === Config.foodSpawnCount) {
+                    setTimeout(function () { return Resources.registerSound.play(); }, 350);
+                }
                 return;
             }
             var food = collectedFood[currIdx];
@@ -1205,7 +1209,6 @@ var Director = (function (_super) {
         if (State.gameOver)
             return;
         State.gameOverCheckout = true;
-        Resources.registerSound.play();
         this._handleGameOver();
     };
     Director.prototype.gameOver = function (enemy) {
