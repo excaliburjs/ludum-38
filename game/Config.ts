@@ -26,10 +26,10 @@ var Config = {
    enemyVignetteRadius: 150,
    enemyChaseMusicRadius: 400,
 
-   enemySpawnMinTime: 5000,
-   enemySpawnMaxTime: 12000,
+   enemySpawnMinTime: 3000,
+   enemySpawnMaxTime: 8000,
 
-   enemySpawnMaximum: 10,
+   enemySpawnMaximum: 12,
    enemyCheckoutTime: 30000,
 
 
