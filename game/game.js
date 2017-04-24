@@ -918,13 +918,13 @@ var Director = (function (_super) {
         scnMain.camera.zoom(3.5);
         return this.actions.delay(2000).asPromise().then(function () {
             return scnMain.camera.zoom(1, 3000);
-            player.disableMovement = false;
         });
     };
     //2. display grocery list
     Director.prototype._showGroceryList = function () {
         console.log('show grocery list');
         $('.playerShoppingList').show();
+        player.disableMovement = false;
         //TODO
     };
     //3. spawn in food
