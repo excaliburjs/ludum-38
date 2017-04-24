@@ -104,7 +104,13 @@ a {
 }
 
 #game-over-dialog .game-over-dialog-content #game-over-conversation .conversationText {
-   font-family: Arial, Helvetica, sans-serif;
-   font-size: 24px;
+   font-family: 'Press Start 2P', Arial, Helvetica, sans-serif;
+   font-size: 16px;
    height: 30px;
+   background: white;
+   border: 3px solid black;
+   padding: 5px;
+   display: inline-block;
 }
+
+#enemyConvo { float: right; }
