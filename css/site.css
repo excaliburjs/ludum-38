@@ -37,7 +37,16 @@ a {
 }
 
 .game-over-dialog-content ul li:not(.done) {
+   color:#666;
+}
+
+.game-over-dialog-content ul li:not(.done):before {
+   content: 'X';
+   margin-right: 5px;
+   font-size: 1.5em;
+   line-height: 1;
    color: red;
+   font-weight: bold;
 }
 
 .game-over-dialog-content ul li.done {
