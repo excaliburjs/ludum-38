@@ -6,6 +6,10 @@ class Director extends ex.Actor {
    private _diagIntro: ex.Actor;
    private _enemiesSpawned: number = 0;
 
+   public onInitialize(){
+      this.on('postupdate', this._update)
+   }
+
    public setup() {
       ex.Logger.getInstance().info('director setup');
 
@@ -37,6 +41,39 @@ class Director extends ex.Actor {
          })
 
       })
+   }
+
+   private _findMinimum<T>(nodes: T[], valueFunc: (node: T) => number): T {
+      var minNode: T = null;
+      var minValue: number = Infinity;
+      for(var node of nodes){
+         var val = valueFunc(node);
+         if(val < minValue){
+            minValue = val;
+            minNode = node;
+         }
+      }
+      return minNode;
+   }
+
+   private _update(evt: ex.PostUpdateEvent){
+      if(scnMain.enemies && scnMain.enemies.length) {
+         var closest = this._findMinimum(scnMain.enemies, (enemy) => {
+            return player.pos.distance(enemy.pos);
+         });
+
+         var distanceToPlayer = player.pos.distance(closest.pos);
+         if(distanceToPlayer < Config.enemyVignetteRadius) {
+            vignette.visible = true;
+            var segment = Config.enemyVignetteRadius / 4;
+            var index = (3 -Math.floor(distanceToPlayer / segment)).toFixed(0);
+            
+            vignette.setDrawing('vignette' + index);
+
+         } else {
+            vignette.visible = false;
+         }
+      }
    }
    
    //1. start zoomed in on player, zoom out

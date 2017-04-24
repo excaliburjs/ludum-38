@@ -132,12 +132,12 @@ class Enemy extends ex.Actor {
                var food = gameRandom.pickOne<Food>(foodList);
                end = this._grid.findClosestNode(food.pos.x, food.pos.y);
                break;
-            case ENEMY_PLAYER_MODE:
-               end = this._grid.findClosestNode(player.pos.x, player.pos.y);
-               break;
             case ENEMY_RANDOM_MODE:
                end = gameRandom.pickOne<WaypointNode>(this._grid.nodes);
                break;
+            case ENEMY_PLAYER_MODE:
+               end = this._grid.findClosestNode(player.pos.x, player.pos.y);
+               break;            
          }
          
       }
@@ -151,19 +151,7 @@ class Enemy extends ex.Actor {
    }
 
    public checkForPlayer(): boolean {
-      var distanceToPlayer = player.pos.distance(this.pos);
-      if(distanceToPlayer < Config.enemyVignetteRadius) {
-         vignette.visible = true;
-         var segment = Config.enemyVignetteRadius / 4;
-         var index = (3 -Math.floor(distanceToPlayer / segment)).toFixed(0);
-         
-         vignette.setDrawing('vignette' + index);
-
-      }else {
-         vignette.visible = false;
-      }
-
-
+      
       var result = false;
       for(var ray of this.rays){
          var playerTime = player.raycastTime(ray, Config.enemyRayLength);
