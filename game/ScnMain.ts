@@ -58,6 +58,7 @@ class ScnMain extends ex.Scene {
    public door: ex.Actor;
    public map: ex.TileMap;
    public enemies: Enemy[] = [];
+   public cashier: ex.Actor;
 
    public onInitialize(engine: ex.Engine) {
       this.map = Resources.map.getTileMap();
@@ -98,6 +99,10 @@ class ScnMain extends ex.Scene {
       this.door.setDrawing('idle');
       this.add(this.door);
       this.door.setZIndex(2);
+
+      // cashier
+      this.cashier = new Cashier(1126, 450, Config.playerWidth, Config.playerHeight, ex.Color.Red);
+      this.add(this.cashier);
 
       director.setup();
 
