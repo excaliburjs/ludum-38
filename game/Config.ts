@@ -58,7 +58,8 @@ var GameOverEnemyPrompts = [
    'Hey! Small world, huh?',
    'Fancy seeing you here! What a small world!',
    'Oh, you shop here? Small world!',
-   'I can\'t believe I ran into you, what a small world!'
+   'I can\'t believe I ran into you, what a small world!',
+   'Long time no see! Small world, huh?'
 ];
 
 var NpcNames = [
@@ -80,5 +81,5 @@ const FoodNameMatrix = [
 // Types of recipe suffixes
 const RecipeNames = [
    'Soup', 'Cake', 'Hot Dish', 'Casserole', 'Mash',
-   'Pasta', 'Salad', 'Pudding'
+   'Pasta', 'Salad', 'Pudding', 'Stew', 'Pie', 'Sandwich', 'Smoothie'
 ]

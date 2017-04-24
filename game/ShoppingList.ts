@@ -99,7 +99,7 @@ class ShoppingList {
 
        // move shopping list to game over dialog (hacky!)
        $('#game-over-shopping-list').append($('#shopping-list'))
-       $('#game-over-recipe').text('Recipe: ' + State.recipeName);
+       $('#game-over-recipe').text(State.recipeName);
 
        for (let i = 0; i < State.collectedFood.length; i++) {
          let foodArr = State.collectedFood[i] ? State.collectedFood : State.uncollectedFood;          
