@@ -903,8 +903,12 @@ var SoundManager = (function () {
     function SoundManager() {
     }
     SoundManager.init = function () {
-        SoundManager._updateMusicButton();
-        SoundManager._updateMuteAllButton();
+        if (Preferences.muteBackgroundMusic) {
+            SoundManager.muteBackgroundMusic();
+        }
+        if (Preferences.muteAll) {
+            SoundManager.muteAll();
+        }
         $('#mute-music').on('click', function () {
             if (Preferences.muteBackgroundMusic) {
                 SoundManager.unmuteBackgroundMusic();
@@ -974,15 +978,12 @@ var SoundManager = (function () {
         SoundManager._updateMusicButton();
     };
     SoundManager.playPlayerSpotted = function () {
-        Resources.playerSpottedSound.setVolume(Config.soundVolume);
         Resources.playerSpottedSound.play();
     };
     SoundManager.playSpawnEnemy = function () {
-        Resources.spawnEnemySound.setVolume(Config.soundVolume);
         Resources.spawnEnemySound.play();
     };
     SoundManager.playSpawnFood = function () {
-        Resources.spawnFoodSound.setVolume(0.3);
         Resources.spawnFoodSound.play();
     };
     SoundManager._updateMusicButton = function () {
