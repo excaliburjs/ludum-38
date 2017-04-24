@@ -62,7 +62,8 @@
     <script src="lib/classnames/index.min.js"></script>
     <script src="lib/zepto/zepto.min.js"></script>
     <script src="lib/storejs/store.min.js"></script>
-    
+    <script src="lib/dialog-polyfill/dialog-polyfill.js"></script>
+
     <script src="game/game.js?COMMIT_NUMBER" type="text/javascript"></script>
     <!-- Google analytics --> 
     <script>
@@ -92,6 +93,9 @@
       &bull; <a href="credits.html?COMMIT_NUMBER">Credits</a>
       &bull; version <a href="https://github.com/excaliburjs/ludum-38/commit/COMMIT_NUMBER">@COMMIT_NUMBER</a></footer> 
       <script>
+         var gameOverDialog = $('#game-over-dialog').get(0);
+         dialogPolyfill.registerDialog(gameOverDialog);
+
          $('.restart-game-button').click(function(){
                window.location.reload();
          });

@@ -160,7 +160,7 @@ class Director extends ex.Actor {
       stats.captureEndGameAndPublish();
 
       $('body').addClass('game-over');
-      $('#game-over-dialog').show();
+      (<any>$('#game-over-dialog').get(0)).showModal();
 
       $('#game-over-summary-collect').toggleClass('done', player.shoppingList.isEmpty);
       $('#game-over-summary-avoid').toggleClass('done', !State.gameOverEnemy);
