@@ -303,7 +303,6 @@ var Stats = (function () {
     Stats.prototype.samplePlayer = function (delta) {
         this._playerSample += delta;
         if (this._playerSample > Config.playerSample) {
-            console.log("player sampled");
             this._playerSample = 0;
             this.playerPositions.push({ x: player.pos.x, y: player.pos.y });
         }
@@ -312,7 +311,6 @@ var Stats = (function () {
         var _this = this;
         this._enemySample += delta;
         if (this._enemySample > Config.enemySample) {
-            console.log("Enemy sampled");
             this._enemySample = 0;
             scnMain.enemies.forEach(function (e) {
                 _this.enemyPositions.push({ x: e.pos.x, y: e.pos.y });
@@ -999,7 +997,7 @@ var WaypointGrid = (function () {
                 tempRay.dir.y = .0001;
             }
             if (this.rayCast(tempRay, node.pos.distance(n.pos))) {
-                console.log("invalid neighbor");
+                ex.Logger.getInstance().debug("Waypoint Grid: invalid neighbor");
             }
             else {
                 result.push(n);
@@ -1356,9 +1354,7 @@ var Director = (function (_super) {
     };
     //2. display grocery list
     Director.prototype._showGroceryList = function () {
-        console.log('show grocery list');
         $('.playerShoppingList').show();
-        //TODO
     };
     //3. spawn in food
     Director.prototype._spawnFood = function () {
@@ -1417,7 +1413,6 @@ var Director = (function (_super) {
         var minutes = Math.floor(elapsedSeconds / 60);
         var seconds = elapsedSeconds - (minutes * 60);
         var timeMessage = "I shopped for " + minutes + " minutes, " + seconds + " seconds";
-        console.log(timeMessage);
         game.stop();
         // reset bg music, in case player was being chased
         if (!Preferences.muteBackgroundMusic) {
@@ -1507,8 +1502,6 @@ var Analytics = (function () {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(payload)
-        }).then(function (value) {
-            console.log(value.body);
         });
     };
     return Analytics;
@@ -1543,7 +1536,7 @@ loadPreferences();
 SoundManager.init();
 var gameDebug = false;
 var gameRandom = new ex.Random(Date.now());
-console.log("Game seed " + gameRandom.seed);
+ex.Logger.getInstance().info("Game seed " + gameRandom.seed);
 var charSheets = [];
 // create an asset loader
 var loader = new ex.Loader();
