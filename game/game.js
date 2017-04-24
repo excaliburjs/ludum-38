@@ -217,12 +217,13 @@ var GameOverEnemyPrompts = [
 ];
 var NpcNames = [
     'Your ex',
-    'Gym teacher',
-    'Crazy neighbor',
+    'Your high school gym teacher',
+    'Your loud neighbor',
     'The Mayor',
-    'That person you owe money to',
+    'That person you owe money',
     'Gas station attendant',
-    'Chief of police'
+    'Chief of police',
+    'That person who\'s name you can\'t remember',
 ];
 // Index matches row major index of food.png
 var FoodNameMatrix = [
@@ -1389,10 +1390,16 @@ var Director = (function (_super) {
         }
         var enemyCanvas = enemySprite._spriteCanvas.toDataURL();
         $('#enemy').css("background-image", "url('" + enemyCanvas + "'");
-        var enemyText = gameRandom.pickOne(NpcNames) + ": \"" + gameRandom.pickOne(GameOverEnemyPrompts) + "\"";
+        var enemyName = gameRandom.pickOne(NpcNames);
+        var enemyText = "\"" + gameRandom.pickOne(GameOverEnemyPrompts) + "\"";
+        if (State.gameOverCheckout) {
+            var enemyName = 'The cashier';
+            enemyText = enemyText + ' Paper or plastic?';
+        }
         window.setTimeout(function () {
             $('#enemyConvo').css({ visibility: 'visible' });
-            ShoppingList.typewriter(enemyText, '#enemyConvo', Config.convoEnemySpeed);
+            $('#enemyName').text(enemyName);
+            ShoppingList.typewriter(enemyText, '#enemyMessage', Config.convoEnemySpeed);
         }, Config.convoEnemyDelay);
         window.setTimeout(function () {
             $('#playerConvo').css({ visibility: 'visible' });
