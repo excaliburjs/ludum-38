@@ -209,7 +209,8 @@ var Config = {
     spawnTimedEnemyTime: 5000,
     convoEnemyDelay: 1000,
     convoEnemySpeed: 50,
-    convoPlayerSpeed: 100
+    convoPlayerSpeed: 100,
+    gameOverFoodAnimInterval: 400
 };
 var GameOverEnemyPrompts = [
     'Hey! Small world, huh?',
@@ -886,7 +887,7 @@ var ShoppingList = (function () {
             $('#item' + (State.collectedFood.indexOf(food) + 1)).css("background-image", "url('" + colSpriteCanvas + "'");
             Resources.checkoutSound.play();
             currIdx++;
-        }, 700);
+        }, Config.gameOverFoodAnimInterval);
     };
     return ShoppingList;
 }());
