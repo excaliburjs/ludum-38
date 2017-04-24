@@ -200,25 +200,39 @@ class ScnMain extends ex.Scene {
          .callMethod(() => this.door.setDrawing('close'));
    }
 
+   private _foodSpawnAnimTimer: ex.Timer;
+
    spawnFood(){
       // player is added to scene global context
-      var foodArr = new Array<Food>();
-      
-         var chosenFoodZones = gameRandom.pickSet(FoodTypes, Config.foodSpawnCount);
+      var foodArr = new Array<Food>();      
+      var chosenFoodZones = gameRandom.pickSet(FoodTypes, Config.foodSpawnCount);
 
-         for (var i = 0; i < chosenFoodZones.length; i++){
-            var chosenFoodZone: FoodZone = chosenFoodZones[i];
-            var validTiles = this.getCellsInFoodZone(chosenFoodZone);
-            var chosenCell = validTiles[gameRandom.integer(0, validTiles.length - 1)];
-                        
-            var food = new Food(chosenCell.x, chosenCell.y, i, chosenFoodZone);
-                        
-            this.add(food);
-            foodArr.push(food);
+      for (var i = 0; i < chosenFoodZones.length; i++){
+         var chosenFoodZone: FoodZone = chosenFoodZones[i];
+         var validTiles = this.getCellsInFoodZone(chosenFoodZone);
+         var chosenCell = validTiles[gameRandom.integer(0, validTiles.length - 1)];
+                     
+         var food = new Food(chosenCell.x, chosenCell.y, i, chosenFoodZone);
+                              
+         foodArr.push(food);
+      }
+
+      var currIdx = 0;
+      this._foodSpawnAnimTimer = new ex.Timer(() => {
+         if (currIdx === foodArr.length) {
+            scnMain.cancelTimer(this._foodSpawnAnimTimer);
+            return;
          }
 
+         scnMain.add(foodArr[currIdx]);
          SoundManager.playSpawnFood();
 
+         currIdx++;
+      }, Config.spawnFoodTimeInterval, true);
+
+      // WORKAROUND timers cannot be added within another timer's callback fn
+      setTimeout(() => scnMain.add(this._foodSpawnAnimTimer), 1);      
+      
       var shoppingList = new ShoppingList(foodArr);
       player.shoppingList = shoppingList;
       shoppingList.updateUI();
