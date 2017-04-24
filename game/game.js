@@ -1209,16 +1209,15 @@ var Director = (function (_super) {
             var closest = this._findMinimum(scnMain.enemies, function (enemy) {
                 return player.pos.distance(enemy.pos);
             });
-            var distanceToPlayer = player.pos.distance(closest.pos);
-            if (distanceToPlayer < Config.enemyVignetteRadius) {
-                vignette.visible = true;
-                var segment = Config.enemyVignetteRadius / 4;
-                var index = (3 - Math.floor(distanceToPlayer / segment)).toFixed(0);
-                vignette.setDrawing('vignette' + index);
-            }
-            else {
-                vignette.visible = false;
-            }
+            // var distanceToPlayer = player.pos.distance(closest.pos);
+            // if(distanceToPlayer < Config.enemyVignetteRadius) {
+            //    vignette.visible = true;
+            //    var segment = Config.enemyVignetteRadius / 4;
+            //    var index = (3 -Math.floor(distanceToPlayer / segment)).toFixed(0);
+            //    vignette.setDrawing('vignette' + index);
+            // } else {
+            //    vignette.visible = false;
+            // }
         }
     };
     //1. start zoomed in on player, zoom out
