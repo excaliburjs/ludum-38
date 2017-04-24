@@ -136,6 +136,7 @@ var Resources = {
     foodSheet: new ex.Texture('img/food.png'),
     enemySheet: new ex.Texture('img/enemy.png'),
     surpriseSheet: new ex.Texture('img/surprise.png'),
+    vignette: new ex.Texture('img/vignette-stretched.png'),
     music: new ex.Sound('assets/snd/bossa_nova.mp3'),
     playerSpottedSound: new ex.Sound('assets/snd/playerSpotted.mp3', 'assets/snd/playerSpotted.wav'),
     spawnEnemySound: new ex.Sound('assets/snd/spawnEnemy.mp3', 'assets/snd/spawnEnemy.wav'),
@@ -439,7 +440,7 @@ var Enemy = (function (_super) {
         // set this to postdebugdraw on production
         this.on('postdraw', function (evt) {
             if (_this.attack) {
-                _this._surpriseSprite.draw(evt.ctx, -_this._surpriseSprite.naturalWidth / 2, -_this._surpriseSprite.naturalHeight / 2 - 20);
+                _this._surpriseSprite.draw(evt.ctx, -_this._surpriseSprite.naturalWidth / 2, -_this._surpriseSprite.naturalHeight / 2 - 50);
             }
             if (gameDebug) {
                 for (var _i = 0, _a = _this.rays; _i < _a.length; _i++) {
@@ -985,6 +986,10 @@ var player = new Player(Config.playerStart.x, Config.playerStart.y);
 scnMain.add(player);
 var director = new Director();
 scnMain.add(director);
+// add the vignette
+var vignette = new ex.UIActor(0, 0, game.getDrawWidth(), game.getDrawHeight());
+vignette.addDrawing(Resources.vignette);
+scnMain.add(vignette);
 //TODO Remove debug mode
 var gamePaused = false;
 game.input.keyboard.on('down', function (keyDown) {
