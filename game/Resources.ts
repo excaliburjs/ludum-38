@@ -18,6 +18,7 @@ var Resources = {
    // vignette2: new ex.Texture('img/vignette-stretched-darker.png'),
    // vignette3: new ex.Texture('img/vignette-stretched-darkest.png'),
    music: new ex.Sound('assets/snd/bossa_nova.mp3'),
+   ominousMusic: new ex.Sound('assets/snd/ominous.mp3', 'assets/snd/ominous.wav'),
    playerSpottedSound: new ex.Sound('assets/snd/playerSpotted.mp3', 'assets/snd/playerSpotted.wav'),
    spawnEnemySound: new ex.Sound('assets/snd/spawnEnemy.mp3', 'assets/snd/spawnEnemy.wav'),
    spawnFoodSound: new ex.Sound('assets/snd/placeFood.mp3', 'assets/snd/placeFood.wav'),
@@ -28,5 +29,5 @@ var Resources = {
    doorSlideCloseSound: new ex.Sound('assets/snd/doorslideclose.mp3', 'assets/snd/doorslideclose.wav'),
    diagIntro: new ex.Texture('img/diag-intro.png'),
    doorSheet: new ex.Texture('img/door.png')
-   
+
 };
