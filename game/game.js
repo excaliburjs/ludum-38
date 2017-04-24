@@ -166,6 +166,7 @@ var Resources = {
     doorSheet: new ex.Texture('img/door.png')
 };
 var Config = {
+    analyticsEndpoint: 'https://ludum38stats.azurewebsites.net/api/HttpTriggerJS1?code=Fj7bATyuqPp3qLCEFIDfJHNtGLm7UAQVBzBckN36ulpNs5Src/v4FQ==',
     gameWidth: 1200,
     gameHeight: 720,
     enterDoorX: 13 * 24,
@@ -1387,6 +1388,22 @@ var Cashier = (function (_super) {
     };
     return Cashier;
 }(ex.Actor));
+var Analytics = (function () {
+    function Analytics() {
+    }
+    Analytics.publish = function (payload) {
+        return fetch(Config.analyticsEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        }).then(function (value) {
+            console.log(value.body);
+        });
+    };
+    return Analytics;
+}());
 /// <reference path="../lib/excalibur-dist/excalibur-tiled.d.ts" />
 /// <reference path="../node_modules/@types/zepto/index.d.ts" />
 /// <reference path="../node_modules/@types/classnames/index.d.ts" />
@@ -1405,6 +1422,7 @@ var Cashier = (function (_super) {
 /// <reference path="SoundManager.ts" />
 /// <reference path="Director.ts" />
 /// <reference path="Cashier.ts" />
+/// <reference path="Analytics.ts" />
 var game = new ex.Engine({
     width: Config.gameWidth,
     height: Config.gameHeight,
