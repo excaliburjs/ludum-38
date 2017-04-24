@@ -550,6 +550,7 @@ var Enemy = (function (_super) {
         }
     };
     Enemy.prototype._wander = function (startNode) {
+        var _this = this;
         var start = startNode;
         var end = null;
         if (this.lastKnownPlayerPos) {
@@ -561,8 +562,14 @@ var Enemy = (function (_super) {
                 case ENEMY_FOOD_MODE:
                     var foodList = player.shoppingList.getFoodLeft();
                     var food = gameRandom.pickOne(foodList);
-                    end = this._grid.findClosestNode(food.pos.x, food.pos.y);
-                    break;
+                    //the player has picked up all the food. Fall back to random mode
+                    if (food == null) {
+                        this.mode = ENEMY_RANDOM_MODE;
+                    }
+                    else {
+                        end = this._grid.findClosestNode(food.pos.x, food.pos.y);
+                        break;
+                    }
                 case ENEMY_RANDOM_MODE:
                     end = gameRandom.pickOne(this._grid.nodes);
                     break;
@@ -576,15 +583,20 @@ var Enemy = (function (_super) {
             }
         }
         var path = this._grid.findPath(start, end);
+        var checkoutX = 0;
         for (var i = 0; i < path.length; i++) {
             this.actions.moveTo(path[i].pos.x, path[i].pos.y, Config.enemySpeed);
-            //if the enemy is checking out, after they get to the waypoint near the checkout,
-            //manually have them exit the store
-            if (this.mode == ENEMY_CHECKOUT_MODE && i == path.length - 1) {
-                this.actions.moveTo(path[i].pos.x, Config.gameHeight - 90, Config.enemySpeed);
-                this.actions.moveTo(1250, Config.gameHeight - 90, Config.enemySpeed);
-                this.kill();
-            }
+            checkoutX = path[i].pos.x;
+        }
+        //if the enemy is checking out, after they get to the waypoint near the checkout,
+        //manually have them exit the store
+        if (this.mode == ENEMY_CHECKOUT_MODE) {
+            this.actions.moveTo(checkoutX, Config.gameHeight - 90, Config.enemySpeed);
+            this.actions.moveTo(1250, Config.gameHeight - 90, Config.enemySpeed);
+            this.actions.callMethod(function () {
+                ex.Util.removeItemToArray(_this, scnMain.enemies);
+            });
+            this.actions.die();
         }
     };
     Enemy.prototype.checkForPlayer = function () {
@@ -1134,7 +1146,7 @@ var Director = (function (_super) {
     //4. the first antagonist arrives
     Director.prototype._spawnFirstEnemy = function () {
         this._enemiesSpawned++;
-        scnMain.spawnEnemy(ENEMY_CHECKOUT_MODE);
+        scnMain.spawnEnemy(ENEMY_PLAYER_MODE);
     };
     //4b. add more antagonists
     Director.prototype._spawnTimedEnemy = function () {
