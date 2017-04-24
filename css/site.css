@@ -35,3 +35,11 @@ a {
     height: 30px;
     width: 100px;
 }
+
+.playerShoppingList {
+    display: inline-block;
+    width: 150px;
+    height: 650px;
+    background-image: url("../img/legalpad.png");
+    background-repeat: repeat-y;
+}
