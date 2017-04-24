@@ -167,6 +167,7 @@ class Director extends ex.Actor {
 
       player.shoppingList.handleGameOver();
 
+      $('body').addClass('game-over');
       $('#game-over-dialog').show();
 
       $('#game-over-summary-collect').toggleClass('done', player.shoppingList.isEmpty);
