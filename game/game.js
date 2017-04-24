@@ -191,7 +191,8 @@ var Config = {
     backgroundVolume: 0.1,
     groceryListTime: 4000,
     spawnFoodTime: 4000,
-    spawnFirstEnemyTime: 7000
+    spawnFirstEnemyTime: 7000,
+    spawnTimedEnemyTime: 5000
 };
 var State = {
     gameOver: false,
@@ -1060,7 +1061,7 @@ var Director = (function (_super) {
                 _this._spawnFirstEnemy();
             }, Config.spawnFirstEnemyTime);
             scnMain.add(_this._spawnFirstEnemyTimer);
-            _this.actions.delay(2000).callMethod(function () {
+            _this.actions.delay(Config.spawnTimedEnemyTime).callMethod(function () {
                 _this._spawnTimedEnemy();
             });
         });
