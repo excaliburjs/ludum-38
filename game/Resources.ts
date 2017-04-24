@@ -24,6 +24,8 @@ var Resources = {
    checkoutSound: new ex.Sound('assets/snd/checkout.mp3', 'assets/snd/checkout.wav'),
    registerSound: new ex.Sound('assets/snd/register.mp3', 'assets/snd/register.wav'),
    pickupSound: new ex.Sound('assets/snd/pickup.mp3', 'assets/snd/pickup.wav'),
+   doorSlideSound: new ex.Sound('assets/snd/doorslide.mp3', 'assets/snd/doorslide.wav'),
+   doorSlideCloseSound: new ex.Sound('assets/snd/doorslideclose.mp3', 'assets/snd/doorslideclose.wav'),
    diagIntro: new ex.Texture('img/diag-intro.png'),
    doorSheet: new ex.Texture('img/door.png')
 };

@@ -200,6 +200,7 @@ class ScnMain extends ex.Scene {
    spawnEnemy(mode: EnemyMode = ENEMY_RANDOM_MODE) {
 
       // open door
+      Resources.doorSlideSound.play();
       this.door.setDrawing('open');
       this.door.actions
          .delay(50 * 13)
@@ -211,7 +212,10 @@ class ScnMain extends ex.Scene {
             SoundManager.playSpawnEnemy();
          })
          .delay(600)
-         .callMethod(() => this.door.setDrawing('close'));
+         .callMethod(() => {
+            this.door.setDrawing('close');
+            Resources.doorSlideCloseSound.play();
+         });
    }
 
    private _foodSpawnAnimTimer: ex.Timer;
