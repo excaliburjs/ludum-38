@@ -135,7 +135,14 @@ var Resources = {
     playerSheet: new ex.Texture('img/player.png'),
     foodSheet: new ex.Texture('img/food.png'),
     bwFoodSheet: new ex.Texture('img/foodbw.png'),
-    enemySheet: new ex.Texture('img/enemy.png'),
+    charSheet1: new ex.Texture('img/char-sprites/player-1.png'),
+    charSheet2: new ex.Texture('img/char-sprites/player-2.png'),
+    charSheet3: new ex.Texture('img/char-sprites/player-3.png'),
+    charSheet4: new ex.Texture('img/char-sprites/player-4.png'),
+    charSheet5: new ex.Texture('img/char-sprites/player-1-long.png'),
+    charSheet6: new ex.Texture('img/char-sprites/player-2-long.png'),
+    charSheet7: new ex.Texture('img/char-sprites/player-3-long.png'),
+    charSheet8: new ex.Texture('img/char-sprites/player-4-long.png'),
     surpriseSheet: new ex.Texture('img/surprise.png'),
     vignette0: new ex.Texture('img/vignette-stretched-light.png'),
     vignette1: new ex.Texture('img/vignette-stretched-dark.png'),
@@ -564,7 +571,9 @@ var Enemy = (function (_super) {
     };
     Enemy.prototype._setupDrawing = function () {
         //TODO randomly assign one of the different character spritesheets to the enemy
-        var enemySheet = new ex.SpriteSheet(Resources.enemySheet, 10, 1, 45, 45);
+        var number = gameRandom.integer(1, 8).toString();
+        var sprite = 'charSheet' + number;
+        var enemySheet = new ex.SpriteSheet(Resources[sprite], 10, 1, 45, 45);
         this.addDrawing('down', enemySheet.getSprite(0));
         this.addDrawing('up', enemySheet.getSprite(3));
         this.addDrawing('left', enemySheet.getSprite(7));
