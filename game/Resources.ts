@@ -1,6 +1,7 @@
 var Resources = {
    map: new Extensions.Tiled.TiledResource('assets/map.json'),
    playerSheet: new ex.Texture('img/player.png'),
+   playerSelect: new ex.Texture('img/player-select.png'),
    foodSheet: new ex.Texture('img/food.png'),
    bwFoodSheet: new ex.Texture('img/foodbw.png'),
    charSheet1: new ex.Texture('img/char-sprites/player-1.png'),
@@ -20,5 +21,6 @@ var Resources = {
    playerSpottedSound: new ex.Sound('assets/snd/playerSpotted.mp3', 'assets/snd/playerSpotted.wav'),
    spawnEnemySound: new ex.Sound('assets/snd/spawnEnemy.mp3', 'assets/snd/spawnEnemy.wav'),
    spawnFoodSound: new ex.Sound('assets/snd/placeFood.mp3', 'assets/snd/placeFood.wav'),
-   diagIntro: new ex.Texture('img/diag-intro.png')
+   diagIntro: new ex.Texture('img/diag-intro.png'),
+   doorSheet: new ex.Texture('img/door.png')
 };

@@ -3,6 +3,11 @@ var Config = {
    gameWidth: 1200,
    gameHeight: 720,
 
+   enterDoorX: 13 * 24,
+   enterDoorY: 29 * 24,
+   enterDoorWidth: 120,
+   enterDoorHeight: 24,
+
    playerStart: new ex.Vector(24 * 24, 13 * 24),
    playerWidth: 25,
    playerHeight: 40,
@@ -36,5 +41,6 @@ var Config = {
 
    groceryListTime: 4000,
    spawnFoodTime: 4000,
-   spawnFirstEnemyTime: 7000
+   spawnFirstEnemyTime: 7000,
+   spawnTimedEnemyTime: 5000
 }

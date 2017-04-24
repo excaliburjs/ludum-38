@@ -9,10 +9,14 @@ class Player extends ex.Actor {
    public shoppingList : ShoppingList;
    public disableMovement: boolean = false;
 
+   private _selectSprite: ex.Sprite;
+
    public onInitialize(engine: ex.Engine) {
       this._setupDrawing();
 
       this.collisionType = ex.CollisionType.Active;
+
+      this._selectSprite = Resources.playerSelect.asSprite();
       
       game.input.keyboard.on('hold', (keyHeld?: ex.Input.KeyEvent) => {
          if (!State.gameOver) {
@@ -78,9 +82,14 @@ class Player extends ex.Actor {
             }
          }
       });
+      
 
       this.on('postupdate', (evt: ex.PostUpdateEvent) => {
          this.vel.setTo(0, 0);
+      });
+
+      this.on('postdraw', (evt: ex.PostDrawEvent) => {
+         this._selectSprite.draw(evt.ctx, -this._selectSprite.naturalWidth / 2, this._selectSprite.naturalHeight / 2 + 10);
       });
    }
 
