@@ -47,7 +47,8 @@ for (var r in Resources) {
 }
 
 // randomize order of character sprites used
-var randCharSheets = gameRandom.pickSet(charSheets, charSheets.length, false);
+// var randCharSheets = gameRandom.pickSet(charSheets, charSheets.length, false); //TODO does not shuffle the order
+var randCharSheets = gameRandom.shuffle(charSheets);
 var randCharSheetIndex = 0;
 
 var scnMain = new ScnMain(game);
