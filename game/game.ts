@@ -16,6 +16,7 @@
 /// <reference path="WaypointNode.ts" />
 /// <reference path="SoundManager.ts" />
 /// <reference path="Director.ts" />
+/// <reference path="Cashier.ts" />
 
 
 var game = new ex.Engine({

@@ -58,6 +58,7 @@ class ScnMain extends ex.Scene {
    public door: ex.Actor;
    public map: ex.TileMap;
    public enemies: Enemy[] = [];
+   public cashier: ex.Actor;
 
    public onInitialize(engine: ex.Engine) {
       this.map = Resources.map.getTileMap();
@@ -79,8 +80,10 @@ class ScnMain extends ex.Scene {
       // Build game over triggers
       for (var go of this._gameOverZone) {
          let goc = go.getCenter();
-         this.add(new ex.Trigger(goc.x, goc.y, this.map.cellWidth, this.map.cellHeight, 
-            this.handleGameOverTrigger));
+         var gameOverTrigger = new ex.Trigger(goc.x, goc.y, this.map.cellWidth, this.map.cellHeight, 
+            this.handleGameOverTrigger);
+         gameOverTrigger.target = player;
+         this.add(gameOverTrigger);
       }
 
       // Build waypoint grid for pathfinding based on 
@@ -98,6 +101,10 @@ class ScnMain extends ex.Scene {
       this.door.setDrawing('idle');
       this.add(this.door);
       this.door.setZIndex(2);
+
+      // cashier
+      this.cashier = new Cashier(1126, 450, Config.playerWidth, Config.playerHeight, ex.Color.Red);
+      this.add(this.cashier);
 
       director.setup();
 
@@ -170,7 +177,7 @@ class ScnMain extends ex.Scene {
    }
 
    handleGameOverTrigger = () => {
-      director.checkout();
+         director.checkout();
    }
 
    getCellsInFoodZone(foodZone: string): IFoodSpawnPoint[] {

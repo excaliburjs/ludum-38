@@ -1,10 +1,12 @@
 const ENEMY_FOOD_MODE = 'Food';
 const ENEMY_PLAYER_MODE = 'Player';
 const ENEMY_RANDOM_MODE = 'Random';
+const ENEMY_CHECKOUT_MODE = 'Checkout';
 
 type EnemyMode = 
    | typeof ENEMY_FOOD_MODE
    | typeof ENEMY_RANDOM_MODE
+   | typeof ENEMY_CHECKOUT_MODE
    | typeof ENEMY_PLAYER_MODE;
 class Enemy extends ex.Actor {
 
@@ -137,6 +139,10 @@ class Enemy extends ex.Actor {
                break;
             case ENEMY_PLAYER_MODE:
                end = this._grid.findClosestNode(player.pos.x, player.pos.y);
+               break;
+            case ENEMY_CHECKOUT_MODE:
+               //get the waypoint closest to the checkout
+               end = this._grid.findClosestNode(1100, 370);
                break;            
          }
          
@@ -144,8 +150,16 @@ class Enemy extends ex.Actor {
 
       var path = this._grid.findPath(start, end);
             
-      for(var node of path){
-         this.actions.moveTo(node.pos.x, node.pos.y, Config.enemySpeed);
+      for(var i = 0; i < path.length; i++){
+         this.actions.moveTo(path[i].pos.x, path[i].pos.y, Config.enemySpeed);
+
+         //if the enemy is checking out, after they get to the waypoint near the checkout,
+         //manually have them exit the store
+         if(this.mode == ENEMY_CHECKOUT_MODE && i == path.length - 1){
+            this.actions.moveTo(path[i].pos.x, Config.gameHeight - 90, Config.enemySpeed);
+            this.actions.moveTo(1250, Config.gameHeight - 90, Config.enemySpeed);
+            this.kill();
+         }
       }
 
    }

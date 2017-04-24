@@ -36,7 +36,7 @@ class Director extends ex.Actor {
          }, Config.spawnFirstEnemyTime);
          scnMain.add(this._spawnFirstEnemyTimer);
 
-         this.actions.delay(2000).callMethod(() => {
+         this.actions.delay(Config.spawnTimedEnemyTime).callMethod(() => {
             this._spawnTimedEnemy();
          })
 
@@ -103,7 +103,7 @@ class Director extends ex.Actor {
    //4. the first antagonist arrives
    private _spawnFirstEnemy() {
       this._enemiesSpawned++;
-      scnMain.spawnEnemy(ENEMY_PLAYER_MODE);
+      scnMain.spawnEnemy(ENEMY_CHECKOUT_MODE);
    }
 
    //4b. add more antagonists
