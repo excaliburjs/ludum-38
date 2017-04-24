@@ -113,7 +113,7 @@ class Director extends ex.Actor {
       this.actions.delay(spawnTime).callMethod(() =>{
          if(State.gameOver || (this._enemiesSpawned > Config.enemySpawnMaximum)) return;
          this._enemiesSpawned++;
-         scnMain.spawnEnemy(ENEMY_FOOD_MODE);
+         scnMain.spawnEnemy(ENEMY_CHECKOUT_MODE);
          this._spawnTimedEnemy();
       });
    }

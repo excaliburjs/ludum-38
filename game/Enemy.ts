@@ -132,8 +132,13 @@ class Enemy extends ex.Actor {
             case ENEMY_FOOD_MODE:
                var foodList = player.shoppingList.getFoodLeft();
                var food = gameRandom.pickOne<Food>(foodList);
-               end = this._grid.findClosestNode(food.pos.x, food.pos.y);
-               break;
+               //the player has picked up all the food. Fall back to random mode
+               if(food == null){
+                  this.mode = ENEMY_RANDOM_MODE;
+               }else{
+                  end = this._grid.findClosestNode(food.pos.x, food.pos.y);
+                  break;
+               }
             case ENEMY_RANDOM_MODE:
                end = gameRandom.pickOne<WaypointNode>(this._grid.nodes);
                break;
@@ -149,17 +154,21 @@ class Enemy extends ex.Actor {
       }
 
       var path = this._grid.findPath(start, end);
-            
+      var checkoutX = 0;      
       for(var i = 0; i < path.length; i++){
          this.actions.moveTo(path[i].pos.x, path[i].pos.y, Config.enemySpeed);
+         checkoutX = path[i].pos.x;
+      }
 
-         //if the enemy is checking out, after they get to the waypoint near the checkout,
-         //manually have them exit the store
-         if(this.mode == ENEMY_CHECKOUT_MODE && i == path.length - 1){
-            this.actions.moveTo(path[i].pos.x, Config.gameHeight - 90, Config.enemySpeed);
-            this.actions.moveTo(1250, Config.gameHeight - 90, Config.enemySpeed);
-            this.kill();
-         }
+      //if the enemy is checking out, after they get to the waypoint near the checkout,
+      //manually have them exit the store
+      if(this.mode == ENEMY_CHECKOUT_MODE){
+         this.actions.moveTo(checkoutX, Config.gameHeight - 90, Config.enemySpeed);
+         this.actions.moveTo(1250, Config.gameHeight - 90, Config.enemySpeed);
+         this.actions.callMethod(()=>{
+            ex.Util.removeItemToArray(this, scnMain.enemies);
+         });
+         this.actions.die();
       }
 
    }
