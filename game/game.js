@@ -1014,14 +1014,8 @@ var SoundManager = (function () {
         if (Preferences.muteBackgroundMusic) {
             SoundManager.muteBackgroundMusic();
         }
-        else {
-            SoundManager.unmuteBackgroundMusic();
-        }
         if (Preferences.muteAll) {
             SoundManager.muteAll();
-        }
-        else {
-            SoundManager.unmuteAll();
         }
         $('#mute-music').on('click', function () {
             if (Preferences.muteBackgroundMusic) {
