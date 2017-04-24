@@ -1,6 +1,11 @@
 var State = {
-   gameOver: false   
-}
+   gameOver: false,
+   gameOverCheckout: false,
+   gameOverEnemy: false,
+   uncollectedFood: <Food[]>[],
+   collectedFood: <Food[]>[]
+};
+
 var _origState = { ...State };
 
 function resetState() {

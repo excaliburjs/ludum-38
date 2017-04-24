@@ -156,7 +156,7 @@ class ScnMain extends ex.Scene {
    }
 
    handleGameOverTrigger = () => {
-      director.gameOver();
+      director.checkout();
    }
 
    getCellsInFoodZone(foodZone: string): IFoodSpawnPoint[] {

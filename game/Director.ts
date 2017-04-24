@@ -66,13 +66,35 @@ class Director extends ex.Actor {
    //4b. add more antagonists
 
    //5. checkout - game ends
-   public gameOver() {
+   public checkout() {
       // already called (could be triggered multiple times)
-      if (State.gameOver) return;
+      if (State.gameOver) return; 
 
-      ex.Logger.getInstance().info('game over');
-      State.gameOver = true;
-      $('#game-over-dialog').show();
+      State.gameOverCheckout = true;
+
+      this._handleGameOver();
+   }
+
+   public gameOver(enemy: Enemy) {
+      // already called (could be triggered multiple times)
+      if (State.gameOver) return;      
+
+      State.gameOverEnemy = true;
+
+      // TODO handle enemy (show on dialog? orchestrate cut scene?)
+      this._handleGameOver();
    }
    
+   private _handleGameOver() {
+      ex.Logger.getInstance().info('game over');
+      State.gameOver = true;
+
+      player.shoppingList.handleGameOver();
+
+      $('#game-over-dialog').show();
+
+      $('#game-over-summary-collect').toggleClass('done', player.shoppingList.isEmpty);
+      $('#game-over-summary-avoid').toggleClass('done', !State.gameOverEnemy);
+      $('#game-over-summary-checkout').toggleClass('done', State.gameOverCheckout);
+   }
 }

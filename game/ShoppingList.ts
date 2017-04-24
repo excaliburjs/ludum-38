@@ -2,15 +2,23 @@ const SHOPPING_TEXT_GET_FOOD = 'Need to get:'
 const SHOPPING_TEXT_CHECKOUT = 'Time to checkout!'
 
 class ShoppingList {
-   private _collectedFood: Food[] = [];
+    constructor(items: Food[]) {
+      State.uncollectedFood = items;
+      State.collectedFood = new Array<Food>(items.length);
+    }
 
-    constructor(public items: Food[]) {
-      this._collectedFood = new Array<Food>(items.length);
+    public get isEmpty() {
+       return State.uncollectedFood.filter(
+          i => i === undefined).length === Config.foodSpawnCount;
+    }
+
+    public get collectedFood() {
+       return State.collectedFood.filter(f => f !== undefined);
     }
 
     public removeItem(id: string) {
-       if(this.items && this.items.length){
-         var idxsToRemove = this.items.map(function(obj, index) {
+       if(State.uncollectedFood && State.uncollectedFood.length){
+         var idxsToRemove = State.uncollectedFood.map(function(obj, index) {
             if(obj && obj.shoppingListId == id) {
                return index;
             }
@@ -18,9 +26,9 @@ class ShoppingList {
 
          if(idxsToRemove && idxsToRemove.length) {
             var idx = idxsToRemove[0];
-            var removedFood = this.items[idx];
-            this.items[idx] = undefined;
-            this._collectedFood[idx] = removedFood;
+            var removedFood = State.uncollectedFood[idx];
+            State.uncollectedFood[idx] = undefined;
+            State.collectedFood[idx] = removedFood;
             this.updateUI();
          }
        }
@@ -31,6 +39,8 @@ class ShoppingList {
       var len = text.length;
       var pos = 0;
       var typer: number;
+
+      if ($(target).text() === text) return;
 
       var type = function () {
          if (progress === text) {
@@ -47,28 +57,32 @@ class ShoppingList {
 
     public updateUI() {
 
-      var collectedFood = this._collectedFood.filter(f => f !== undefined);
-
-      if (collectedFood.length !== Config.foodSpawnCount) {
+      if (this.collectedFood.length !== Config.foodSpawnCount) {
          ShoppingList.typewriter(SHOPPING_TEXT_GET_FOOD, '#shop-message', 90);
       } else {
          ShoppingList.typewriter(SHOPPING_TEXT_CHECKOUT, '#shop-message', 90);         
       }
 
-       for (let i = 0; i < this._collectedFood.length; i++) {
-          if (!this._collectedFood[i]) {
-            var bwSprite = <any>Food.bwFoodSheet.getSprite(this.items[i].spriteIndex);
+       for (let i = 0; i < State.collectedFood.length; i++) {
+          if (!State.collectedFood[i]) {
+            var bwSprite = <any>Food.bwFoodSheet.getSprite(State.uncollectedFood[i].spriteIndex);
             var bwSpriteCanvas = bwSprite._spriteCanvas.toDataURL();
 
             $('#item' + (i + 1)).css("background-image", "url('" + bwSpriteCanvas + "'");
 
           } else {
 
-            var colSprite = <any>Food.foodSheet.getSprite(this._collectedFood[i].spriteIndex);
+            var colSprite = <any>Food.foodSheet.getSprite(State.collectedFood[i].spriteIndex);
             var colSpriteCanvas = colSprite._spriteCanvas.toDataURL();
 
             $('#item' + (i + 1)).css("background-image", "url('" + colSpriteCanvas + "'");
           }
        }
+    }
+
+    public handleGameOver() {
+
+       // move shopping list to game over dialog (hacky!)
+       $('#game-over-shopping-list').append($('#shopping-list'))
     }
 }

@@ -20,20 +20,32 @@ a {
 }
 
 #game-over-dialog {
-   background: black;
-   color: orangered;
-   height: 300px;
+   background-image: url(../img/legalpad.png);
+   background-repeat: repeat; 
+   border: 4px solid #666; 
+   font-family: 'Indie Flower', Arial, Helvetica, sans-serif;
+   font-size: 24px;
+   color: #222;
+   height: 400px;
    width: 500px;
    top: 0;
    margin-top: 90px;
 }
 
-.restart-game-button {
-   background: orangered;
-    border: orangered;
-    border-radius: 5px;
-    height: 30px;
-    width: 100px;
+.game-over-dialog-content ul {
+   list-style-type: none;
+}
+
+.game-over-dialog-content ul li:not(.done) {
+   color: red;
+}
+
+.game-over-dialog-content ul li.done {
+   text-decoration: line-through;
+}
+
+.game-over-dialog-content a.restart-game-button {
+   margin-right: 1em;
 }
 
 .canvas-wrapper {
@@ -67,8 +79,16 @@ a {
    text-align: center;
 }
 
-.canvas-wrapper .playerShoppingList .shoppingListItem {
+.playerShoppingList .shoppingListItem {
    width: 48px;
    height: 48px;
    display: inline-block;
+}
+
+#game-over-dialog .playerShoppingList {
+   text-align: center;
+}
+
+#game-over-dialog .playerShoppingList .shoppingListMessage {
+   display: none;
 }
