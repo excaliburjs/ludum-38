@@ -106,9 +106,7 @@ var Player = (function (_super) {
         return this.getBounds().rayCast(ray, clip);
     };
     Player.prototype._setupDrawing = function () {
-        var number = gameRandom.integer(1, 8).toString();
-        var sprite = 'charSheet' + number;
-        var playerSheet = new ex.SpriteSheet(Resources[sprite], 10, 1, 45, 45);
+        var playerSheet = new ex.SpriteSheet(director.getCharSprite(), 10, 1, 45, 45);
         this.addDrawing('down', playerSheet.getSprite(0));
         this.addDrawing('up', playerSheet.getSprite(3));
         this.addDrawing('left', playerSheet.getSprite(7));
@@ -640,9 +638,7 @@ var Enemy = (function (_super) {
         return result;
     };
     Enemy.prototype._setupDrawing = function () {
-        var number = gameRandom.integer(1, 8).toString();
-        var sprite = 'charSheet' + number;
-        var enemySheet = new ex.SpriteSheet(Resources[sprite], 10, 1, 45, 45);
+        var enemySheet = new ex.SpriteSheet(director.getCharSprite(), 10, 1, 45, 45);
         this.addDrawing('down', enemySheet.getSprite(0));
         this.addDrawing('up', enemySheet.getSprite(3));
         this.addDrawing('left', enemySheet.getSprite(7));
@@ -1220,6 +1216,16 @@ var Director = (function (_super) {
         // TODO handle enemy (show on dialog? orchestrate cut scene?)
         this._handleGameOver();
     };
+    Director.prototype.getCharSprite = function () {
+        var result = Resources[randCharSheets[randCharSheetIndex]];
+        if (randCharSheetIndex == randCharSheets.length - 1) {
+            randCharSheetIndex = 0;
+        }
+        else {
+            randCharSheetIndex++;
+        }
+        return result;
+    };
     Director.prototype._handleGameOver = function () {
         ex.Logger.getInstance().info('game over');
         State.gameOver = true;
@@ -1242,7 +1248,7 @@ var Cashier = (function (_super) {
     Cashier.prototype._setupDrawing = function () {
         var number = gameRandom.integer(1, 8).toString();
         var sprite = 'charSheet' + number;
-        var playerSheet = new ex.SpriteSheet(Resources[sprite], 10, 1, 45, 45);
+        var playerSheet = new ex.SpriteSheet(director.getCharSprite(), 10, 1, 45, 45);
         this.addDrawing('down', playerSheet.getSprite(0));
         this.addDrawing('up', playerSheet.getSprite(3));
         this.addDrawing('left', playerSheet.getSprite(7));
@@ -1294,11 +1300,18 @@ SoundManager.init();
 var gameDebug = false;
 var gameRandom = new ex.Random(Date.now());
 console.log("Game seed " + gameRandom.seed);
+var charSheets = [];
 // create an asset loader
 var loader = new ex.Loader();
 for (var r in Resources) {
     loader.addResource(Resources[r]);
+    if (r.search('charSheet') != -1) {
+        charSheets.push(r);
+    }
 }
+// randomize order of character sprites used
+var randCharSheets = gameRandom.pickSet(charSheets, charSheets.length, false);
+var randCharSheetIndex = 0;
 var scnMain = new ScnMain(game);
 game.addScene('main', scnMain);
 // create the player in global context
