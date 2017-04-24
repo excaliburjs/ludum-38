@@ -133,7 +133,8 @@ var Resources = {
     music: new ex.Sound('assets/snd/bossa_nova.mp3'),
     playerSpottedSound: new ex.Sound('assets/snd/playerSpotted.mp3', 'assets/snd/playerSpotted.wav'),
     spawnEnemySound: new ex.Sound('assets/snd/spawnEnemy.mp3', 'assets/snd/spawnEnemy.wav'),
-    spawnFoodSound: new ex.Sound('assets/snd/placeFood.mp3', 'assets/snd/placeFood.wav')
+    spawnFoodSound: new ex.Sound('assets/snd/placeFood.mp3', 'assets/snd/placeFood.wav'),
+    diagIntro: new ex.Texture('img/diag-intro.png')
 };
 var Config = {
     gameWidth: 1200,
@@ -836,7 +837,12 @@ var Director = (function (_super) {
     Director.prototype.setup = function () {
         var _this = this;
         ex.Logger.getInstance().info('director setup');
+        this._diagIntro = new ex.Actor(player.getRight() + 10, player.y + 5, 175, 48);
+        this._diagIntro.anchor.setTo(0, 1);
+        this._diagIntro.addDrawing(Resources.diagIntro);
+        scnMain.add(this._diagIntro);
         this._zoomOut().then(function () {
+            _this._diagIntro.kill();
             _this._showGroceryListTimer = new ex.Timer(function () {
                 _this._showGroceryList();
             }, Config.groceryListTime);
