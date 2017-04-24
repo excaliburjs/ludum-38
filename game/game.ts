@@ -62,9 +62,9 @@ var director = new Director();
 scnMain.add(director);
 
 // add the vignette
-var vignette = new ex.UIActor(0, 0, game.getDrawWidth(), game.getDrawHeight());
-vignette.visible = false;
-scnMain.add(vignette);
+// var vignette = new ex.UIActor(0, 0, game.getDrawWidth(), game.getDrawHeight());
+// vignette.visible = false;
+// scnMain.add(vignette);
 
 //TODO Remove debug mode
 var gamePaused = false;
