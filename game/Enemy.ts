@@ -132,8 +132,9 @@ class Enemy extends ex.Actor {
             case ENEMY_FOOD_MODE:
                var foodList = player.shoppingList.getFoodLeft();
                var food = gameRandom.pickOne<Food>(foodList);
-               //the player has picked up all the food. Fall back to random mode
-               if(food == null){
+               //the player has picked up all or most of the food. Fall back to random mode
+               //to prevent enemies from clumping on food
+               if(food == null || foodList.length < 3){
                   this.mode = ENEMY_RANDOM_MODE;
                }else{
                   end = this._grid.findClosestNode(food.pos.x, food.pos.y);
