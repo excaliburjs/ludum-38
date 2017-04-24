@@ -39,6 +39,14 @@ class Enemy extends ex.Actor {
    onInitialize(engine: ex.Engine) {
       this._setupDrawing();
       this.collisionType = ex.CollisionType.Passive;
+
+      //make enemies leave the store after a certain amount of time
+      var checkoutTimer = new ex.Timer(() => {
+         this.mode = ENEMY_CHECKOUT_MODE;
+      }, Config.enemyCheckoutTime);
+
+      scnMain.add(checkoutTimer);
+
       this.on('postupdate', (evt: ex.PostUpdateEvent) => {
          this.attack = false;
          // calculate the forward vector of enemy
