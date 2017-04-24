@@ -1341,6 +1341,12 @@ var Director = (function (_super) {
         }
         var enemyCanvas = enemySprite._spriteCanvas.toDataURL();
         $('#enemy').css("background-image", "url('" + enemyCanvas + "'");
+        window.setTimeout(function () {
+            ShoppingList.typewriter("\"Hey! Small world, huh?\"", '#enemyConvo', 80);
+        }, 1000);
+        window.setTimeout(function () {
+            ShoppingList.typewriter("\"...\"", '#playerConvo', 100);
+        }, 3000);
     };
     return Director;
 }(ex.Actor));
