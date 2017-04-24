@@ -455,9 +455,6 @@ var Enemy = (function (_super) {
             end = gameRandom.pickOne(this._grid.nodes);
         }
         var path = this._grid.findPath(start, end);
-        if (path.length > 2) {
-            path.splice(0, 1);
-        }
         for (var _i = 0, path_1 = path; _i < path_1.length; _i++) {
             var node = path_1[_i];
             this.actions.moveTo(node.pos.x, node.pos.y, Config.enemySpeed);
