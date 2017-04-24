@@ -1374,6 +1374,7 @@ var Director = (function (_super) {
             SoundManager.unmuteBackgroundMusic();
         }
         player.shoppingList.handleGameOver();
+        $('body').addClass('game-over');
         $('#game-over-dialog').show();
         $('#game-over-summary-collect').toggleClass('done', player.shoppingList.isEmpty);
         $('#game-over-summary-avoid').toggleClass('done', !State.gameOverEnemy);

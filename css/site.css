@@ -6,6 +6,18 @@ body {
    font-size: 14px;
 }
 
+.game-over-cover { display: none; }
+
+body.game-over .game-over-cover {
+   display: block;
+   background: rgba(0, 0, 0, 0.5);
+   position: absolute;
+   top: 0;
+   right: 0;
+   left: 0;
+   bottom: 0;
+}
+
 #sound {      
    font-size: 2em; 
    padding: 1em 0;  
