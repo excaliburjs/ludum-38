@@ -111,6 +111,7 @@ var Player = (function (_super) {
         this.addDrawing('up', playerSheet.getSprite(3));
         this.addDrawing('left', playerSheet.getSprite(7));
         this.addDrawing('right', playerSheet.getSprite(9));
+        this._leftDrawing = playerSheet.getSprite(9); //for game over screen
         // var walkDownAnim = playerSheet.getAnimationBetween(game, 0, 4, 180);
         var walkDownAnim = playerSheet.getAnimationByIndices(game, [0, 1, 0, 2], 180);
         walkDownAnim.loop = true;
@@ -662,6 +663,7 @@ var Enemy = (function (_super) {
         this.addDrawing('up', enemySheet.getSprite(3));
         this.addDrawing('left', enemySheet.getSprite(7));
         this.addDrawing('right', enemySheet.getSprite(9));
+        this._rightDrawing = enemySheet.getSprite(7);
         var walkDownAnim = enemySheet.getAnimationByIndices(game, [0, 1, 0, 2], 180);
         walkDownAnim.loop = true;
         this.addDrawing('walkDown', walkDownAnim);
@@ -1269,7 +1271,7 @@ var Director = (function (_super) {
             return;
         State.gameOverEnemy = true;
         // TODO handle enemy (show on dialog? orchestrate cut scene?)
-        this._handleGameOver();
+        this._handleGameOver(enemy);
     };
     Director.prototype.getCharSprite = function () {
         var result = Resources[randCharSheets[randCharSheetIndex]];
@@ -1281,7 +1283,7 @@ var Director = (function (_super) {
         }
         return result;
     };
-    Director.prototype._handleGameOver = function () {
+    Director.prototype._handleGameOver = function (enemy) {
         ex.Logger.getInstance().info('game over');
         State.gameOver = true;
         player.shoppingList.handleGameOver();
@@ -1289,6 +1291,18 @@ var Director = (function (_super) {
         $('#game-over-summary-collect').toggleClass('done', player.shoppingList.isEmpty);
         $('#game-over-summary-avoid').toggleClass('done', !State.gameOverEnemy);
         $('#game-over-summary-checkout').toggleClass('done', State.gameOverCheckout);
+        var playerSprite = player._leftDrawing;
+        var playerCanvas = playerSprite._spriteCanvas.toDataURL();
+        $('#player').css("background-image", "url('" + playerCanvas + "'");
+        var enemySprite;
+        if (State.gameOverEnemy) {
+            enemySprite = enemy._rightDrawing;
+        }
+        else if (State.gameOverCheckout) {
+            enemySprite = scnMain.cashier._rightDrawing;
+        }
+        var enemyCanvas = enemySprite._spriteCanvas.toDataURL();
+        $('#enemy').css("background-image", "url('" + enemyCanvas + "'");
     };
     return Director;
 }(ex.Actor));
@@ -1309,6 +1323,7 @@ var Cashier = (function (_super) {
         this.addDrawing('up', playerSheet.getSprite(3));
         this.addDrawing('left', playerSheet.getSprite(7));
         this.addDrawing('right', playerSheet.getSprite(9));
+        this._rightDrawing = playerSheet.getSprite(7);
         // // var walkDownAnim = playerSheet.getAnimationBetween(game, 0, 4, 180);
         // var walkDownAnim = playerSheet.getAnimationByIndices(game, [0, 1, 0, 2], 180)
         // walkDownAnim.loop = true;

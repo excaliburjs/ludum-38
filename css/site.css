@@ -92,3 +92,15 @@ a {
 #game-over-dialog .playerShoppingList .shoppingListMessage {
    display: none;
 }
+
+#game-over-dialog .game-over-dialog-content #game-over-conversation {
+   text-align: center;
+}
+
+#game-over-dialog .game-over-dialog-content #game-over-conversation .characterArt {
+   
+   display: inline-block;
+   /*margin: 0px auto;*/
+   height: 45px;
+   width: 45px;
+}
