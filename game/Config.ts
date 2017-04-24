@@ -63,12 +63,13 @@ var GameOverEnemyPrompts = [
 
 var NpcNames = [
    'Your ex',
-   'Gym teacher',
-   'Crazy neighbor',
+   'Your high school gym teacher',
+   'Your loud neighbor',
    'The Mayor',
-   'That person you owe money to',
+   'That person you owe money',
    'Gas station attendant',
-   'Chief of police'
+   'Chief of police',
+   'That person who\'s name you can\'t remember',
 ]
 
 // Index matches row major index of food.png

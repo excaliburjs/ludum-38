@@ -186,11 +186,18 @@ class Director extends ex.Actor {
       var enemyCanvas = enemySprite._spriteCanvas.toDataURL();   
       $('#enemy').css("background-image", "url('" + enemyCanvas + "'");
       
-      var enemyText = `${gameRandom.pickOne(NpcNames)}: "${gameRandom.pickOne(GameOverEnemyPrompts)}"`;
+      var enemyName = gameRandom.pickOne(NpcNames);
+      var enemyText = `"${gameRandom.pickOne(GameOverEnemyPrompts)}"`;
+
+      if (State.gameOverCheckout) {
+         var enemyName = 'The cashier';
+         enemyText = enemyText + ' Paper or plastic?';
+      }
       
       window.setTimeout(() => {
          $('#enemyConvo').css({ visibility: 'visible' });
-         ShoppingList.typewriter(enemyText, '#enemyConvo', Config.convoEnemySpeed);
+         $('#enemyName').text(enemyName);
+         ShoppingList.typewriter(enemyText, '#enemyMessage', Config.convoEnemySpeed);
       }, Config.convoEnemyDelay);
       window.setTimeout(() => {
          $('#playerConvo').css({ visibility: 'visible' });
