@@ -156,11 +156,16 @@ var Resources = {
     playerSpottedSound: new ex.Sound('assets/snd/playerSpotted.mp3', 'assets/snd/playerSpotted.wav'),
     spawnEnemySound: new ex.Sound('assets/snd/spawnEnemy.mp3', 'assets/snd/spawnEnemy.wav'),
     spawnFoodSound: new ex.Sound('assets/snd/placeFood.mp3', 'assets/snd/placeFood.wav'),
-    diagIntro: new ex.Texture('img/diag-intro.png')
+    diagIntro: new ex.Texture('img/diag-intro.png'),
+    doorSheet: new ex.Texture('img/door.png')
 };
 var Config = {
     gameWidth: 1200,
     gameHeight: 720,
+    enterDoorX: 13 * 24,
+    enterDoorY: 29 * 24,
+    enterDoorWidth: 120,
+    enterDoorHeight: 24,
     playerStart: new ex.Vector(24 * 24, 13 * 24),
     playerWidth: 25,
     playerHeight: 40,
@@ -287,6 +292,17 @@ var ScnMain = (function (_super) {
         }
         // Build waypoint grid for pathfinding based on 
         this._grid = new WaypointGrid(this._nodes, this._wallTiles);
+        // Entrance door
+        this.door = new ex.Actor(Config.enterDoorX, Config.enterDoorY, Config.enterDoorWidth, Config.enterDoorHeight);
+        this.door.anchor.setTo(0, 0);
+        var doorSheet = new ex.SpriteSheet(Resources.doorSheet, 13, 1, Config.enterDoorWidth, Config.enterDoorHeight);
+        var spriteIndices = doorSheet.sprites.map(function (s, idx) { return idx; });
+        this.door.addDrawing('idle', doorSheet.getSprite(0));
+        this.door.addDrawing('open', doorSheet.getAnimationForAll(game, 50));
+        this.door.addDrawing('close', doorSheet.getAnimationByIndices(game, spriteIndices.reverse(), 50));
+        this.door.setDrawing('idle');
+        this.add(this.door);
+        this.door.setZIndex(2);
         director.setup();
         this.on('postdraw', function (evt) {
             if (gameDebug) {
@@ -361,11 +377,21 @@ var ScnMain = (function (_super) {
     //TODO if we don't create a new WaypointGrid, the enemies spawn in at the current location of the existing enemies
     // the WaypointGrid is being modified in an unexpected fashion
     ScnMain.prototype.spawnEnemy = function (mode) {
+        var _this = this;
         if (mode === void 0) { mode = ENEMY_RANDOM_MODE; }
-        var enemy = new Enemy(this._grid, mode);
-        this.enemies.push(enemy);
-        this.add(enemy);
-        SoundManager.playSpawnEnemy();
+        // open door
+        this.door.setDrawing('open');
+        this.door.actions
+            .delay(50 * 13)
+            .callMethod(function () {
+            var enemy = new Enemy(_this._grid, mode);
+            _this.enemies.push(enemy);
+            _this.add(enemy);
+            enemy.setZIndex(1);
+            SoundManager.playSpawnEnemy();
+        })
+            .delay(600)
+            .callMethod(function () { return _this.door.setDrawing('close'); });
     };
     ScnMain.prototype.spawnFood = function () {
         // player is added to scene global context
