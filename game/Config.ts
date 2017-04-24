@@ -20,6 +20,12 @@ var Config = {
 
    enemyVignetteRadius: 300,
 
+   enemySpawnMinTime: 5000,
+   enemySpawnMaxTime: 12000,
+
+   enemySpawnMaximum: 10,
+
+
    foodWidth: 48,
    foodHeight: 48,
    foodSheetCols: 9,

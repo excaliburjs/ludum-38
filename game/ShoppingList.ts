@@ -34,6 +34,12 @@ class ShoppingList {
        }
     }  
 
+    public getFoodLeft() : Food[] {
+       return this.items.filter(f => {
+          return !!f;
+       });
+    }
+
     static typewriter(text: string, target: string, speed: number) {
       var progress: string = '';
       var len = text.length;
