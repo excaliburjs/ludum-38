@@ -225,7 +225,6 @@ var Config = {
     gameOverFoodAnimInterval: 400
 };
 var GameOverEnemyPrompts = [
-    'Hey! Small world, huh?',
     'Fancy seeing you here! What a small world!',
     'Oh, you shop here? Small world!',
     'I can\'t believe I ran into you, what a small world!',
