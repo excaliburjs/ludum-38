@@ -5,10 +5,14 @@
     <title>I Just Wanted Groceries - Ludum Dare 38</title>
     <link href="https://fonts.googleapis.com/css?family=Indie+Flower|Press+Start+2P" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/site.css?331e036756c5bf1fce4e0fe19ada3c3265e19632">
+    <link rel="stylesheet" href="css/site.css?df434970501aca9f72dad0819033f3e4dcecf8c9">
     <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css">
     <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+
+    <meta property="og:title" content="I Just Wanted Groceries - Ludum Dare 38"/>
+    <meta property="og:url" content="http://excaliburjs.com/ludum-38/"/>
+    <meta property="og:image" content="http://excaliburjs.com/ludum-38/img/favicon.png" />
 
 </head>
 <body>
@@ -42,8 +46,27 @@
          </div>
 
          <h2 id="game-over-recipe"></h2>
-
+         
          <div id="game-over-shopping-list"></div>  
+
+         <p id="social-container">
+            <a id="twidget" href="https://twitter.com/share" class="twitter-share-button" data-text="I went shopping for SOCIAL_SCORE. I Just Wanted Groceries!" data-via="ExcaliburJS" data-hashtags="LDJAM">Tweet</a>
+            <div id="facebook-sucks">
+               <div style="top: -11px" id="fidget" class="fb-share-button" data-href="http://excaliburjs.com/ludum-38/" data-layout="button_count"></div>
+               <div id="fb-root"></div>
+               <script>
+                     (function (d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0];
+                        if (d.getElementById(id)) return;
+                        js = d.createElement(s);
+                        js.id = id;
+                        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+                        fjs.parentNode.insertBefore(js, fjs);
+                     }(document, 'script', 'facebook-jssdk'));
+               </script>
+            </div>
+
+         </p>
 
          <div id="game-over-playtime"></div>      
          
@@ -63,15 +86,15 @@
       <a id="mute-all" href="#mute-all"><i class="fa fa-volume-up"></i></a>
     </div>
 
-    <script src="lib/excalibur-dist/excalibur.js?331e036756c5bf1fce4e0fe19ada3c3265e19632" type="text/javascript"></script>
-    <script src="lib/excalibur-tiled/dist/excalibur-tiled.js?331e036756c5bf1fce4e0fe19ada3c3265e19632" type="text/javascript"></script>
+    <script src="lib/excalibur-dist/excalibur.js?df434970501aca9f72dad0819033f3e4dcecf8c9" type="text/javascript"></script>
+    <script src="lib/excalibur-tiled/dist/excalibur-tiled.js?df434970501aca9f72dad0819033f3e4dcecf8c9" type="text/javascript"></script>
     <script src="lib/classnames/index.min.js"></script>
     <script src="lib/zepto/zepto.min.js"></script>
     <script src="lib/storejs/store.min.js"></script>
     <script src="lib/fetchjs/fetch.min.js"></script>
     <script src="lib/dialog-polyfill/dialog-polyfill.js"></script>
 
-    <script src="game/game.js?331e036756c5bf1fce4e0fe19ada3c3265e19632" type="text/javascript"></script>
+    <script src="game/game.js?df434970501aca9f72dad0819033f3e4dcecf8c9" type="text/javascript"></script>
     <!-- Google analytics --> 
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -97,8 +120,8 @@
       </script>
     
     <footer>Made with <a href="http://excaliburjs.com">Excalibur.js</a> 
-      &bull; <a href="credits.html?331e036756c5bf1fce4e0fe19ada3c3265e19632">Credits</a>
-      &bull; version <a href="https://github.com/excaliburjs/ludum-38/commit/331e036756c5bf1fce4e0fe19ada3c3265e19632">@331e036756c5bf1fce4e0fe19ada3c3265e19632</a></footer> 
+      &bull; <a href="credits.html?df434970501aca9f72dad0819033f3e4dcecf8c9">Credits</a>
+      &bull; version <a href="https://github.com/excaliburjs/ludum-38/commit/df434970501aca9f72dad0819033f3e4dcecf8c9">@df434970501aca9f72dad0819033f3e4dcecf8c9</a></footer> 
       <script>
          var gameOverDialog = $('#game-over-dialog').get(0);
          dialogPolyfill.registerDialog(gameOverDialog);

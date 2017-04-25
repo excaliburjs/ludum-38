@@ -247,7 +247,7 @@ var FoodNameMatrix = [
 // Types of recipe suffixes
 var RecipeNames = [
     'Soup', 'Cake', 'Hot Dish', 'Casserole', 'Mash',
-    'Pasta', 'Salad', 'Pudding', 'Stew', 'Pie', 'Sandwich', 'Smoothie'
+    'Pasta', 'Salad', 'Pudding', 'Stew', 'Pie', 'Sandwiches', 'Smoothies'
 ];
 var State = {
     gameOver: false,
@@ -1462,6 +1462,22 @@ var Director = (function (_super) {
             $('#playerConvo').css({ visibility: 'visible' });
             ShoppingList.typewriter('"..."', '#playerConvo', Config.convoPlayerSpeed);
         }, Config.convoEnemyDelay + (Config.convoEnemySpeed * enemyText.length));
+        // I'm so sorry, I'm so very sorry...so tired
+        try {
+            var text = document.getElementById("twidget").dataset['text'];
+            document.getElementById("twidget").dataset['text'] = text.replace("SOCIAL_SCORE", State.recipeName);
+            var twitterScript = document.createElement('script');
+            twitterScript.innerText = "!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } } (document, 'script', 'twitter-wjs');";
+            document.getElementById("game-over-dialog").appendChild(twitterScript);
+            var social = document.getElementById('social-container');
+            var facebookW = document.getElementById('fidget');
+            facebookW.parentNode.removeChild(facebookW);
+            social.appendChild(facebookW);
+        }
+        catch (e) {
+            ex.Logger.getInstance().error("Something happened ", e);
+            //swallow
+        }
     };
     return Director;
 }(ex.Actor));
