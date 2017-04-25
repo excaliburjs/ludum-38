@@ -85,5 +85,5 @@ const FoodNameMatrix = [
 // Types of recipe suffixes
 const RecipeNames = [
    'Soup', 'Cake', 'Hot Dish', 'Casserole', 'Mash',
-   'Pasta', 'Salad', 'Pudding', 'Stew', 'Pie', 'Sandwich', 'Smoothie'
+   'Pasta', 'Salad', 'Pudding', 'Stew', 'Pie', 'Sandwiches', 'Smoothies'
 ]

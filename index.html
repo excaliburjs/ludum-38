@@ -10,6 +10,10 @@
     <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
 
+    <meta property="og:title" content="I Just Wanted Groceries - Ludum Dare 38"/>
+    <meta property="og:url" content="http://excaliburjs.com/ludum-38/"/>
+    <meta property="og:image" content="http://excaliburjs.com/ludum-38/img/favicon.png" />
+
 </head>
 <body>
    <div class="canvas-wrapper">         
@@ -42,8 +46,27 @@
          </div>
 
          <h2 id="game-over-recipe"></h2>
-
+         
          <div id="game-over-shopping-list"></div>  
+
+         <p id="social-container">
+            <a id="twidget" href="https://twitter.com/share" class="twitter-share-button" data-text="I went shopping for SOCIAL_SCORE. I Just Wanted Groceries!" data-via="ExcaliburJS" data-hashtags="LDJAM">Tweet</a>
+            <div id="facebook-sucks">
+               <div style="top: -11px" id="fidget" class="fb-share-button" data-href="http://excaliburjs.com/ludum-38/" data-layout="button_count"></div>
+               <div id="fb-root"></div>
+               <script>
+                     (function (d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0];
+                        if (d.getElementById(id)) return;
+                        js = d.createElement(s);
+                        js.id = id;
+                        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+                        fjs.parentNode.insertBefore(js, fjs);
+                     }(document, 'script', 'facebook-jssdk'));
+               </script>
+            </div>
+
+         </p>
 
          <div id="game-over-playtime"></div>      
          
