@@ -1569,28 +1569,27 @@ var director = new Director();
 scnMain.add(director);
 var stats = new Stats();
 //TODO Remove debug mode
-var gamePaused = false;
-game.input.keyboard.on('down', function (keyDown) {
-    switch (keyDown.key) {
-        case ex.Input.Keys.P:
-            if (gamePaused) {
-                game.start();
-                ex.Logger.getInstance().info('game resumed');
-            }
-            else {
-                game.stop();
-                ex.Logger.getInstance().info('game paused');
-            }
-            gamePaused = !gamePaused;
-            break;
-        case ex.Input.Keys.Semicolon:
-            game.isDebug = !game.isDebug;
-            break;
-        case ex.Input.Keys.O:
-            gameDebug = !gameDebug;
-            break;
-    }
-});
+// var gamePaused = false;
+// game.input.keyboard.on('down', (keyDown?: ex.Input.KeyEvent) => {
+//     switch(keyDown.key) {
+//         case ex.Input.Keys.P : 
+//             if (gamePaused) {
+//                 game.start();
+//                 ex.Logger.getInstance().info('game resumed');
+//             } else {
+//                 game.stop();
+//                 ex.Logger.getInstance().info('game paused');
+//             }
+//             gamePaused = !gamePaused;
+//             break;
+//         case ex.Input.Keys.Semicolon :
+//             game.isDebug = !game.isDebug;
+//             break;
+//         case ex.Input.Keys.O : 
+//             gameDebug = !gameDebug
+//             break;
+//     }
+// });
 // --------------------------------------- //
 game.start(loader).then(function () {
     // turn off anti-aliasing
