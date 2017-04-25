@@ -15,7 +15,7 @@ var Config = {
 
    playerStart: new ex.Vector(24 * 24, 13 * 24),
    playerWidth: 25,
-   playerHeight: 40,
+   playerHeight: 25,
 
    playerVel: 100,
 
@@ -35,7 +35,7 @@ var Config = {
    enemySpawnMaxTime: 8000,
 
    enemySpawnMaximum: 12,
-   enemyCheckoutTime: 30000,
+   enemyCheckoutTime: 20000,
 
 
    foodWidth: 48,
