@@ -33,6 +33,8 @@ mkdir -p out/lib/font-awesome/css
 mkdir -p out/lib/font-awesome/fonts
 mkdir -p out/lib/storejs
 mkdir -p out/lib/zepto
+mkdir -p out/lib/fetchjs
+mkdir -p out/lib/dialog-polyfill
 
 cd lib
 cp -R classnames ../out/lib
@@ -42,6 +44,8 @@ cp -R font-awesome/css ../out/lib/font-awesome
 cp -R font-awesome/fonts ../out/lib/font-awesome
 cp -R storejs ../out/lib/
 cp -R zepto ../out/lib
+cp -R fetchjs ../out/lib/
+cp -R dialog-polyfill ../out/lib
 cd ..
 cd out
 
