@@ -99,7 +99,7 @@ var Player = (function (_super) {
             _this.vel.setTo(0, 0);
         });
         this.on('postdraw', function (evt) {
-            _this._selectSprite.draw(evt.ctx, -_this._selectSprite.naturalWidth / 2, _this._selectSprite.naturalHeight / 2 + 10);
+            _this._selectSprite.draw(evt.ctx, -_this._selectSprite.naturalWidth / 2, _this._selectSprite.naturalHeight / 2);
         });
     };
     Player.prototype.raycast = function (ray, clip) {
@@ -107,24 +107,36 @@ var Player = (function (_super) {
     };
     Player.prototype._setupDrawing = function () {
         var playerSheet = new ex.SpriteSheet(director.getCharSprite(), 10, 1, 45, 45);
-        this.addDrawing('down', playerSheet.getSprite(0));
-        this.addDrawing('up', playerSheet.getSprite(3));
-        this.addDrawing('left', playerSheet.getSprite(7));
-        this.addDrawing('right', playerSheet.getSprite(9));
+        var downSprite = playerSheet.getSprite(0);
+        var upSprite = playerSheet.getSprite(3);
+        var leftSprite = playerSheet.getSprite(7);
+        var righSprite = playerSheet.getSprite(9);
+        downSprite.anchor.setTo(0, 0.2);
+        upSprite.anchor.setTo(0, 0.2);
+        leftSprite.anchor.setTo(0, 0.2);
+        righSprite.anchor.setTo(0, 0.2);
+        this.addDrawing('down', downSprite);
+        this.addDrawing('up', upSprite);
+        this.addDrawing('left', leftSprite);
+        this.addDrawing('right', righSprite);
         this._leftDrawing = playerSheet.getSprite(9); //for game over screen
         // var walkDownAnim = playerSheet.getAnimationBetween(game, 0, 4, 180);
         var walkDownAnim = playerSheet.getAnimationByIndices(game, [0, 1, 0, 2], 180);
         walkDownAnim.loop = true;
+        walkDownAnim.anchor.setTo(0, 0.2);
         this.addDrawing('walkDown', walkDownAnim);
         // var walkUpAnim = playerSheet.getAnimationBetween(game, 4,8, 180);
         var walkUpAnim = playerSheet.getAnimationByIndices(game, [3, 4, 3, 5], 180);
         walkUpAnim.loop = true;
+        walkUpAnim.anchor.setTo(0, 0.2);
         this.addDrawing('walkUp', walkUpAnim);
         var walkLeftAnim = playerSheet.getAnimationByIndices(game, [7, 6], 200);
         walkLeftAnim.loop = true;
+        walkLeftAnim.anchor.setTo(0, 0.2);
         this.addDrawing('walkLeft', walkLeftAnim);
         var walkRightAnim = playerSheet.getAnimationByIndices(game, [9, 8], 200);
         walkRightAnim.loop = true;
+        walkRightAnim.anchor.setTo(0, 0.2);
         this.addDrawing('walkRight', walkRightAnim);
         this.setDrawing('down');
     };
@@ -179,7 +191,7 @@ var Config = {
     enterDoorHeight: 24,
     playerStart: new ex.Vector(24 * 24, 13 * 24),
     playerWidth: 25,
-    playerHeight: 40,
+    playerHeight: 25,
     playerVel: 100,
     enemyStart: new ex.Vector(384, 720),
     enemyWidth: 50,
@@ -194,7 +206,7 @@ var Config = {
     enemySpawnMinTime: 3000,
     enemySpawnMaxTime: 8000,
     enemySpawnMaximum: 12,
-    enemyCheckoutTime: 30000,
+    enemyCheckoutTime: 20000,
     foodWidth: 48,
     foodHeight: 48,
     foodSheetCols: 9,
