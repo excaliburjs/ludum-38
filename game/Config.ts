@@ -32,10 +32,10 @@ var Config = {
    enemyChaseMusicRadius: 400,
 
    enemySpawnMinTime: 3000,
-   enemySpawnMaxTime: 8000,
+   enemySpawnMaxTime: 6000,
 
    enemySpawnMaximum: 12,
-   enemyCheckoutTime: 20000,
+   enemyCheckoutTime: 25000,
 
 
    foodWidth: 48,
