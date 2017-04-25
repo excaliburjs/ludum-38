@@ -1,6 +1,7 @@
 class Stats implements IPayload {
-   date: string = "" 
+   date: string = "";
    seed: number = 0; // seeded value
+   commit: string = "";
    started: number; // time
    timePlayed: number = 0; // amount of time played
    won: boolean = false; // won or lost
@@ -13,6 +14,9 @@ class Stats implements IPayload {
    private _enemySample: number = 0;
    
    public captureEndGameAndPublish(){
+
+      this.commit = $('#commit-number').text();
+
       this.seed = gameRandom.seed;
       this.foodCollected = State.collectedFood.map(f => {
          return f.foodZone

@@ -5,6 +5,7 @@ interface IPosition {
 
 interface IPayload {
    date: string, // date
+   commit: string,
    seed: number, // seeded value
    started: number, // time
    timePlayed: number, // amount of time played
