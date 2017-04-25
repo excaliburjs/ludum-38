@@ -14,24 +14,6 @@ class Director extends ex.Actor {
    public setup() {
       ex.Logger.getInstance().info('director setup');
 
-       // I'm so sorry, I'm so very sorry...so tired
-      try {
-         var text = document.getElementById("twidget").dataset['text'];
-         document.getElementById("twidget").dataset['text'] = text.replace("SOCIAL_SCORE", State.recipeName);
-         var twitterScript = <HTMLScriptElement>document.createElement('script');
-         twitterScript.innerText = "!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } } (document, 'script', 'twitter-wjs');";
-         document.getElementById("game-over-dialog").appendChild(twitterScript);
-
-
-         var social = document.getElementById('social-container');
-         var facebookW = document.getElementById('fidget');
-         facebookW.parentNode.removeChild(facebookW);
-         social.appendChild(facebookW);
-      } catch (e) {
-         ex.Logger.getInstance().error("Something happened ", e);
-         //swallow
-      }
-
       this._diagIntro = new ex.Actor(player.getRight() + 10, player.y + 5, 175, 48);
       this._diagIntro.anchor.setTo(0, 1);
       this._diagIntro.addDrawing(Resources.diagIntro);
@@ -220,6 +202,24 @@ class Director extends ex.Actor {
          $('#playerConvo').css({ visibility: 'visible' });
          ShoppingList.typewriter('"..."', '#playerConvo', Config.convoPlayerSpeed);
       }, Config.convoEnemyDelay + (Config.convoEnemySpeed * enemyText.length));
-     
+      
+
+      // I'm so sorry, I'm so very sorry...so tired
+      try {
+         var text = document.getElementById("twidget").dataset['text'];
+         document.getElementById("twidget").dataset['text'] = text.replace("SOCIAL_SCORE", State.recipeName);
+         var twitterScript = <HTMLScriptElement>document.createElement('script');
+         twitterScript.innerText = "!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } } (document, 'script', 'twitter-wjs');";
+         document.getElementById("game-over-dialog").appendChild(twitterScript);
+
+
+         var social = document.getElementById('social-container');
+         var facebookW = document.getElementById('fidget');
+         facebookW.parentNode.removeChild(facebookW);
+         social.appendChild(facebookW);
+      } catch (e) {
+         ex.Logger.getInstance().error("Something happened ", e);
+         //swallow
+      }
    }
 }
