@@ -1,0 +1,15 @@
+version: '2.1'
+
+services: 
+  web:
+    build: .
+    image: just-wanted-groceries-compose
+    ports: 
+      - 8080:8080
+    network_mode: "host"
+  database:
+    image: "mongo:3.5.10-windowsservercore"
+    ports:
+     - 27017:27017
+    network_mode: "host"
+
